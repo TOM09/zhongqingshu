@@ -1,0 +1,90 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>公益详情</title>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="toTop" content="true">
+    <link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+    <!--bootstrap框架↓-->
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <!--本页面CSS↓-->
+    <link rel="stylesheet" href="/static/css/swiper.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!--bootstrap框架↓-->
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+    <script type="text/javascript" src="/static/js/index.js"></script>
+    <script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+    <style type="text/css">
+    body{
+    font-family: "Microsoft YaHei";
+    font-size: 16px;
+    line-height: 26px;
+    }
+    </style>
+<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+<div class="Header">
+    <dl class="Login_topdl">
+        <dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+        <dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume" >招聘</a><a href="/mcbn/services/publicgood/query" style="color: #E80D22;border-bottom: 2px solid #E80D22;">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+    </dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+    <div class="main_fff">
+        <dl class="gongy_xxtop" style="position: relative;">
+            <dt style="position: absolute;right: 0px;bottom:10px;">
+                <c:if test="${publicGood.hasHelp eq '0'}">
+                     <a href="/mcbn/services/dispense/donation">捐助</a>
+                </c:if>
+                <c:if test="${publicGood.hasHelp eq '1'}">
+                    <a class="gongy_jies"  href="javascript:void(0);">已捐助</a>
+                </c:if>
+                <c:if test="${publicGood.hasHelp eq '2'}">
+                    <a class="gongy_jies" href="javascript:void(0);">已结束</a>
+                </c:if>
+                <span>${publicGood.browseCount}人浏览</span></dt>
+            <dd style="margin-top: 30px;max-width: 75%;">
+                <h1>${publicGood.title}</h1>
+                <span>结束时间：<fmt:formatDate value="${publicGood.end_time}" pattern="yyyy.MM.dd"/> </span>
+            </dd>
+        </dl>
+        <div class="gongy_xxbox">
+            ${publicGood.content}
+        </div>
+       <!-- <div class="gongy_botbt"><span>捐助奖励</span></div>
+        <ul class="gongy_botul">
+            <li><a href=""><img src="/static/images/tp.png" /></a><span>奖状</span>捐助金额：0-99元</li>
+            <li><a href=""><img src="/static/images/tp.png" /></a><span>奖牌</span>捐助金额：100-999元</li>
+            <li><a href=""><img src="/static/images/tp.png" /></a><span>奖励</span>捐助金额：1000及以上</li>
+        </ul> -->
+
+    </div>
+</div>
+
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+</body>
+<script>
+    $(function(){
+        $("#lusername").html($.cookie('userName')+"<b></b>");
+    })
+</script>
+    </html>

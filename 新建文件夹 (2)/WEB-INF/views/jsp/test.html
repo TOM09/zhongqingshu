@@ -1,0 +1,43 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="toTop" content="true">
+    <link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+    <!--bootstrap框架↓-->
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <!--本页面CSS↓-->
+    <link rel="stylesheet" href="/static/css/swiper.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!--bootstrap框架↓-->
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+    <script type="text/javascript" src="/static/js/util.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-paginator.js"></script> 
+<h3 id="h"></h3>
+    <script>
+        var viewUrl = "/mcbn/services/common/fieldsDict"
+        var data = {};
+        data.clientType = 102500;
+        ajax(viewUrl,data, function (result) {
+ 	    	if (result.status == "success"){
+ 	    		if (result.datas[0]){
+ 	    		}
+ 	    	}
+ 	   	}); 
+    </script>
+</head>
+<body>
+
+<!--尾部end-->
+</body>
+</html>

@@ -1,0 +1,12 @@
+@charset "utf-8";
+/* CSS Document */
+body { background:url(../images/p34.png);}
+.indexs-top { background:#eb9c91;}
+.user_loginmessage { color:#fff;}
+.indexs-topnav { color:#FFF !important;}
+.indexs-topnav_icon { color:#FFF;}
+.indexs-logo { background:url(../images/logo3.png);}
+.indexs-head { background:url(../images/p24.png) no-repeat center center;}
+.indexs-head_nav a { color:#fff !important;}
+.footer {background:none !important; color:#333333;}
+

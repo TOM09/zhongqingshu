@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <title>登陆</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta name="toTop" content="true">
+    <link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+    <!--bootstrap框架↓-->
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <!--本页面CSS↓-->
+    <link rel="stylesheet" href="/static/css/swiper.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!--bootstrap框架↓-->
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+    <script type="text/javascript" src="/static/js/util.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-paginator.js"></script>
+    <style>
+        input::-ms-clear,input::-ms-reveal{display:none;}
+    </style>
+		<script>
+        $(document).ready(function () {
+            if (window.history && window.history.pushState) {
+                $(window).on('popstate', function () {
+                    window.history.pushState('forward', null, '');
+                    window.history.forward(1);
+                });
+            }
+            window.history.pushState('forward', null, '');  //在IE中必须得有这两行
+            window.history.forward(1);
+        })
+	</script>
+    <script>
+        $(document).ready(function () {
+            $.cookie('__token__', "", {expires: -1 });
+            $.cookie('userId', "", {expires: -1 });
+            $.cookie('companyId', "", {expires: -1 });
+            $.cookie('userName', "", {expires: -1 });
+            if (window.history && window.history.pushState) {
+                $(window).on('popstate', function () {
+                    window.history.pushState('forward', null, '');
+                    window.history.forward(1);
+                });
+            }
+            window.history.pushState('forward', null, '');  //在IE中必须得有这两行
+            window.history.forward(1);
+            //调入页脚
+            $('.footer').load('footerpage.html');
+        });
+    </script>
+    <script>
+        function login(){
+            $("#nametitle").html("");
+            $("#pwtitle").html("");
+            var inputAccount = $("#inputAccount").val();
+            var inputPassword = $("#inputPassword").val();
+            if(inputAccount == ""){
+                $("#nametitle").html('请输入账号');
+            } else if( inputPassword == "") {
+                $("#pwtitle").html('请输入密码');
+            } else {
+                var data = {};
+                data.username = inputAccount;
+                data.password = inputPassword;
+                data.companyType = 100700;
+                data.clientType = "102500";
+                ajax2(("/services/user/login"), data, function (result) {
+                    var resultCode = result.resultCode;
+                    if (resultCode == "1") {
+                        var resultCode = result.resultCode;
+                        var companyId = result.datas[0].companyId;
+                        localStorage.setItem("companyId",companyId);
+                        console.log(localStorage)
+                        data = {};
+                        data.id=companyId;
+                        ajax("/mcbn/services/common/getApprovalStatus", data, function (resulta) {
+                            var resultStatus = resulta.datas[0].status;
+                            if (resultStatus == "100850") {
+                                window.location.href = "loginOperator.html";
+                            } else if (resultStatus == "100851") {
+                                window.location.href = "approving.html";
+                            } else if (resultStatus == "100852") {
+//                              window.location.href = "manageIndex.html";
+                            } else if (resultStatus == "100853") {
+                                window.location.href = "approveFail.html";
+                            }
+//                            window.location.href = "/mcbn/services/dispense/approveSuccess";
+                        })
+                    } else {
+                        if(result.errorMessage.indexOf("Your account has been disabled") > -1){
+                            $("#pwtitle").html('您的账号已冻结');
+                        } else if(result.errorMessage.indexOf("Password retry limit exceed") > -1){
+                            $("#pwtitle").html('密码错误次数过多,请一天后重试');
+                        } else if(result.errorMessage.indexOf("Password not match") > -1 || result.errorMessage.indexOf("The password is not correct") > -1){
+                            $("#pwtitle").html('密码错误');
+                        } else if(result.errorMessage.indexOf("SMS message frequency too high.") > -1){
+                            $("#pwtitle").html('发送太频繁,请稍后再试');
+                        } else if(result.errorMessage.indexOf("Company type don't match") > -1){
+                            $("#nametitle").html('此账号不存在');
+                        } else {
+                            $("#pwtitle").html('账号或密码错误');
+                        }
+                    }
+                })
+
+            }
+        }
+
+        
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div class="Header">
+    <dl class="Login_topdl">
+       <dt style="margin-top:9px;"><img src="static/images/logo.png" style="width:111px;height:43px;"></dt>
+        <dd><a href="https://www.zqtree.com">我是求职者</a> | <a href="">APP</a></dd>
+    </dl>
+</div>
+<!--头部end-->
+<div class="login_bg">
+    <div class="login_box">
+        <h1>中青树企业账号登录</h1>
+        <ul>
+            <li><input type="text" id="inputAccount" class="login_text2" placeholder="手机/用户名"><span id="nametitle" class="redfont"></span></li>
+            <li><input  type="password" id="inputPassword" class="login_pawd2" placeholder="密码"><a href="javascript:void(0);" class="xians_a">显示</a><span id="pwtitle" class="redfont"></span></li>
+            <li><button id="buttonGetPhoneVerifyCode" class="log_zmm"onclick="javascript:window.location.href='forgotPassword.html'">忘记密码</button></li>
+        </ul>
+        <button class="login_btn" id="buttonRegister" onclick="login()">登录</button>
+        <p class="login_p">没有账号？<a href="register.html">快速注册</a></p>
+    </div>
+</div>
+<!--尾部开始-->
+<div class="footer">
+</div>
+    <script>
+        $(".xians_a").click(function () {
+            if ($("#inputPassword").attr("type") == "password") {
+                $("#inputPassword").attr("type","text");
+            }else {
+                $("#inputPassword").attr("type","password");
+            }
+        });
+    </script>
+<!--尾部end-->
+</body>
+</html>

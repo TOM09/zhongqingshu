@@ -1,0 +1,11 @@
+jQuery(function(){
+	//右侧留言
+	jQuery('.liu_touch').mouseover(function(){
+		jQuery(this).addClass('hover');
+		jQuery('.liu_box').show();
+	});
+	jQuery('.liu_touch').mouseleave(function(){
+		jQuery(this).removeClass('hover');
+		jQuery('.liu_box').hide();
+	});
+});

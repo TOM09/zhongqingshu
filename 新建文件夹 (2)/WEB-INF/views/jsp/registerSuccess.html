@@ -1,0 +1,62 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+	<title>注册成功</title>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+<!--头部开始-->
+<div class="Header">
+    <dl class="Login_topdl">
+		<dt><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+		<dd><a href="">我是求职者</a> | <a href="">APP</a></dd>
+	</dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+<div class="main_fff">
+    <dl class="Login_tit">
+		<dt>注册</dt>
+	</dl>
+	<div class="zhc_con">
+		<p><img src="/static/images/imge_zhuce.png" /></p>
+		<h1>注册成功</h1>
+		<div class="wz_p">请您继续完成企业认证信息</div>
+	  <button class="login_btn">企业认证</button>
+	</div>
+</div>
+</div>	
+	
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+<script>
+    $(".login_btn").click(function () {
+        window.location.href = "/mcbn/services/dispense/loginOperator";
+	});
+</script>
+</body>
+</html>

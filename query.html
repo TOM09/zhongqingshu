@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>公益</title>
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+		<meta name="toTop" content="true">
+		<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!--bootstrap框架↓-->
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+		<!--本页面CSS↓-->
+		<link rel="stylesheet" href="/static/css/swiper.css">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="css/style2.css">
+		<!--头部样式-->
+		<link rel="stylesheet" href="css/util.css">
+		<!--bootstrap框架↓-->
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+		<script type="text/javascript" src="/static/js/index.js"></script>
+		<script type="text/javascript" src="/static/js/bootstrap-paginator.js"></script>
+		<script type="text/javascript" src="/static/js/util.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				queryAllPublicGood(1);
+				$("#lusername").html($.cookie('userName') + "<b></b>");
+
+			})
+
+			function queryPublicGoodInfo(id) {
+				window.location.href = "/mcbn/services/publicgood/queryone?id=" + id;
+			}
+
+			function queryAllPublicGood(data) {
+				var pageCount = "";
+				var postdata = {};
+				postdata.curPage = data;
+				postdata.clientType = 102500;
+				ajax("/mcbn/services/publicgood/queryajax",postdata,function(msg) {
+						var trs = "";
+						$("#main").empty();
+						for (var i = 0; i < msg.publicgood.length; i++) {
+//						$.each(msg.publicgood, function(i, msg.publicgood[i]) {
+							trs += '<div class="gongy_list"><span class="gongy_tp"><a href="/mcbn/services/publicgood/queryone?id=' + msg.publicgood[i].id + '"><img src="/images/' + msg.publicgood[i].images + '" /></a></span><div class="gongy_Rnr"><h1><a href="/mcbn/services/publicgood/queryone?id=' + msg.publicgood[i].id + '">' + msg.publicgood[i].title + '</a></h1>' + msg.publicgood[i].summary + '</div></div>'
+						}
+						$("#main").html(trs);
+						buildPage("pagenumber", msg.currentPage, msg.totalPages, "queryAllPublicGood", "");
+					}
+				)
+//				$.ajax({
+//					type: "post",
+//					url: "/mcbn/services/publicgood/queryajax",
+//					data: JSON.stringify(postdata),
+//					contentType: "application/json",
+//					dataType: "json",
+//					success: function(msg) {
+//						var trs = "";
+//						$("#main").empty();
+//						$.each(msg.publicgood, function(i, msg.publicgood[i]) {
+//							trs += '<div class="gongy_list"><span class="gongy_tp"><a href="/mcbn/services/publicgood/queryone?id=' + msg.publicgood[i].id + '"><img src="/images/' + msg.publicgood[i].images + '" /></a></span><div class="gongy_Rnr"><h1><a href="/mcbn/services/publicgood/queryone?id=' + msg.publicgood[i].id + '">' + msg.publicgood[i].title + '</a></h1>' + msg.publicgood[i].summary + '</div></div>'
+//						});
+//						$("#main").html(trs);
+//						buildPage("pagenumber", msg.currentPage, msg.totalPages, "queryAllPublicGood", "");
+//					}
+//				})
+
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--头部以外部引用js-->
+		<div class="w1200">
+			<div class="main_fff">
+				<div id="main">
+				</div>
+				<div class="pageDiv">
+					<ul class="pagination clearfix" id="pagenumber">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--尾部end-->
+	</body>
+	<script type="text/javascript" src="js/header.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+</html>

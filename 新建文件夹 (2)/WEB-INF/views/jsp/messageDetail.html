@@ -1,0 +1,100 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>消息详情</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+</head>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w1200">
+		<div class="main_fff" id="messageDetail">
+		</div>
+	</div>	
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+		
+	<!--弹出层-->
+	<div class="tc_box">
+		<div class="tc_box_con" style="height:280px;">
+	    	<div class="close_tc">
+	    		<img src="images/Group 2.png"/>
+	    	</div>
+	    	<div class="tc_box_contitle" style="margin-bottom: 20px;">
+	        	删除消息
+	        </div>
+			<div class="tc_p">确定要删除消息吗？</div>
+			<button class="tc_btn" id="buttonRegister">确定</button>
+	    </div>
+	</div>
+						
+	<script>
+		var dataId = '${dataId}'
+		$('.open_tca').click(function(){
+			$('.tc_box').show();
+		});
+		$('.close_tc,.tc_btn').click(function(){
+			$('.tc_box').hide();
+		});
+		$(function(){
+			query()
+		})
+		function query(){
+			var viewUrl = "/services/message/view"
+			var data4 = {}
+	    	data4.clientType=102500;
+	    	data4.messageId = Number(dataId)
+	        ajax((viewUrl),data4, function (result) {
+	 	    	if (result.status == "success"){
+	 	    		if (result.status == "success"){
+	 	    			var time = new Date(result.datas[0].createDate)
+				   	 	var pdate= (time.getYear()+1900)+
+				   		"."+(((time.getMonth())+1)<10?
+				   				("0"+(time.getMonth()+1)):
+				   				(time.getMonth()+1))+
+				   		"."+((time.getDate())<10?
+				   				("0"+time.getDate()):
+				   				(time.getDate()))+
+				   		" "+(((time.getHours()))<10?
+				   				("0"+(time.getHours())):
+				   			(time.getHours()))+
+				   		":"+ (((time.getMinutes()))<10?
+				   			("0"+(time.getMinutes())):
+				   			(time.getMinutes()))
+					    trs = "<dl class='Login_tit'><dt>"+result.datas[0].title+"<span>"+pdate+"</span></dt></dl><div class='xiao_con'>"+result.datas[0].content+"</div>"
+				   	 	$("#messageDetail").html(trs);  
+	 	    		}
+	 	    	}
+	 	   	}); 
+		}
+	</script>
+</body>
+</html>

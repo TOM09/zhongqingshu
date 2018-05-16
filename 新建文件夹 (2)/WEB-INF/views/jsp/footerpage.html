@@ -1,0 +1,33 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<span> © 中青数联科技（北京）有限公司 <br><a href="http://www.miitbeian.gov.cn">京ICP备18013705号-1 中青树</a></span>
+
+
+
+<div class="tc_box" id="closeBox">
+    <div class="tc_box_con" style="height:280px;">
+        <div class="close_tc" id="closeX">
+            <img src="/static/images/Group 2.png"/>
+        </div>
+        <div class="tc_box_contitle" style="margin-bottom: 20px;padding-top: 52px;line-height: 28px;">
+            退出登录
+        </div>
+        <div class="tc_p">确定要退出登录吗？</div>
+        <button class="tc_btn" id="buttonRegister" style="margin: 25px auto 30px auto;">完成</button>
+    </div>
+</div>
+<script>
+    $('.logout').click(function(){
+        $('#closeBox').show();
+    });
+    $('#closeX').click(function(){
+        $('#closeBox').hide();
+    });
+    $('#buttonRegister').click(function(){
+        var data = {};
+        data.clientType = "102500";
+        ajax(("${servicefix}/services/user/logout"), data, function (result) {
+            $.cookie('__token__', "", {expires: -1 });
+            window.location.href = "/";
+        });
+    });
+</script>

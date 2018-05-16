@@ -1,0 +1,260 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>政策发布</title>
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/fileinput.min.css" rel="stylesheet" type="text/css" />
+	<link href="/static/js/fileinput.min.js" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/static/manager/css/css.css">
+    <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/manager/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<script src="/static/bootstrap-3.3.7-dist/js/moment-with-locales.min.js"></script>
+	<script src="/static/bootstrap-3.3.7-dist/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/static/manager/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/static/manager/ueditor/ueditor.all.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/static/manager/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script type="text/javascript" src="/static/js/util.js"></script>
+	<style type="text/css">
+		.contentHead {
+			width: 93%;
+			margin-left: 7%;
+			margin-top: 3%;
+		}
+		.content {
+			width: 93%;
+		}
+	</style>
+</head>
+<body style="background-color: white;">
+<div style="border: 10px solid #EFEFEF;">
+	<h1 class="contentHead" style="width: 100%;margin: 0px;">发布政策信息</h1>
+	<div class="content" style="float: none;">
+	<form class="form-horizontal" action="/mcbn/services/admint/policy/createPolicy" role="form"
+	method="POST" 
+	enctype="multipart/form-data" onsubmit="return check()">
+		<div class="person_box">
+		    	<div class="person_list">
+		        	<div class="person_list_name">
+		            	标题：
+		            </div>
+		            <div class="person_list_box">
+		            	<input name=title id="title" class="person_list_inputs"/><lable id="lable_title" style="color:red;"></lable>
+		            </div>
+		        </div>
+		        <div class="person_list">
+		        	<div class="person_list_name" >
+		            	缩略图：
+		            </div>
+		            <div class="gongsilogo_box" id="preview"><img id="slt" src="/static/images/tp.png"/></div>
+		          	<div class="col-xs-12 col-sm-4 col-md-4">
+					    <div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle">
+                            <input name="imageUrl" id="imageUrl" type="text" style="display: none"/>
+					        <button class="touxiang_textabtn" type="button" style="height:42px;">上传</button>
+					        <input type="file" accept="image/png,image/gif,image/jpeg" id="jobData" name="file" onchange="loadFile()" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">
+					        <span id="filename" style="vertical-align: middle;line-height: 22px;color: #9B9B9B;">建议图片最佳尺寸为750*560px，要求小于500KB，格式为jpg/png</span>
+					    </div>
+					</div><lable id="lable_file" style="color:red;"></lable>
+				</div>
+	
+		        <div class="person_list">
+		        	<div class="person_list_name">
+		            	正文：
+		            </div>
+                    <input name="text" type="hidden" id="text"/>
+		            <div class="person_list_box" style="border: 1px solid #ccc;">
+                        <div id="editor" type="text/plain" style="width:600px;height:500px;"></div>
+		            </div>
+		        </div>       
+		        <div class="person_list">
+		        	<div class="person_list_name">
+		            	&nbsp;
+		            </div>
+		            <div class="person_list_box" >
+		                <button type="button" onclick="check()" class="person_list_btn">发布</button>
+                        <%--<button type="button" onclick="saveDraft()" class="person_list_btn" style="width: 130px;background: #4294F7;margin-left: 12px;">存草稿</button>--%>
+		            </div>
+		        </div>
+		    </div>
+	    </form>
+	</div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 300px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body" id="prompt">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script type="text/javascript">
+        var ue = UE.getEditor('editor', {
+            toolbars: [[
+                'fullscreen', 'undo', 'redo', '|',
+                'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+                'directionalityltr', 'directionalityrtl', 'indent', '|',
+                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+                'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+                'simpleupload',  'emotion', 'map', 'insertframe', 'insertcode',  'pagebreak', 'template', '|',
+                'horizontal', 'date', 'time', 'spechars',  '|',
+                'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+                'print', 'preview', 'searchreplace', 'help'
+            ]],
+            wordCount:false,
+            elementPathEnabled:false
+
+        });
+        function loadFile(file){
+            var flag = false;
+            var arr = ["jpg","png","gif"];
+            var filename = $('#jobData')[0].files[0].name;
+            var index = filename.lastIndexOf(".");
+            var ext = filename.substr(index+1);
+            for(var i=0;i<arr.length;i++)
+            {
+                if(ext == arr[i])
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag)
+            {
+                $('#prompt').html('请上传格式为jpg/png/gif的图片');
+                $('#myModal').modal('show');
+                return;
+            }
+
+            var fileSize = 0;
+            fileSize = $('#jobData')[0].files[0].size;
+            fileSize=Math.round(fileSize/1024*100)/100; //单位为KB
+            if(fileSize>500){
+                $('#prompt').html('照片最大尺寸为500KB，请重新上传');
+                $('#myModal').modal('show');
+                return false;
+            }
+            var formData = new FormData();
+            formData.append("file", $('#jobData')[0].files[0]);
+            $.ajax({
+                type: "POST",
+                url: "${servicefix}/services/upload/cms/image/file",
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#slt").attr("src","${imgprefix}"+data.datas[0]);
+                    $("#imageUrl").val(data.datas[0]);
+                },
+                error: function(data) {
+                }
+            });
+        }
+		
+		$(function () {
+            if(isSubAccount == 1) {
+                $('.link').removeClass('accordionActive').eq(2).addClass('accordionActive');
+            } else {
+                $('.link').removeClass('accordionActive').eq(7).addClass('accordionActive');
+            }
+		    $('#datetimepicker1').datetimepicker({  
+		        format: 'YYYY.MM.DD',
+		        locale: moment.locale('zh-cn')  
+		    });  
+		    $('#datetimepicker2').datetimepicker({  
+		        format: 'YYYY.MM.DD hh:mm',
+		        locale: moment.locale('zh-cn')  
+		    });  
+		}); 
+		
+		function check(){
+            $("#text").val(UE.getEditor('editor').getContent());
+			var title = $("#title").val();
+			var imageUrl = $("#imageUrl").val();
+			var text = $("#text").val();
+			if (title == ""){
+                $('#prompt').html('请输入标题');
+                $('#myModal').modal('show');
+                return;
+			}
+			if (imageUrl == ""){
+                $('#prompt').html('请输入缩略图');
+                $('#myModal').modal('show');
+                return;
+			}
+			if (text == ""){
+                $('#prompt').html('请输入正文');
+                $('#myModal').modal('show');
+                return;
+			}
+            companyuel = "${managerTerminalIndexUrl}";
+            var data={};
+            data.title=$("#title").val();
+            data.imageUrl=$("#imageUrl").val();
+            data.text=replaceRealImgPath($("#text").val());
+            ajax(("/mcbn/services/admint/policy/createPolicy"), data, function (result) {
+                var resultCode = result.resultCode;
+                if (resultCode=="1") {
+                    window.location.href = "/mcbn/services/admint/policy/policyManage";
+                } else {
+                    $('#prompt').html('提交失败');
+                    $('#myModal').modal('show');
+                }
+            });
+		}
+    //存草稿
+        function saveDraft(){
+            $("#text").val(UE.getEditor('editor').getContent());
+            var title = $("#title").val();
+            var imageUrl = $("#imageUrl").val();
+            var trainTime = $("#trainTime").val();
+            var trainLocation = $("#trainLocation").val();
+            var text = $("#text").val();
+            if(title == ""&&imageUrl == ""&&trainTime == ""&&trainLocation == ""&&text == ""){
+                $('#prompt').html('请输入内容');
+                $('#myModal').modal('show');
+                return;
+            }
+            companyuel = "${managerTerminalIndexUrl}";
+            var data={};
+            data.title=title;
+            data.imageUrl=imageUrl;
+            data.text=replaceRealImgPath($("#text").val());
+            data.trainTime=trainTime;
+            data.trainLocation=trainLocation;
+    <%--ajax(("/mcbn/services/admint/train/createTrain"), data, function (result) {--%>
+    <%--var resultCode = result.resultCode;--%>
+    <%--if (resultCode=="1") {--%>
+    <%--window.location.href = "/mcbn/services/admint/train/trainManage";--%>
+    <%--} else {--%>
+    <%--$('#prompt').html('提交失败');--%>
+    <%--$('#myModal').modal('show');--%>
+    <%--}--%>
+    <%--});--%>
+        }
+	</script>
+</div>
+</body>
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</html>

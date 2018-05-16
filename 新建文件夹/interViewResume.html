@@ -1,0 +1,228 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>视频面试</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w1200">
+	<div class="main_fff">
+		<dl class="Login_tit">
+			<dt>视频面试求职者列表</dt>
+		</dl>
+				<div class="jd_box_table">
+	            	<ul class="jd_qh" style="margin-bottom:20px;">
+	                	<li id='l1' class='active'><a  style='cursor:pointer' onclick='change_1()'>待面试</a></li>
+	                    <li id='l2'><a style='cursor:pointer' onclick='change_2()'>已面试</a></li>
+	                </ul>
+	                <div id="table_1">
+	                	<div id="div_1"></div>
+						
+					<div class="pageDiv">
+						<ul class="pagination clearfix" id="pagenumber_1">
+						</ul>
+					</div>	
+						   
+	                </div>
+	                <div id="table_2">
+						<div id="accordion" class="accordion">
+							
+					    </div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_2">
+							</ul>
+						</div>	
+	          		</div>
+		</div>
+	</div>
+	</div>
+	
+	<div class="tc_box">
+	<div class="tc_box_con" style="height:280px;">
+    	<div class="close_tc">
+    		<img src="/static/images/Group 2.png"/>
+    	</div>
+    	<div class="tc_box_contitle" style="margin-bottom: 20px;">
+        	面试已结束
+        </div>
+		<button class="tc_btn" id="buttonRegister1">确定</button>
+    </div>
+	</div>
+
+	  <script>
+	  var companyId = '${companyId}'
+	  var positionId = '${positionId}'
+	  var conditions = "";
+          $(function(){
+			queryNotResumeList(1,conditions)
+		})
+		function queryNotResumeList(data,conditions){
+              var  idata={};
+            idata.companyId=companyId;
+            idata.currentPage=data;
+            idata.position=positionId;
+			$.ajax({
+				type:"post",
+				url:"${pageContext.request.contextPath }/mcbn/services/resume/queryNotResumeList",
+                data:JSON.stringify(idata),
+                dataType:"json",
+                contentType: "application/json",
+				success:function(msg){
+					pre = msg.page.pre;
+					next =	msg.page.next;
+					pageCount = msg.page.pageCount;
+					rows = msg.page.rows;
+					var trs="";
+					$.each(msg.page.rows,function(i,resume){
+					
+							trs += "<dl class='jianl_tddl' style='border:1px solid #EEEEEE;margin-bottom:25px;'><dd><div class='jianl_div'>"
+							if (resume.video != null && resume.auditStatus == 102651){
+								trs +=	"<div style='float:left'><image  style='width:90px;height:90px' src='"+resume.videoImage+"' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+							}else{
+								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/"+resume.headImage+"' controls='controls' id='media' poster='images/tp2.png' ></image></div>" 
+							}
+							trs += "<h1><a href='#'>"+resume.btruName+"</a><b>"+(resume.wiName==null?'':resume.wiName+"·")+(resume.btujiwptName==null?'':resume.btujiwptName)+"</b><span>"+(resume.salary==null?'':resume.salary)+"</span></h1>"+
+									"<p>"+resume.sex+" | "+resume.age+" | "+resume.address+"| "+(resume.degreeLevel==null?'':resume.degreeLevel +" | ")+resume.weName+"</p></div>"+
+									"<button class='person_fabuzw' onclick=\"interView("+resume.bturId+","+resume.pId+")\" style='display:none'>视频面试</button></dd></dl>"
+									
+					});
+					$("#div_1").html(trs);
+					if (msg.flg == 1){
+						$(".person_fabuzw").css('display','block');
+					}
+				    buildPage2("pagenumber_1",msg.page.currentPage,msg.page.pageCount,"queryNotResumeList","")
+				}
+			})
+		} 
+	 	function queryAlreadyResumeList(data,conditions){
+            var  qarData={};
+            qarData.companyId=companyId;
+            qarData.currentPage=data;
+            qarData.position=positionId;
+	 		$("#accordion").html('')
+			$.ajax({
+				type:"post",
+				url:"${pageContext.request.contextPath }/mcbn/services/resume/queryAlreadyResumeList",
+                data:JSON.stringify(qarData),
+                dataType:"json",
+                contentType: "application/json",
+				success:function(msg){
+					pre =  msg.pre;
+					next =	msg.next;
+					pageCount = msg.pageCount;
+					rows = msg.rows;
+					
+					$.each(msg.rows,function(i,resume){
+							var trs="";
+							trs += "<dl class='jianl_tddl'><dd><div class='jianl_div'>"
+							if (resume.video != null && resume.auditStatus == 102651){
+								trs +=	"<div style='float:left'><image  style='width:90px;height:90px' src='"+resume.videoImage+"' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+							}else{
+								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/"+resume.headImage+"' controls='controls' id='media' poster='images/tp2.png' ></image></div>" 
+							}
+							trs += "<h1><a href='#'>"+resume.btruName+"</a><b>"+(resume.wiName==null?'':resume.wiName+"·")+(resume.btujiwptName==null?'':resume.btujiwptName)+"</b><span>"+(resume.salary==null?'':resume.salary)+"</span></h1>"+
+									"<p>"+resume.sex+" | "+resume.age+" | "+resume.address+"| "+(resume.degreeLevel==null?'':resume.degreeLevel+" | ")+resume.weName+"</p></div>"+
+									"<button class='person_fabuzw person_fabuzw2' onclick=\"lookVideo("+resume.bturId+","+resume.pId+")\" style='display:none'>查看录像</button>"+
+									"<div class='clear'></div>"+
+									"<strong class='ms_strong link' onclick='see()' style='"+
+    								"margin: 0px 11px 0px 0px;'>面试记录</strong>"+
+									"<div class='ms_con submenu' id='interviewComment' >"+(resume.interviewComment==null?'':resume.interviewComment)+"</div>"+
+									"</dd></dl>"
+							$("#accordion").append(trs);
+							if (resume.ifVideo == 1){
+								   $(".person_fabuzw").css('display','block');
+							}
+							
+						});
+					
+					
+					buildPage2("pagenumber_2",msg.currentPage,msg.pageCount,"queryAlreadyResumeList","")
+				}
+			})
+		} 
+		function change_1(){
+			 $("#table_2").css('display','none');
+			 $("#table_1").css('display','block'); 
+			 $("#l1").addClass('active');
+			 $("#l2").removeClass('active');
+			 queryNotResumeList(1,conditions)
+		 }
+		 function change_2(){
+			 $("#table_1").css('display','none');
+			 $("#table_2").css('display','block'); 
+			 $("#l2").addClass('active');
+			 $("#l1").removeClass('active');
+			 queryAlreadyResumeList(1,conditions)
+		 }
+		 var flag = true;
+		 function see(){
+			 if (flag){
+			 	$("#interviewComment").css('display','block') ; 
+			 	flag = false;
+			 }else{
+				$("#interviewComment").css('display','none');
+				flag = true;
+			 }
+		 }
+		 function interView(resumeId,positionId){
+		     var data={};
+		     data.position=positionId;
+						$.ajax({
+						type:"post",
+						url:"${pageContext.request.contextPath }/mcbn/services/resume/queryTime",
+                            data:JSON.stringify(data),
+                            dataType:"json",
+                            contentType: "application/json",
+						success:function(msg){
+							if (msg == 1){
+								location.href="${pageContext.request.contextPath}/mcbn/services/resume/videoWindow?resumeId="+resumeId+"&positionId="+positionId;
+							}else{
+								$('.open_tca').click(function(){
+									$('.tc_box').show();
+								});
+							}
+						}
+					});
+		}
+      function lookVideo(resumeId,positionId){
+          location.href="${pageContext.request.contextPath}/mcbn/services/resume/videoWindowShow?resumeId="+resumeId+"&positionId="+positionId;
+      }
+		$('.close_tc,.tc_btn').click(function(){
+			$('.tc_box').hide();
+		});
+	   </script>
+
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+</body>
+</html>

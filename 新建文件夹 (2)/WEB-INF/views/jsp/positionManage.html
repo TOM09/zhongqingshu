@@ -1,0 +1,291 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>职位管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+	<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w1200">
+	<div class="main_fff">
+		<dl class="Login_tit">
+			<dt>职位管理</dt>
+		</dl>
+	<div class="jd_box_table" style="position:relative">
+	            	<ul class="jd_qh">
+	                	<li id='l1' class='active'><a style='cursor:pointer' onclick='change_1()'>在线职位</a></li>
+	                    <li id='l2'><a style='cursor:pointer' onclick='change_2()'>下线职位</a></li>
+	                </ul>
+					<button class="fabuzw_btn" style="top: 9px;position:absolute;">发布职位</button>
+	                <div id="table_1" style="display:block;" >
+						<div id="div_1"></div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_1">
+							</ul>
+						</div>	
+	                </div>
+	               <div id="table_2" >
+						<div id="div_2"></div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_2">
+							</ul>
+						</div>
+	                </div> 
+	</div>	
+	</div>
+	</div>
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+	<script type="text/javascript">
+	var companyId = "${companyId}"
+	var pre
+	var next 
+	var pageCount
+	var rows
+	$(function(){
+		queryAllPositionOnline(1);
+		if ('${show}' == 'rePublish'){
+			queryAllPositionOffline(1);
+			change_2()
+		}
+	})  
+	function queryPositionD(positionId) {
+			location.href="${pageContext.request.contextPath}/mcbn/services/position/queryPositionD?positionId="+positionId
+	 }
+	 function queryAllPositionOnline(data){
+	    var  queryData={};
+         queryData.companyId=${companyId};
+         queryData.currentPage=data;
+         queryData.status=102750;
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/position/queryAllPosition",
+            data:JSON.stringify(queryData),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+				pre =   msg.pre;
+				next =	msg.next;
+				pageCount = msg.pageCount;
+				rows = msg.rows;
+				var trs="";
+				var workCity;
+				$.each(msg.rows,function(i,position){
+						workCity = position.workCityName.split('_');
+						trs += "<dl class='fabuzw_dl'><dd>"+
+								"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo("+position.id+")\">" +position.positionName+"</a>"+
+							(position.isVideo==true?"<b>"+"视频"+"</b>":"&nbsp;&nbsp;")+
+								"<span>"+position.ssName+"</span></h1>"+
+								"<p>"+position.weName+"&nbsp;"+position.degreeLevelName+"&nbsp;"+position.jobCategoryName+"&nbsp;"+workCity[1]+"</p></dd>"+
+								"<dt><button class='person_fabuzw' onclick=\"queryPositionD("+position.id+")\">查看职位</button><button class='person_fabuzw' onclick=\"updateStatus("+position.id+")\">下线职位</button></dt></dl>" 
+				});
+				$("#div_1").html(trs);
+//				createPage("#pagenumber_1","on")
+//				$("#pagenumber_2").html("");
+                buildPage2("pagenumber_1",msg.currentPage, pageCount,"queryAllPositionOnline","");
+			}
+		})
+	} 
+	 function queryAllPositionOffline(data){
+        		 var  queryData={};
+        		 queryData.companyId=${companyId};
+        		 queryData.currentPage=data;
+        		 queryData.status=102751;
+				$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath }/mcbn/services/position/queryAllPosition",
+                    data:JSON.stringify(queryData),
+                    dataType:"json",
+                    contentType: "application/json",
+					success:function(msg){
+						pre =   msg.pre;
+						next =	msg.next;
+						pageCount = msg.pageCount;
+						rows = msg.rows;
+						var trs="";
+						var workCity;
+						$.each(msg.rows,function(i,position){
+								workCity = position.workCityName.split('_');
+								trs += "<dl class='fabuzw_dl'><dd>"+
+										"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo("+position.id+")\">" +position.positionName+"</a>"+
+                                    	(position.isVideo==true?"<b>"+"视频"+"</b>":"&nbsp;&nbsp;")+
+										"<span>"+position.ssName+"</span></h1>"+
+										"<p>"+position.weName+"&nbsp;"+position.degreeLevelName+"&nbsp;"+position.jobCategoryName+"&nbsp;"+workCity[1]+"</p></dd>"+
+										"<dt><button class='person_fabuzw' onclick=\"queryPositionD("+position.id+")\">查看职位</button><button class='person_fabuzw' onclick=\"rePublish("+position.id+")\">重新发布</button></dt></dl>" 
+						});
+						$("#div_2").html(trs);
+//						createPage("#pagenumber_2","off")
+//                        $("#pagenumber_1").html("");
+						buildPage2("pagenumber_2",msg.currentPage, pageCount,"queryAllPositionOffline","");
+				   }
+			    })
+		} 
+
+	 function createPage(data,flag){
+		 if (flag == "on"){
+			if (rows.length!=0){
+				var p = "<li><a style='cursor:pointer' id='pren'>上一页</a></li>";
+				for (var i=1;i<=pageCount;i++){
+					if (i>3){
+						break;
+					}
+					if (i == 3 && pageCount>=5){
+						p +="<li><a style='cursor:pointer' id='n"+i+"'>"+i+"</a>...</li>"
+					}else{
+						p += "<li><a style='cursor:pointer' id='n"+i+"'>"+i+"</a></li>"
+					}
+				}
+				if (pageCount>3){
+					p += "<li><a id='endn'>"+pageCount+"</a></li>"
+				}
+				p += "<li><a style='cursor:pointer' id='nextn'>下一页</a></li>"
+				$(data).html(p);
+				//注册点击分页事件
+				
+			    $("#n1").on("click",function(){
+				     queryAllPositionOnline(companyId,1);
+			    })
+				$("#n2").on("click",function(){
+			    	
+			    		queryAllPositionOnline(companyId,2);
+				});
+			    $("#n3").on("click",function(){
+			    
+			    		queryAllPositionOnline(companyId,3);
+  	
+				});
+				$("#pren").on("click",function(){
+					
+						queryAllPositionOnline(companyId,pre);
+
+				});
+				$("#nextn").on("click",function(){
+				
+						queryAllPositionOnline(companyId,next);
+
+				});
+				$("#endn").on("click",function(){
+					
+						queryAllPositionOnline(companyId,pageCount);
+		
+				});
+			}
+		 }else{
+			 if (rows.length!=0){
+					var p = "<li><a style='cursor:pointer' id='pref'>上一页</a></li>";
+					for (var i=1;i<=pageCount;i++){
+						if (i>3){
+							break;
+						}
+						if (i == 3 && pageCount>=5){
+							p +="<li><a style='cursor:pointer' id='f"+i+"'>"+i+"</a>...</li>"
+						}else{
+							p += "<li><a style='cursor:pointer' id='f"+i+"'>"+i+"</a></li>"
+						}
+					}
+					if (pageCount>3){
+						p += "<li><a id='endf'>"+pageCount+"</a></li>"
+					}
+					p += "<li><a style='cursor:pointer' id='nextf'>下一页</a></li>"
+					$(data).html(p);
+					//注册点击分页事件
+					
+				    $("#f1").on("click",function(){
+				    	queryAllPositionOffline(companyId,1);
+				    })
+					$("#f2").on("click",function(){
+				    	
+						queryAllPositionOffline(companyId,2);
+					});
+				    $("#f3").on("click",function(){
+				    
+				    	queryAllPositionOffline(companyId,3);
+				    	
+					});
+					$("#pref").on("click",function(){
+						
+						queryAllPositionOffline(companyId,pre);
+	
+					});
+					$("#nextf").on("click",function(){
+					
+						queryAllPositionOffline(companyId,next);
+
+					});
+					$("#endf").on("click",function(){
+						
+						queryAllPositionOffline(companyId,pageCount);
+			
+					});
+				}
+		 }
+	 }
+	 $(".fabuzw_btn").click(function () {
+		location.href="${pageContext.request.contextPath }/mcbn/services/position/cPosition?companyId="+companyId
+	 })
+	 function change_1(){
+		 $("#table_2").css('display','none');
+		 $("#table_1").css('display','block'); 
+		 $("#l1").addClass('active');
+		 $("#l2").removeClass('active');
+		 queryAllPositionOnline(1)
+	 }
+	 function change_2(){
+		 $("#table_1").css('display','none');
+		 $("#table_2").css('display','block'); 
+		 $("#l2").addClass('active');
+		 $("#l1").removeClass('active');
+		 queryAllPositionOffline(1)
+	 }
+	 function updateStatus(data){
+	     var  udata={};
+         udata.data=data;
+		 $.ajax({
+				type:"post",
+				url:"${pageContext.request.contextPath }/mcbn/services/position/updateStatus",
+                data:JSON.stringify(udata),
+                dataType:"json",
+                contentType: "application/json",
+				success:function(msg){
+					if (msg == 1){
+						queryAllPositionOnline(1)
+					}
+			   }
+		    })
+	 }
+	 function rePublish(data){
+		location.href="${pageContext.request.contextPath }/mcbn/services/position/rePublish?data="+data
+	 }
+	</script>
+
+</body>
+</html>

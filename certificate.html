@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>认证信息</title>
+</head>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/verification.js"></script>
+<link rel="stylesheet" type="text/css" href="js/reset-min.css">
+<link rel="stylesheet" type="text/css" href="js/util.css">
+<link rel="stylesheet" href="css/util.css">
+<link rel="stylesheet" href="css/style.css">
+<body>
+<div class="w1200">
+    <div class="main_fff mar_box">
+        <dl class="Login_tit">
+            <dt>认证信息</dt>
+        </dl>
+        <div class="person_box" style="text-align:center;">
+            <div class="zhizhao">
+                <div class="zhizhao_t">营业执照：</div>
+                <input name="images" id="images" type="text" style="display: none"/>
+                <div class="licenseBorder">
+                    <img class="licenseImg" src="img/image_zhizhao2.png">
+                    <input type="file" name="file" class="licenseInput">
+                </div>
+                <div class="zhizhao_t" style="margin-left:100px;margin-right:10px;">样例：</div>
+                <div>
+                    <img src="img/image_zhizhao1.png">
+                </div>
+            </div>
+
+            <div class="zhizhao">
+                <p>1.图片要求必须为彩色、清晰的数码相机拍摄件或扫描件，涂改后无效（或黑白影印件加盖公司红色公章）。</p>
+                <p>2.图片上的公司名称必须与您公司信息中填写的公司名称完全一致。</p>
+                <p>3.图片必须清晰、完整、方向正确，不能带有无关的水印、标记或者其他网站的logo。</p>
+                <p>4.图片小于500KB，格式为jpg/png/gif。</p>
+            </div>
+            <button class="person_list_btn" id="buttonNext">下一步</button>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="js/loginHeader.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+<script>
+    $(function () {
+        imgUpload('.zhizhao',".licenseInput",'/services/upload/user/image/file',function (imgUrl) {
+            localStorage.setItem('licenseImg',imgUrl.datas[0]);
+            $('#images').val(imgUrl.datas[0]);
+            $('.licenseImg').attr('src','/images/'+imgUrl.datas[0]);
+        });
+        $('#buttonNext').click(function () {
+            if ($("#jobData").val() == "") {
+                $('#prompt').html('请输入缩略图');
+                $('#myModal').modal('show');
+            } else {
+                var data = {};
+                data.clientType = "102500";
+                data.id = +localStorage.getItem("companyId");
+                ajax("/services/company/view/own", data, function (resulta) {
+                    var resultStatus = resulta.datas[0].status;
+                    if (resultStatus == "100851") {
+                        toast('认证正在审核中，请耐心等待')
+                    } else {
+                        window.location.href = "certificationInfo.html?data=" + localStorage.getItem('licenseImg');
+                    }
+                });
+            }
+        })
+    })
+</script>
+</html>

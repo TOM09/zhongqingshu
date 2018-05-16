@@ -1,0 +1,220 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+    <title>公益</title>
+    <script type="text/javascript" src="/static/manager/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <link href="/static/manager/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/static/manager/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/static/manager/css/css.css">
+    <script type="text/javascript" src="/static/manager/js/bootstrap-paginator.js"></script>
+    <script type="text/javascript" src="/static/js/util.js"></script>
+    <style type="text/css">
+        .contentHead {
+            width: 93%;
+            margin-left: 7%;
+            margin-top: 3%;
+        }
+        .content {
+            width: 93%;
+            float: right;
+        }
+    </style>
+    <script>
+        $(function(){
+            $('.link').removeClass('accordionActive').eq(4).addClass('accordionActive');
+            query(1,"");
+        });
+
+        var conditions=""
+        var pageData=1;
+        function changeshow(id){
+            $('.box-title').text('是否确定下线？')
+            $('#linecloseBox').show();
+            $('.onlineBtn').unbind('click').click(function(){
+                var data={};
+                data.id=id;
+                $.ajax({
+                    type:"post",
+                    url:"/mcbn/services/admint/publicgood/updateStatus",
+                    data:JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType:"json",
+                    success:function(msg){
+                        $('#linecloseBox').hide();
+                       query(pageData,conditions)
+                    }
+                })
+            });
+        }
+        function onlineshow(id){
+            $('.box-title').text('是否确定上线？')
+            $('#linecloseBox').show();
+            $('.onlineBtn').unbind('click').click(function(){
+                var data={};
+                data.id=id;
+                $.ajax({
+                    type:"post",
+                    url:"/mcbn/services/admint/publicgood/changToOnline",
+                    data:JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType:"json",
+                    success:function(msg){
+                        $('#linecloseBox').hide();
+                        query(pageData,conditions)
+                    }
+                })
+            });
+        }
+
+        function showpginfo(id){
+            var flag = 1;
+            window.location.href = "/mcbn/services/admint/publicgood/publicGoodDetailManage?id="+id+"&flag="+flag;
+        }
+        function editpginfo(id){
+            var flag = 1;
+            window.location.href = "/mcbn/services/admint/publicgood/queryPublicInfoBeforeUpdate?id="+id+"&flag="+flag;
+        }
+        function query(page, title) {
+            var data={};
+            data.page=page;
+            data.pageSize = 10;
+            data.title= title+"";
+            pageData = page;
+            conditions = title;
+            $.ajax({
+                type:"post",
+                url:"/mcbn/services/admint/publicgood/querylikeajax",
+                data:JSON.stringify(data),
+                contentType: "application/json",
+                dataType:"json",
+                success:function(result){
+                    $(".datatr").remove();
+                    for (var i=0;i<result.datas.length;i++){
+                        var data = result.datas[i];
+                        var buttonstr;
+                        if(data.online == 0) {
+                            buttonstr = '<button type="button" class="forbid2" onclick="onlineshow(' + data.id + ')">上线</button>';
+                        }else{
+                            buttonstr = '<button type="button" class="forbid" onclick="changeshow(' + data.id + ')">下线</button>';
+                        }
+                        $("#datatable").append(
+                            "<tr class='datatr'>"
+                            +"<td style='line-height:30px'>"+data.title+"</td>"
+                            +"<td>"+data.end_time+"</td>"
+                            +"<td>"+(data.online=="1"?"已上线":"已下线")+"</td>"
+                            +"<td>"
+                            +"<button type='button' onclick='showpginfo(" + data.id + ")'>查看详情</button>"
+                            +"<button type='button' onclick='editpginfo(" + data.id + ")'>编辑</button>"
+                            +buttonstr
+                            +"</td></tr>"
+                        );
+                    }
+                    if(result.datas.length == 0) {
+                        $("#datatable").append(
+                            "<tr  class='datatr'>"
+                            +"<td colspan='4'>无此搜索内容</td>"
+                            +"</tr>"
+                        );
+                    }
+                    buildPage("pagenumber",result.pageinfo.currentPage,result.pageinfo.totalPages,"query",conditions);
+                }
+            })
+        }
+
+
+    </script>
+</head>
+<div class="tc_box" id="linecloseBox">
+    <div class="tc_box_con" style="height:280px;">
+        <div class="close_tc" id="closeL">
+            <img src="/static/images/Group 2.png"/>
+        </div>
+        <div class="box-title"></div>
+        <button class="cancleBtn">取消</button><button class="onlineBtn" >确定</button>
+    </div>
+</div>
+<body style="background-color: white;">
+<div style="border: 10px solid #EFEFEF;">
+    <div class="financeHead">
+        <ul style="padding-left:0;">
+            <li style="text-align:left;">公益</li>
+            <%--<li>草稿箱</li>--%>
+        </ul>
+        <%--<span class="underLine"></span>--%>
+    </div>
+<div class="contentBorder">
+<div class="content"  style="float: none;">
+    <div class="search">
+        <button type="button" class="createBtn">发布公益信息</button>
+     	 <input id="pgkey" type="text" placeholder="搜索关键词">
+        <button class="searchBtn" type="button"></button>
+    </div>
+    <table border="0" cellpadding="0" cellspacing="0" class="permissionTable" id="datatable">
+        <tr>
+            <th width="*">标题</th>
+            <th width="150px">结束时间</th>
+            <th width="100px">状态</th>
+            <th width="430px">操作</th>
+        </tr>
+    </table>
+    <ul class="pagination" id="pagenumber">
+    </ul>
+</div>
+    <div class="content" style="float: none;display:none;">
+        <div class="search">
+            <input id="draftSearch" type="text" placeholder="搜索关键词">
+            <button class="searchBtn" type="button"></button>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+            <thead>
+                <tr>
+                    <th width="170px">标题</th>
+                    <th width="180px">上次保存时间</th>
+                    <th width="*">操作</th>
+                </tr>
+                <tr>
+                    <td>捐助留守儿童</td>
+                    <td>2018.02.12 09:20:12</td>
+                    <td>
+                        <button type="button" onclick="editDetail()">编辑</button>
+                        <button type="button" onclick="deleteDraft()">删除</button>
+                    </td>
+                </tr>
+            </thead>
+            <tbody id="draftData"></tbody>
+        </table>
+        <ul class="pagination" id="draftNumber">
+        </ul>
+    </div>
+</div>
+<script>
+    $(".createBtn").click(function () {
+        window.location.href = "/mcbn/services/admint/publicgood/create";
+    });
+    $(".searchBtn").click(function(){
+        var conditions = $("#pgkey").val();
+        query(1,conditions);
+    });
+    $('#closeL,.cancleBtn').click(function(){
+        $('#linecloseBox').hide();
+    });
+    $('.financeHead li').click(function () {
+        var _left = 20;
+        var num = $(this).index();
+        $(this).addClass('active').siblings().removeClass('active');
+        $('.content').eq(num).fadeIn().siblings().hide();
+        _left += num * $(this).width();
+        $(".underLine").animate({left: _left + "px"});
+    })
+</script>
+</div>
+</body>
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</html>

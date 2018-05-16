@@ -1,0 +1,62 @@
+<%@ page language="java" import="com.gqt.cms.model.*" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公益详情</title>
+    <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/static/manager/css/css.css">
+    <script type="text/javascript" src="/static/js/util.js"></script>
+    <style type="text/css">
+        body{
+            font-family: "Microsoft YaHei";
+            font-size: 16px;
+            line-height: 26px;
+        }
+        .contentHead {
+            width: 93%;
+            margin-left: 7%;
+            margin-top: 3%;
+        }
+        .content {
+            width: 93%;
+            float: right;
+        }
+
+    </style>
+    <script>
+        $(function(){
+            $('.link').removeClass('accordionActive').eq(4).addClass('accordionActive');
+        })
+    </script>
+</head>
+<body  style="background-color: white;">
+<div style="border: 10px solid #EFEFEF;">
+<h1 class="contentHead"  style="width: 100%;margin: 0px;">公益详情</h1>
+<div class="content" style="float: none;">
+    <dl class="gongy_xxtop" style="width: 100%;margin: 0px;" >
+        <dt style="width:15%"><img src="/images/${publicGood.images}" style="width:100%;height:auto"/></dt>
+        <dd style="width: 80%;">
+            <h1 style="margin-top: 20px;">${publicGood.title}</h1>
+            <span style="margin-top: 17px;">结束时间：${time}<i>${publicGood.browseCount}人浏览</i></span>
+        </dd>
+    </dl>
+    <div class="gongy_xxbox">
+        ${publicGood.content}
+    </div>
+
+    <ul class="pagination" id="pagenumber">
+    </ul>
+
+</div>
+</div>
+</body>
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</html>

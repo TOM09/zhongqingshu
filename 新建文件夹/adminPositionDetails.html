@@ -1,0 +1,162 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>职位详情</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=8e2c24150d9743810be9ae4fa2461da5"></script>
+<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+<script type="text/javascript" src="/static/js/util.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<!-- <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+</head>
+<body style="background-color: white;">
+	<div class="w1200" style="border: 10px solid #EFEFEF;width: auto;">
+	<div class="main_fff" style="margin: 0;">
+				<dl class="zhiw_topdl">
+					<dd>
+						<h1><a href="javascript:void(0);" style="font-size:30px;line-height:42px">${positionDetailsResult.positionName}</a>&nbsp;&nbsp;<span>${positionDetailsResult.ssName}</span></h1>
+						<p style="margn-top:12px;font-size:20px;line-height:28px;"  class="baseInfo"></p>
+						<h2 id="le" style="font-size:16px;line-height:22px;margin-top:15px;">
+							
+						</h2>
+						<strong>${positionDetailsResult.timeDifference}天前发布</strong>
+					</dd>
+					<dt><button id='offLine' class="person_fabuzw" onclick="offLine(${positionId})">下线职位</button></dt>
+				</dl>
+	<div class="zhiw_tit">岗位职责：</div>
+	<ul class="zhiw_ul">
+		${positionDetailsResult.responsibility}
+	</ul>
+	<div class="zhiw_tit">职位描述：</div>
+	<ul class="zhiw_ul">
+		${positionDetailsResult.description}
+	</ul>
+	<div class="zhiw_tit" id="videoTime" style='display:none'>视频面试时间：</div>
+	<ul class="zhiw_ul" style='display:none' id='vt'>
+		<li>${startTime}-${endTime}</li>
+	</ul>
+	<div class="zhiw_tit">工作地址：</div>
+	<ul class="zhiw_ul">
+		<li>${positionDetailsResult.detailedAddress}<a class="bluefont" style='cursor:pointer' id="showMap">查看地图</a></li>
+	</ul>
+		
+	</div>
+	</div>
+	<!--尾部开始-->
+	<div class="footer">
+	</div>
+	<!--尾部end-->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >&times;</button>
+	                <h4 class="modal-title" id="myModalLabel">工作地点</h4>
+	            </div>
+	            <div class="modal-body" id="container" style="position: relative;height: 642px;width: 80%;margin-top:  50px;"></div>
+	            <div class="modal-footer" >
+	                <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<script>
+		var lnglatXY
+		var markers = []
+        var b
+		$(function () {
+            $(".linkChild").eq(4).addClass("accordionActive");
+            $(".submenu").eq(2).css({
+                "display": "block"
+            });
+            if(isSubAccount == 1){
+                $(".linkChild").eq(0).addClass("accordionActive");
+                $(".submenu").eq(0).css({
+                    "display": "block"
+                });
+            }
+			b = ${status}
+			if (b==102751){
+				$("#offLine").text("重新发布");
+			}
+			if ($("#view").text()=="视频"){ 
+				$("#videoTime").css('display','block');
+				$("#vt").css('display','block');
+			}
+		
+			var labelsListJson  ='${positionDetailsResult.labelNames}'
+			var labelsArray =labelsListJson.split(",");
+			var workCityJson = '${positionDetailsResult.workCityName}'
+			var info = '${positionDetailsResult.weName}'+' ${positionDetailsResult.degreeLevelName}'+' ${positionDetailsResult.jobCategoryName} '
+			var workCityArr = workCityJson.split('_');
+			var workCity = workCityArr[1];
+			info += workCity;
+			var sp = ""
+	        $('.baseInfo').html(info);
+			for (var i=0;i<labelsArray.length;i++){
+				sp += "<span>"+labelsArray[i]+"</span>";
+			}
+			$("#le").html(sp);
+			lnglatXY = ['${positionDetailsResult.lon}', '${positionDetailsResult.lat}']; //已知点坐标
+			var map = new AMap.Map('container', {
+			    resizeEnable: true,
+			    zoom:11,
+			    center:lnglatXY
+			});
+			marker = new AMap.Marker({
+				position:lnglatXY
+			});
+			marker.setMap(map);
+			map.plugin(["AMap.ToolBar"], function() {
+		            map.addControl(new AMap.ToolBar());
+		    }); 
+	   	})
+	    function offLine(data){
+            if (b==102751){
+                location.href="${pageContext.request.contextPath }/mcbn/services/admint/position/rePublish?data="+data+"&mark=admin"
+			} else {
+                var adata={};
+                adata.data=data;
+                $.ajax({
+                    type:"post",
+                    url:"${pageContext.request.contextPath }/mcbn/services/admint/position/updateStatus",
+                    data:JSON.stringify(adata),
+                    dataType:"json",
+                    contentType: "application/json",
+                    success:function(msg){
+                        if (msg == 1){
+                            window.history.go(-1);
+                        }
+                    }
+                });
+			}
+
+		}
+		$("#showMap").click(function(){
+			$("#myModal").modal("show");
+		})
+		
+   </script>
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</body>
+</html>

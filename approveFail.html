@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>审核失败</title>
+</head>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/verification.js"></script>
+<link rel="stylesheet" type="text/css" href="js/reset-min.css">
+<link rel="stylesheet" type="text/css" href="js/util.css">
+<link rel="stylesheet" href="css/util.css">
+<link rel="stylesheet" href="css/style.css">
+<body>
+<div class="w1200">
+    <div class="main_fff">
+        <dl class="Login_tit">
+            <dt>审核</dt>
+        </dl>
+        <div class="zhc_con" style="width:800px;">
+            <p><img src="img/imge_fail.png" /></p>
+            <h1>审核失败</h1>
+            <div class="wz_p">原因</div>
+            <button class="login_btn">重新填写信息</button>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="js/loginHeader.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+<script>
+    $(function () {
+        $(".login_btn").click(function () {
+            window.location.href = "companyInfo.html";
+        });
+    })
+</script>
+</html>

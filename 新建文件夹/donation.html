@@ -1,0 +1,62 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+	<title>捐助</title>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="/static/text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="/static/text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="/static/text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+	<script>
+        $(function(){
+            $("#lusername").html($.cookie('userName')+"<b></b>");
+        })
+	</script>
+</head>
+<body>
+<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+<div class="Header">
+    <dl class="Login_topdl">
+		<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+		<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+	</dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+<div class="main_fff">
+    <dl class="Login_tit">
+		<dt>捐助</dt>
+	</dl>
+	<div class="gongy_jzh">
+		<p style="text-align: center;width:288px;height:25px;font-size:18px;font-family:PingFangSC-Regular;color:rgba(61,61,61,1);line-height:25px;">中国青年创业就业基金会</p>
+        <p style="text-align: center;width:288px;height:21px; font-size:15px;font-family:PingFangSC-Regular;color:rgba(155,155,155,1);line-height:21px;">请点击下方链接进行公益捐助</p>
+        <a style="display:block;width:525px;height:22px; font-size:16px;font-family:PingFangSC-Regular;cursor: pointer;line-height:22px;" href="https://mp.weixin.qq.com/s/N-wlOXX56wWQHoH5FifFxg">https://mp.weixin.qq.com/s/N-wlOXX56wWQHoH5FifFxg</a>
+	</div>
+	
+</div>
+</div>	
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+</body>
+</html>

@@ -1,0 +1,35 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+ <link href="/css/page.css" rel="stylesheet" type="text/css" />
+<!-- 页数 -->
+<div class="message">
+    共<i class="blue">${pageInfo.total}</i>条记录，
+    当前显示第&nbsp;<i class="blue">${pageInfo.pageNum}/${pageInfo.pages}</i>&nbsp;页
+</div>
+<div style="text-align:center;">
+    <ul class="pagination">
+        <c:if test="${!pageInfo.isFirstPage}">
+            <li><a href="javascript:queryAll(${pageInfo.firstPage});">首页</a></li>
+            <li><a href="javascript:queryAll(${pageInfo.prePage});">上一页</a></li>
+        </c:if>
+        <c:forEach items="${pageInfo.navigatepageNums}" var="navigatepageNum">
+        
+            <c:if test="${navigatepageNum==pageInfo.pageNum}">
+                <li class="active"><a href="javascript:queryAll(${navigatepageNum});">${navigatepageNum}</a></li>
+            </c:if>
+            <c:if test="${navigatepageNum!=pageInfo.pageNum}">
+                <li><a href="javascript:queryAll(${navigatepageNum});">${navigatepageNum}</a></li>
+            </c:if>
+        </c:forEach>
+        <c:if test="${!pageInfo.isLastPage}">
+            <li><a href="javascript:queryAll(${pageInfo.nextPage});">下一页</a></li>
+            <li><a href="javascript:queryAll(${pageInfo.lastPage});">最后一页</a></li>
+        </c:if>
+    </ul>
+    <ul>
+	      每页显示：<input id="pageSizeSelf" name="pageSizeSelf" value="${pageInfo.pageSize}" style="width:20px">条数据<button onclick="queryAll(${pageInfo.pageNum})"> Go</button>
+	 </ul>   
+	 <ul>
+	      跳转到第：<input id="pageNumSelf" name="pageNumSelf" value="${pageInfo.pageNum}" style="width:20px">页<button onclick="queryAll(-1)"> Go</button>
+	 </ul> 
+</div>

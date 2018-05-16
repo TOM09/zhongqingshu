@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>招聘</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume" style="color: #E80D22;border-bottom: 2px solid #E80D22;">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="zhaop_so"><input id = 'keyWordVal' style="border:1px solid #ccc;" class="zhaop_text" type="text" placeholder="请输入关键词..."><button onclick='keyWordSearch()' class="zhaop_sobtn">搜索</button></div>
+	<div class="w1200">
+	<div class="main_fff mar_box">
+		<div class="zhc_con">
+			<p><img src="<%=path%>/static/images/imge_jianli.png" /></p>
+			<h1>暂无推荐简历</h1>
+			<div class="wz_p">您目前没有在线职位<br>发布职位才能获取精准的人才推荐</div>
+		    <button class="login_btn" onclick="createPosition()">发布职位</button>
+		</div>
+		
+	</div>
+	</div>
+
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+	<script type="text/javascript">
+		var companyId = $.cookie('companyId') 
+		var keyWord = ''
+		function keyWordSearch(){
+			keyWord = $("#keyWordVal").val();
+			location.href="${pageContext.request.contextPath}/mcbn/services/resume/Search?keyWord="+encodeURI(encodeURI(keyWord))
+		}
+		function createPosition(){
+			location.href="${pageContext.request.contextPath }/mcbn/services/position/cPosition?companyId="+companyId
+		}
+	</script>
+</body>
+</html>

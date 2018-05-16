@@ -1,0 +1,108 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>报名记录</title>
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+<!-- <script type="text/javascript" src="/static/js/index.js"></script> -->
+</head>
+<body>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w1200 main_fff">
+	    <div  id="main">
+            <dl class="Login_tit">
+                <dt>报名记录</dt>
+            </dl>
+		</div>	
+		<div class="pageDiv">
+			<ul class="pagination clearfix" id="pagenumber">
+			</ul>
+		</div>
+	</div>
+
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+	<script type=text/javascript>
+	<%-- href='<%=path%>/services/train/trainDetails' --%>
+	var userId = "${userId}";
+    $(function(){
+		queryAllRegistrationRecord(1);
+        $("#lusername").html($.cookie('userName')+"<b></b>");
+	})  
+	function queryTrainInfo(trainInfoId) {
+        window.location.href = "/mcbn/services/registrationRecord/registrationRecordDetails?id="+trainInfoId;
+	 }
+	 function queryAllRegistrationRecord(data){
+		var pageCount = "";
+		var rdata={};
+         rdata.currentPage=data;
+         rdata.flag="t";
+         rdata.userId=userId;
+		$.ajax({
+			type:"post",
+			url:"/mcbn/services/registrationRecord/queryRegistrationRecordByUserId",
+            data:JSON.stringify(rdata),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+				pre =   msg.pre;
+				next =	msg.next;
+				pageCount = msg.pageCount;
+				var trs="";
+				$(".gongy_list").remove();
+				$.each(msg.rows,function(i,map){
+			
+					trs +="<div class='gongy_list'>" +
+						"<span class='gongy_tp'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+map.trainInfo.id+")\">"+
+						"<img src='/images/"+map.trainInfo.imageUrl+"' >"+
+						"</a></span>"+
+						"<div class='gongy_Rnr'>"+
+							"<h1 class='juz_h2'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+map.trainInfo.id+")\">" +map.trainInfo.title+"</a><b>已报名</b></h1>"+
+							"<span class='juz_shm'>培训时间："+map.trainInfo.trainTime+"</span>"+
+							"<span class='juz_shm'>培训地点："+map.trainInfo.trainLocation+"</span>"+
+							"<span class='juz_shm'>报名时间："+map.createDate+"</span>"+
+						"</div>"+
+					"</div>"
+				});
+				$("#main").append(trs);
+                buildPage("pagenumber",msg.currentPage,msg.pageCount,"queryAllRegistrationRecord","");
+			}
+		})
+		
+		
+	} 
+
+	</script>
+</body>
+</html>

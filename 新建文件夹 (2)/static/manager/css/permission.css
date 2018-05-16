@@ -1,0 +1,179 @@
+.wrap{
+    border: 10px solid #f9f9f9;
+    height: 100%;
+    background: #FFFFFF;
+}
+.contentHead {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #EFEFEF;
+    color: #3D3D3D;
+    font-size: 17px;
+    font-weight: bold;
+    padding-left: 18px;
+    box-sizing: border-box;
+}
+.content{
+    width: 100%;
+    padding:0 15px;
+    box-sizing: border-box;
+}
+.search{
+    width: 400px;
+    float: right;
+    margin: 11px 0;
+    position: relative;
+}
+.createBtn{
+    width:130px;
+    height:34px;
+    line-height: 34px;
+    text-align: center;
+    color: #fff;
+    background: #4294F7;
+    font-size: 14px;
+    border:0;
+    border-radius: 4px;
+}
+.searchBtn{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 34px;
+    border:0;
+    cursor: pointer;
+    background: url("../img/icon_search_nor.png") no-repeat center;
+}
+.search input{
+    width:265px;
+    height:34px;
+    line-height: 34px;
+    background: #F4F4F4;
+    padding-left: 12px;
+    font-size: 14px;
+    border:0;
+    border-radius: 6px;
+    box-sizing: border-box;
+    float: right;
+}
+.permissionTable{
+    width: 100%;
+}
+.permissionTable th,.permissionTable td{
+    text-align: center;
+    border:1px solid #EDEDED;
+}
+.permissionTable th{
+    height:40px;
+    line-height: 40px;
+}
+.permissionTable td{
+    height:50px;
+    line-height:50px;
+}
+.permissionTable td button{
+    width: 120px;
+    height:34px;
+    line-height: 34px;
+    border:#E0E0E0 1px solid;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #868686;
+    text-align: center;
+    background: #fff;
+    cursor: pointer;
+}
+.permissionTable td button.forbid{
+    border:#FFD5D9 1px solid;
+    color: #E80D22;
+}
+.resBorder{
+    margin: 50px 0 70px 100px;
+}
+.rowBorder{
+    margin-bottom: 30px;
+    vertical-align: middle;
+    font-size: 16px;
+}
+.rowBorder img{
+    width:80px;
+    height:80px;
+    border-radius: 50%;
+}
+.rowBorder label{
+    width:180px;
+    height:22px;
+    font-size:16px;
+    color:rgba(61,61,61,1);
+    line-height:22px;
+    text-align: right;
+    display: inline-block;
+}
+.rowBorder input{
+    width: 328px;
+    height: 46px;
+    border: 1px solid #E5E5E5;
+    padding: 0 8px;
+    box-sizing: border-box;
+    background: #fff;
+}
+.rowBorder input.inUpload{
+    cursor:pointer;
+    font-size:0;
+    width: 100px;
+    height:40px;
+    position: absolute;
+    z-index: 99;
+    top:0;
+    left:0;
+    filter:alpha(opacity=0); opacity: 0;
+}
+.uploadBtn{
+    width: 90px;
+    height: 34px;
+    line-height: 34px;
+    font-size: 14px;
+    color: #fff;
+    margin-left: 30px;
+    background-color: #4294F7;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    border-radius: 4px;
+}
+.marTop{
+    vertical-align: middle;
+    margin-top: -65px;
+}
+.notices{
+    display: inline-block;
+    color: #9B9B9B;
+    margin-left: 25px;
+    line-height: 22px;
+    font-size: 14px;
+}
+.rowBorder-l{
+    margin-left: 185px;
+}
+.rowBorder button{
+    width:328px;
+    height:50px;
+    line-height: 50px;
+    font-size:20px;
+    color: #fff;
+    border: 0;
+    background:#E80D22;
+    border-radius: 4px ;
+    cursor: pointer;
+}
+.price{
+    color: #E80D22;
+    font-size: 20px;
+}
+.permission{
+    border-left: 3px solid #E80D22;
+    background : #FFF3F5;
+    color: #E80D22 !important;
+}

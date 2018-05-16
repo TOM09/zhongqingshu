@@ -1,0 +1,10 @@
+.detailImg{
+    cursor: pointer;
+}
+#container{
+    height: 100%;
+    margin: 0px;
+}
+.modal-dialog{
+    height:90%;
+}

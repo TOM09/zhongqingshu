@@ -1,0 +1,139 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>培训详情</title>
+<meta name="toTop" content="true">
+<%@ include file="messageCount.jsp" %>
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+	<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+	<style type="text/css">
+	body{
+	font-family: "Microsoft YaHei";
+	font-size: 16px;
+	line-height: 26px;
+	}
+	</style>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:0px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train" style="color: #E80D22;border-bottom: 2px solid #E80D22;">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w1200">
+	<div class="main_fff">
+		<div class="gongy_jmz" id="registration">
+		</div>     
+		<!--<dl class="gongy_xxtop">
+			<dt><a onclick="registration(${trainInfo.id})" id="isRegistration" style="cursor:pointer"></a><span>${trainInfo.browseCount}人浏览</span></dt>
+			<dd style="width: 80%;">
+				<h1 style="overflow: 80%; word-wrap: break-word; word-break: normal;">${trainInfo.title}</h1>
+				<span><b>${trainInfo.registrationNumber}</b>人已报名</span>
+				<span>培训时间：${time}</span>
+				<span>培训地点：${trainInfo.trainLocation}</span>
+				<span></span>
+			</dd>
+		</dl>-->
+		<dl class="gongy_xxtop" style="position: relative;">
+			<dd style="max-width:80%;">
+				<h1>${trainInfo.title}</h1>
+				<span><b>${trainInfo.registrationNumber}</b>人已报名</span>
+				<span>培训时间：${time}</span>
+				<span>培训地点：${trainInfo.trainLocation}</span>
+				<span></span>
+			</dd>
+			<dt style="position: absolute;right: 0px;bottom: 27px;"><a onclick="registration(${trainInfo.id})" id="isRegistration" style="cursor:pointer"></a><span>${trainInfo.browseCount}人浏览</span></dt>
+		</dl>
+		<div class="gongy_xxbox">
+				${trainInfo.text}
+		</div>
+	</div>
+	</div>	
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+
+    <script type="text/javascript">
+    	function registration(trainInfoId){
+    	    var data={};
+    	    data.trainInfoId=trainInfoId;
+    		$.ajax({
+				type:"post",
+				url:"/mcbn/services/train/registration",
+                data:JSON.stringify(data),
+                dataType:"json",
+                contentType: "application/json",
+				success:function(msg){
+					if (msg==1){
+						$.ajax({
+							type:"post",
+							url:"/mcbn/services/train/queryTrainInfo",
+                            data:JSON.stringify(data),
+							dataType:"json",
+                            contentType: "application/json",
+							success:function(msg){
+								location.reload();
+							}
+						})
+					}
+				}
+			})
+    	}
+    	$(function(){
+            $("#lusername").html($.cookie('userName')+"<b></b>");
+    		var isRegistration="${isRegistration}";
+    		if (isRegistration=="0"){
+    			$("#isRegistration").text("已报名").addClass("gongy_jies");
+                $("#isRegistration").attr("onclick","");
+    		} else if (isRegistration=="1"){
+    			$("#isRegistration").text("报名")
+    		} else if (isRegistration=="2"){
+                $("#isRegistration").text("已结束").addClass("gongy_jies");
+                $("#isRegistration").attr("onclick","");
+            }
+    		var trainInfoId = "${trainInfoId}"
+			var sdata={};
+            sdata.trainInfoId=trainInfoId;
+    		$.ajax({
+				type:"post",
+				url:"/mcbn/services/train/queryRegistration",
+                data:JSON.stringify(sdata),
+                dataType:"json",
+                contentType: "application/json",
+				success:function(msg){
+					var trs="最近报名者:&nbsp;&nbsp;";
+					$.each(msg,function(i,user){
+						trs += "<img src="+user.imageUrl+">"
+					});
+					$("#registration").html(trs);
+				}
+			})
+    	})
+    </script>
+</body>
+</html>

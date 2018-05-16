@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+		<title>注册</title>
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+	  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+	<meta name="toTop" content="true">
+	<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+	<!--bootstrap框架↓-->
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+	<!--本页面CSS↓-->
+	<link rel="stylesheet" href="/static/css/swiper.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<!--bootstrap框架↓-->
+	<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+	<script type="text/javascript" src="/static/js/util.js"></script>
+		<style>
+			input::-ms-clear,input::-ms-reveal{display:none;}
+		</style>
+		<style>
+			.redfont{
+				width:130px !important;
+			}
+		</style>
+		<script>
+			$(document).ready(function (){
+		 	 //调入页脚
+	     	   	$('.footer').load('footerpage.html');
+			 })
+			function register(){
+			    $(".redfont").html("");
+				var username = $("#inputAccount").val();
+	            var password = $("#inputPassword").val();
+	            var phonenumber = $("#inputPhoneNumber").val();
+	            var verifyCode = $("#inputPhoneVerifyCode").val();
+			    if(username == ""){
+	                $("#nametitle").html("请输入用户名");
+	            } else if(password == ""){
+	                $("#pwtitle").html("请输入密码");
+	            } else if(!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test(password)){
+	                $("#pwtitle").html("格式不符");
+	            } else if(phonenumber == ""){
+	                $("#phtitle").html("请输入手机号");
+	            } else if(verifyCode == ""){
+	                $("#phvtitle").html("请输入验证码");
+	            }  else {
+	                var udata = {};
+	                udata.name = username;
+	                udata.clientType = 102500;
+	                ajax("/services/user/check/available/name",udata,function (result1) {
+	                    if(result1.datas[0]) {
+	                        var pdata = {};
+	                        pdata.mobilePhone = phonenumber;
+	                        pdata.clientType = 102500;
+	                        ajax("/services/user/check/available/mobile",pdata,function (result2) {
+	                            if(result2.datas[0]) {
+												var rdata = {};
+												rdata.name = username;
+												rdata.pwd = password;
+												rdata.mobilePhone = phonenumber;
+												rdata.mobilePhoneSecurityCode = verifyCode;
+												rdata.companyType = 100700;
+												rdata.clientType = 102500;
+	                                            ajax("/services/user/register",rdata,function (result3) {
+	                                                var resultCode = result3.resultCode;
+	                                                if(resultCode == "1") {
+	                                                    alert('注册成功');
+	                                                    var logindata = {};
+	                                                    logindata.username = username;
+	                                                    logindata.password = password;
+	                                                    logindata.companyType = 100700;
+	                                                    logindata.clientType = "102500";
+	                                                    ajax2(("/services/user/login"), logindata, function (loginresult) {
+	                                                        var resultCode = loginresult.resultCode;
+	                                                        if (resultCode == "1") {
+	                                                            window.location.href = "registerSuccess.html";
+	                                                        }
+	                                                    })
+	                                                } else {
+	                                                    var errorMessage = result3.errorMessage;
+	                                                    if(errorMessage == "Mobile phone security code don't match."){
+	                                                        $("#phvtitle").html("验证码错误");
+														} else if(errorMessage == "Email security code don't match."){
+	                                                        $("#emvtitle").html("验证码错误");
+	                                                    }
+	
+	                                                }
+	                                            })
+	                            } else {
+	                                $("#phtitle").html("手机号不可用");
+	                            }
+	                        });
+						} else {
+	                        $("#nametitle").html("该用户名已注册");
+	                    }
+	                });
+				}
+			}
+	
+			function getPhoneVerifyCode(){
+	            $(".redfont").html("");
+	            var phonenumber = $("#inputPhoneNumber").val();
+	            if(phonenumber != "" && phonenumber != null) {
+	                var pdata = {};
+	                pdata.mobilePhone = phonenumber;
+	                pdata.clientType = 102500;
+	                ajax("${servicefix}/services/user/check/available/mobile",pdata,function (result) {
+	                    if(!result.datas[0]) {
+	                        $("#phtitle").html("该手机号码已注册");
+	                        return;
+	                    }else {
+	                        var data = {};
+	                        data.mobilePhoneNumber = phonenumber;
+	                        data.clientType = 102500;
+	                        ajax("${servicefix}/services/user/security/code/mobile", data, function (result) {
+	                            if(!result.datas[0]) {
+	                                $("#phvtitle").html("获取失败");
+	                                return;
+	                            }
+	                        });
+	                        $("#phvtitle").html("验证码已发送");
+						}
+	
+					});
+	            } else {
+	                $("#phtitle").html("请输入手机号");
+	            }
+			}
+	
+	        function getEmailVerifyCode(){
+	            $(".redfont").html("");
+	            var emailnumber = $("#inputEmail").val();
+	            if(emailnumber != "" && emailnumber != null) {
+	                var data = {};
+	                data.emailAddress = emailnumber;
+	                data.clientType = 102500;
+	                ajax("${servicefix}/services/user/security/code/email", data, function (result) {
+	                    if(!result.datas[0]) {$("#emvtitle").html("获取失败");}
+					});
+	            } else {
+	                $("#emtitle").html("请输入邮箱");
+	            }
+	        }
+	
+		</script>
+	</head>
+	<body>
+	<!--头部开始-->
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt><a href="/mcbn/services/dispense/companyInfoModeify"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></a></dt>
+			<dd><a href="https://www.zqtree.com">我是求职者</a> | <a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w1200">
+	<div class="main_fff">
+	    <dl class="Login_tit">
+			<dt>注册</dt>
+			<dd>已有账号，去<a href="/">登录</a></dd>
+		</dl>
+		<div class="Login_con">
+			<ul>
+				<li><span>用户名：</span><input type="text" id="inputAccount" class="login_text"><span id="nametitle" class="redfont"></span></li>
+				<li><span>密码：</span><input type="password" id="inputPassword" class="login_pawd"><a href="javascript:void(0);" class="xians_a">显示</a><span id="pwtitle" class="redfont"></span><b>字母数字混合，8位以上20位以下</b></li>
+				<li><span>手机号：</span><input type="text" id="inputPhoneNumber" class="login_text"><span id="phtitle" class="redfont"></span></li>
+				<li><span>验证码：</span><input type="text" id="inputPhoneVerifyCode" class="login_yzm"><button id="buttonGetPhoneVerifyCode" class="xians_yzm" onclick="getPhoneVerifyCode()">获取验证码</button><span id="phvtitle" class="redfont"></span></li>
+			</ul>
+			<button class="login_btn" id="buttonRegister1" onclick="register()">注册</button>
+			<p class="login_p">注册即表示同意<a target="_blank" style="color:red" href="https://www.zqtree.com/termsOfService.html">《用户注册协议》</a></p>
+		</div>
+	</div>
+	</div>	
+		
+	<!--尾部开始-->
+	<div class="footer">
+	</div>
+	<!--尾部end-->
+	
+	<div class="modal fade" id="map" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" style="margin-top: 5px;width: 98%;">
+			<div id="container" tabindex="0"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="postAddress">确定
+				</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		 
+	    $(".xians_a").click(function () {
+	        if ($("#inputPassword").attr("type") == "password") {
+	            $("#inputPassword").attr("type","text");
+	        }else {
+	            $("#inputPassword").attr("type","password");
+	        }
+	    });
+	</script>
+	
+	</body>
+</html>

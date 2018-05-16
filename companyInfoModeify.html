@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>企业信息</title>
+</head>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/verification.js"></script>
+<link rel="stylesheet" type="text/css" href="css/reset-min.css">
+<link rel="stylesheet" type="text/css" href="css/toast.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/util.css">
+<link rel="stylesheet" href="css/style2.css">
+<!--<link rel="stylesheet" href="css/company.css">-->
+<script language=javascript src='https://webapi.amap.com/maps?v=1.4.4&key=8e2c24150d9743810be9ae4fa2461da5'></script>
+<body>
+<div class="w1200">
+    <div class="main_fff mar_box">
+        <dl class="Login_tit">
+            <dt>企业信息</dt>
+            <input id="id" name="id" type="hidden" class="inputCompanyId"/>
+        </dl>
+        <!--<c:if test="${flag eq 1}">-->
+            <!--<div class="fbtit_bt">发布职位前，请先完善企业信息。</div>-->
+        <!--</c:if>-->
+        <div class="person_box">
+            <div class="person_lista">
+                <div class="person_lista_name">
+                    公司logo：
+                </div>
+                <div class="person_lista_box logoBorder">
+                    <input name="logoImageUrl" id="logoImageUrl" type="text" style="display: none"/>
+                    <div class="gongsilogo_box"><img style="width: 114px;height: 114px;margin-left: -2px;margin-top: -2px;" id="slt" src=""/></div>
+                    <span class="touxiang_textabtn"><a href="javascript:void(0);" id="buttonGotoImageUpload">上传logo</a></span><span class="touxiang_textb" style="line-height: 100px;">图片小于500KB，格式为jpg/png</span>
+                    <div style="position: absolute;top: 35px;left: 140px;width: 100px;overflow: hidden;filter: alpha(opacity=0);-moz-opacity:0;opacity:0; cursor: pointer; height: 40px;"><input type="file" accept="image/jpeg,image/png" name="file"  style="cursor: pointer;border: 40px solid black;" id="file" class="inputLogo"/></div>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    所在地：
+                </div>
+                <div class="person_list_box">
+                    <select class="person_list_select" id="addressProvince" name="addressProvince"></select>
+                    <select class="person_list_select" id="addressCity" name="addressCity" style="margin-left: 15px;"></select>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    详细地址：
+                </div>
+                <div class="person_list_box">
+                    <input class="person_list_inputs" id="addressDetail" readonly name="addressDetail"/><span><img class="detailImg" src="img/icon_location.png"/></span>
+                    <input id="lon" name="lon" type="hidden" value=""/>
+                    <input id="lat" name="lat" type="hidden" value=""/>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    行业领域：
+                </div>
+                <div class="person_list_box">
+                    <select class="person_list_selects" id="workIndustryParentId" name="workIndustryParentId"></select>
+                    <select class="person_list_selects" id="workIndustryId" name="workIndustryId"></select>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    公司规模：
+                </div>
+                <div class="person_list_box">
+                    <select class="person_list_selects" id="companyScale" name="companyScale"></select>
+                </div>
+            </div>
+
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    公司性质：
+                </div>
+                <div class="person_list_box">
+                    <select class="person_list_selects" id="companyProperty" name="companyProperty"></select>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    公司网址：
+                </div>
+                <div class="person_list_box">
+                    <input class="person_list_selects" id="webSite" name="webSite"/><span class="person_list_selecta">选填</span>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    公司环境：
+                </div>
+                <div class="person_list_box">
+                    <input type="hidden" id="companyEnvironment"  name="companyEnvironment"/>
+                    <div class="person_shangchuanbox"><input accept="image/jpeg,image/png,image/gif" type="file" id="file1" name="file1" style="cursor: pointer;border: 100px solid black;filter: alpha(opacity=0);-moz-opacity:0;opacity:0;"></div>
+                    <span class="person_shangchuantext">选填，最多上传5张图片，图片小于500KB， 格式为jpg/png/gif</span>
+                </div>
+                <div id="cems" style=" float: left; width: 100%; margin-left: 70px;">
+
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    公司简介：
+                </div>
+                <div class="person_list_box">
+                    <textarea  style="line-height: 25px;overflow-y:auto;" class="person_list_texteara" id="companyProfiles" name="companyProfiles"></textarea><span class="textare_ts"><b class="nowTextLength">0</b>/500</span>
+                </div>
+            </div>
+            <div class="person_list">
+                <div class="person_list_name">
+                    &nbsp;
+                </div>
+                <div class="person_list_box">
+                    <button class="person_list_btn">完成</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--地图-->
+<div class="modal fade" id="map" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="top:20px;">
+    <div class="modal-dialog" style="margin-top: 20px;width: 98%;position:relative">
+        <div id="container" tabindex="0"></div>
+        <div style="position:absolute;top:20px;left:30px;">
+            <input id="mapAddress" type="text" style="width:500px;;height:50px;border:1px solid #ccc;" value="" />
+            <button type="button"  style="text-align: center;margin: 20px 0;width: 100px;height: 46px;line-height:32px;background: rgba(232,13,34,1);border-radius: 4px;color: #fff;font-size: 18px;border: 0px;" id="searchAddress">搜索
+            </button>
+            <button type="button" style="text-align: center;margin: 20px 0;width: 100px;height: 46px;line-height:32px;background: rgba(232,13,34,1);border-radius: 4px;color: #fff;font-size: 18px;border: 0px"  id="postAddress">确定</button>
+        </div>
+        <a href="javascript:void(0);" id="closeMap" style="position:absolute;right: -10px;top: -15px;font-size: 30px;background: #f5efef;border-radius: 30px;width: 35px;height: 30px;text-align:  center;">X</a>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="js/header.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+<script>
+    $(function () {
+        var provinceList=[];
+        var cityList=[];
+        var firstProvince = "";
+        var onewiList=[];
+        var twowiList=[];
+        var forstWi = "";
+        var lngData;
+        var latData;
+        var inputCid =+ localStorage.getItem('username');
+        $('.inputCompanyId').val(inputCid);
+        lengthLimit($('#companyProfiles'), 500, $('.nowTextLength'));
+        imgUpload('.logoBorder','.inputLogo','/services/upload/company/logo/file',function (imgUrl) {
+            localStorage.setItem('logoImg',imgUrl.datas[0]);
+            $('#logoImageUrl').val(imgUrl.datas[0]);
+            $('#slt').attr('src','/images/'+imgUrl.datas[0]);
+        });
+        imgUpload('.person_list_box','#file1','/services/upload/company/environment/image/file',function (imgUrl) {
+            if($(".em").length >= 5){
+                toast('最多上传5张图片')
+                return;
+            }
+            createEmImg(imgUrl.datas[0]);
+        });
+        
+        (key,value)=>{
+        	console.log(key)
+        }
+        function createEmImg(url){
+            $("#cems").append(
+                '<div class="em" i="'+url+'" style="float: left; margin-left: 20px;position: relative;"><img style="width: 100px;height: 100px;" src="/images/'+url+'">' +
+                '<span class="imgdel" style="position: absolute;top: -12px;right: -5px;line-height: normal;font-size: 19px;color: gray;cursor: pointer;">X</span></div>'
+            );
+            $(".imgdel").click(function(){
+                $(this).parent().remove();
+            })
+        }
+        function showCityList(provincename){
+            $("#addressCity").empty();
+            //循环数组
+            for(var j=0;j<provinceList.length;j++){
+                var prodata = provinceList[j];
+                console.log(prodata)
+                //如果省名  == 选中的省名
+                if(prodata.name == provincename) {
+                	//循环所有城市
+                    for(var i = 0; i<cityList.length; i++){
+                        var data = cityList[i];
+                        //如果data的parentId = 省的id
+                        if(data.parentId == prodata.id) {
+                        	//添加到城市名中
+                            $("#addressCity").append("<option value='" + data.name + "'>" + data.name + "</option>");
+                        }
+                    }
+                    return;
+                }
+            }
+
+        }
+
+        function showWiList(pid) {
+            $("#workIndustryId").empty();
+            for (var i = 0; i < twowiList.length; i++) {
+                var data = twowiList[i];
+                if (data.parentId == pid) {
+                    $("#workIndustryId").append("<option value='" + data.id + "'>" + data.name + "</option>");
+                }
+            }
+        }
+        $('.detailImg').click(function () {
+            showMap();
+        })
+        function showMap(){
+            $('#map').modal('show');
+            if($("#addressDetail").val() == "") {
+                geolocation.getCurrentPosition();
+            } else {
+                $("#mapAddress").val($("#addressDetail").val());
+                makeMarker(lngData,latData,$("#addressDetail").val());
+            }
+        }
+        $('#searchAddress').click(function () {
+            searchMap();
+        })
+        function searchMap(){
+            var serchaddress = $("#mapAddress").val();
+            if(serchaddress != ""){
+                placeSearch.search(serchaddress, searchAddressfunc);
+            }
+        }
+        function searchAddressfunc(status, result) {
+            if(status == "complete" && result.info == "OK"){
+                var f = result.poiList.pois[0];
+                address = f.name + f.address;
+                $("#mapAddress").val(address);
+                lngData = f.location.lng;
+                latData = f.location.lat;
+                makeMarker(lngData, latData, address);
+            }
+        }
+        function makeMarker(lng, lat, address){
+            map.remove(markers);
+            markers = [];
+            var marker = new AMap.Marker({
+                position: [lng, lat],
+                title: address,
+                map: map
+            });
+            marker.setMap(map);
+            markers.push(marker);
+            map.setCenter([lng, lat]);
+        }
+        function onComplete(data){
+            lngData = data.position.getLng();
+            latData = data.position.getLat();
+            var lnglatXY = [lngData,latData];
+            address = data.formattedAddress;
+            $("#mapAddress").val(address);
+            map.remove(markers);
+            markers = [];
+            marker = new AMap.Marker({
+                position: lnglatXY,
+                title: address,
+                map: map
+            });
+            markers.push(marker);
+        }
+        var address;
+        var markers=[];
+        var lngData;
+        var latData;
+        $(document).ready(function() {
+//            $("#lusername").html($.cookie('userName')+"<b></b>");
+            map = new AMap.Map('container',{
+                resizeEnable: true,
+                zoom: 15,
+                center: [116.480983, 40.0958]
+            });
+            map.on('click', function(e) {
+                lngData = e.lnglat.getLng();
+                latData = e.lnglat.getLat();
+                var lnglatXY = [e.lnglat.getLng(),e.lnglat.getLat()];
+                geocoder.getAddress(lnglatXY, function(status, result) {
+                    if (status === 'complete' && result.info === 'OK') {
+                        address = result.regeocode.formattedAddress;
+                        $("#mapAddress").val(address);
+                        map.remove(markers);
+                        marker = new AMap.Marker({
+                            position: lnglatXY,
+                            title: address,
+                            map: map
+                        });
+                        markers.push(marker);
+                    }else{
+                    }
+                });
+
+            });
+            AMap.service('AMap.Geocoder',function(){
+                geocoder = new AMap.Geocoder({
+                    city: "010"//城市，默认：“全国”
+                });
+            })
+            map.plugin('AMap.Geolocation', function() {
+                geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    buttonOffset: new AMap.Pixel(10, 20),
+                    zoomToAccuracy: true,
+                    buttonPosition:'RB'
+                });
+                map.addControl(geolocation);
+                AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            });
+            AMap.service(["AMap.PlaceSearch"], function() {
+                placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+                    pageSize: 1,
+                    pageIndex: 1,
+                    city: "010"//城市
+                });
+            });
+            $('#closeMap').click(function(){
+                $('#map').modal('hide');
+            })
+
+            $("#addressProvince").change(function () {
+                var pid = $(this).children('option:selected').val();
+                showCityList(pid);
+            });
+            $("#workIndustryParentId").change(function () {
+                var pid = $(this).children('option:selected').val();
+                showWiList(pid);
+            });
+            $("#postAddress").click(function () {
+                $("#addressDetail").val(address);
+                $("#lon").val(lngData);
+                $("#lat").val(latData);
+                $('#map').modal('hide');
+            })
+
+            $(".person_list_btn").click(function () {
+
+                var logoImageUrl=$("#logoImageUrl").val();
+                var addressProvince=$("#addressProvince").val();
+                var addressCity=$("#addressCity").val();
+                var addressDetail=$("#addressDetail").val();
+                var workIndustryId=$("#workIndustryId").val();
+                var workIndustryParentId=$("#workIndustryParentId").val();
+                var companyScale=$("#companyScale").val();
+                var webSite=$("#webSite").val();
+                var companyProfiles=$("#companyProfiles").val();
+                var companyEnvironment=$("#companyEnvironment").val();
+                var companyProperty=$("#companyProperty").val();
+
+                if(addressDetail==""||addressDetail==null){
+                    toast('请填写选择公司地址')
+                    return;
+                }
+                if(companyProfiles==""||companyProfiles==null){
+                    toast('请填写公司简介')
+                    return;
+                }
+//                else if(companyProfiles.length > 500){
+//                    $('#prompt').html('公司简介超出字数限制');
+//                    $('#myModal').modal('show');
+//                    return;
+//                }
+
+                var emurls = "";
+                for(var i=0;i<$(".em").length;i++){
+                    emurls += $($(".em")[i]).attr("i")+",";
+                }
+                if(emurls != "") {
+                    emurls = emurls.substr(0,emurls.length-1);
+                }
+                $("#companyEnvironment").val(emurls);
+                var data={};
+                data.clientType = 102500;
+                //companyId
+                data.companyId = +localStorage.getItem('username');
+                data.logoImageUrl=$("#logoImageUrl").val();
+                data.addressProvince=$("#addressProvince").val();
+                data.addressCity=$("#addressCity").val();
+                data.addressDetail=$("#addressDetail").val();
+                data.workIndustryId= +$("#workIndustryId").val();
+                data.workIndustryParentId= +$("#workIndustryParentId").val();
+                if(!data.workIndustryId){
+                    data.workIndustryId=data.workIndustryParentId;
+                }
+                data.companyScale=$("#companyScale").val();
+                data.webSite=$("#webSite").val();
+                data.companyProfiles=$("#companyProfiles").val();
+                data.companyProperty=$("#companyProperty").val();
+                data.lon = +$("#lon").val();
+                data.lat = +$("#lat").val();
+                if($("#companyEnvironment").val()){
+                    data.companyEnvironment=$("#companyEnvironment").val();
+                }
+                console.log(data)
+                ajax("/services/company/info/update", data, function (result) {
+                	console.log(result)
+                    var resultCode = result.resultCode;
+                    if (resultCode=="1") {
+                        toast('修改成功')
+                    }
+                });
+            })
+            var data = {};
+            data.type = "province";
+            data.clientType = "102500";
+            ajax('/services/dict/type/list', data, function (result) {
+                var resultCode = result.resultCode;
+                if (resultCode=="1") {
+                    provinceList = result.datas;
+                    var data1 = {};
+                    data1.type = "city";
+                    data1.clientType = "102500";
+                    ajax(("/services/dict/type/list"), data1, function (result) {
+                    	console.log(result)
+                        cityList = result.datas;
+                        for(var i = 0; i<provinceList.length; i++){
+                            if(i == 0) {
+                                firstProvince = provinceList[i].name;
+                            }
+                            $("#addressProvince").append("<option value='" + provinceList[i].name + "'>" + provinceList[i].name + "</option>");
+                        }
+                        $("#addressProvince").val(firstProvince);
+                        showCityList(firstProvince);
+                    });
+                }
+            });
+            var industryDate = {}
+            industryDate.clientType = 102500;
+            ajax("/services/base/data/work/industry/list", industryDate, function (result) {
+                for(var i = 0; i<result.datas.length; i++){
+                    if(result.datas[i].parentId == 0 || result.datas[i].parentId == null) {
+                        onewiList.push(result.datas[i]);
+                    } else {
+                        twowiList.push(result.datas[i]);
+                    }
+                }
+                for(var j = 0; j<onewiList.length; j++){
+                    if(j == 0) {
+                        forstWi = onewiList[j].id;
+                    }
+                    $("#workIndustryParentId").append("<option value='" + onewiList[j].id + "'>" + onewiList[j].name + "</option>");
+                }
+                showWiList(forstWi);
+            });
+            var scaleDate = {};
+            scaleDate.clientType = 102500;
+            scaleDate.type = 'company_scale';
+            ajax("/services/dict/type/list", scaleDate, function (result) {
+                for(var i = 0; i<result.datas.length; i++){
+                    $("#companyScale").append("<option value='" + result.datas[i].name + "'>" + result.datas[i].name + "</option>");
+                }
+            });
+            var propertyDate = {};
+            propertyDate.clientType = 102500;
+            propertyDate.type = 'company_property';
+            ajax("/services/dict/type/list", propertyDate, function (result) {
+                for(var i = 0; i<result.datas.length; i++){
+                    $("#companyProperty").append("<option value='" + result.datas[i].name + "'>" + result.datas[i].name + "</option>");
+                }
+            });
+            var data = {};
+            ajax("/services/company/info/view", data, function (result) {
+                var companyinfo = result.datas[0];
+                var resultCode = result.resultCode;
+                if (resultCode=="1" && companyinfo != null) {
+                    $("#id").val(companyinfo.id);
+                    $("#logoImageUrl").val(companyinfo.logoImageUrl);
+                    $("#slt").attr("src","/images/"+companyinfo.logoImageUrl);
+                    if(!companyinfo.workIndustryParentId) {
+                        companyinfo.workIndustryParentId = companyinfo.workIndustryId;
+                        companyinfo.workIndustryId = "";
+                        showWiList(companyinfo.workIndustryParentId);
+                    }
+                    if(companyinfo.addressProvince) {
+                        $("#addressProvince").val(companyinfo.addressProvince);
+                        showCityList(companyinfo.addressProvince);
+                    }
+                    if(companyinfo.addressCity) {
+                        $("#addressCity").val(companyinfo.addressCity);
+                    }
+                    $("#addressDetail").val(companyinfo.addressDetail);
+                    if(companyinfo.workIndustryParentId) {
+                        $("#workIndustryParentId").val(companyinfo.workIndustryParentId);
+                        showWiList(companyinfo.workIndustryParentId);
+                    }
+                    if(companyinfo.workIndustryId) {
+                        $("#workIndustryId").val(companyinfo.workIndustryId);
+                    }
+                    if(companyinfo.companyScale) {
+                        $("#companyScale").val(companyinfo.companyScale);
+                    }
+                    if(companyinfo.companyProperty) {
+                        $("#companyProperty").val(companyinfo.companyProperty);
+                    }
+
+                    $("#webSite").val(companyinfo.webSite);
+                    $("#companyProfiles").val(companyinfo.companyProfiles);
+//                    limitTextarea($("#companyProfiles"));
+                    $("#companyEnvironment").val(companyinfo.companyEnvironment);
+                    if(companyinfo.companyEnvironment){
+                        var gem = companyinfo.companyEnvironment.split(",");
+                        for(var i=0;i<gem.length;i++){
+                            createEmImg(gem[i]);
+                        }
+                    }
+                    $("#lon").val(companyinfo.lon);
+                    $("#lat").val(companyinfo.lat);
+                    lngData = companyinfo.lon;
+                    latData = companyinfo.lat;
+
+                }
+            })
+        })
+    })
+</script>
+</html>

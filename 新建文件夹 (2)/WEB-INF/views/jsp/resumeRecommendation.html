@@ -1,0 +1,159 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+	<title>简历推荐</title>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<%@ include file="messageCount.jsp" %>
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+</head>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="">首页</a><a href="" class="hover">招聘</a><a href="">公益</a><a href="">培训</a><a href="">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="zhaop_so"><input id = 'keyWordVal' class="zhaop_text" type="text" placeholder="请输入关键词..."><button onclick='keyWordSearch()' class="zhaop_sobtn">搜索</button></div>
+	<div class="w1200">
+		<div class="main_fff">
+				<div class="jd_box_table">
+	               <div id="table_1" style="margin-top:-20px; display:block" >
+						<div id="div_1"></div>
+						<ul class="pagination" id="pagenumber_1">
+						</ul>
+	                </div>
+	         	</div>
+		</div>
+	</div>	
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+
+	<script type="text/javascript">
+		var companyId = $.cookie('companyId') 
+		var keyWord = ''
+		$(function(){
+			queryRecommendResume(1,keyWord,companyId)
+		})
+		function queryRecommendResume(data,keyWord,companyId){
+			$.ajax({
+				type:"post",
+				url:"${pageContext.request.contextPath }/mcbn/services/resume/queryRecommendResume",
+				data:"&currentPage=" + data +"&keyWord="+keyWord + "&companyId="+companyId,
+				dataType:"json",
+				success:function(msg){
+					pre =   msg.pre;
+					next =	msg.next;
+					pageCount = msg.pageCount;
+					rows = msg.rows;
+				    var trs="";
+					$.each(msg.rows,function(i,resume){
+						trs += "<dl class='jianl_tddl'><dd><div class='jianl_div'>"
+						if (resume.video != ''){
+							trs +=	"<div style='float:left'><video  style='width:90px;height:90px' src='<%=path%>"+resume.video+"' controls='controls' id='media' poster='images/tp2.png' ></video></div>"
+						}else{
+							trs += "<div style='float:left'><image  style='width:70px;height:70px' src='<%=path%>"+resume.headImage+"' controls='controls' id='media' poster='images/tp2.png' ></image></div>" 
+						}
+						trs += "<h1><a href='#'>"+resume.btruName+"</a><b>"+resume.wiName+"·"+resume.btujiwptName+"</b><span>"+resume.salary+"</span></h1>"+
+								"<p>"+resume.sex+" | "+resume.age+" | "+resume.address+"| "+resume.degreeLevel+" | "+resume.workTime+"年经验</p></div>"+
+								"<button class='person_fabuzw' onclick=\"queryResumeDetails("+resume.bturId+")\">查看简历</button></dd></dl>"
+					});
+					if(msg.rows.length == 0) {
+						trs = "<tr><td colspan='2'>无此搜索内容</td></tr>";
+					}
+					$("#div_1").html(trs);
+					createPage("#pagenumber_1")
+				}
+			})
+		}
+		function createPage(data,flag){
+	  		$(data).empty()
+			if (rows.length!=0){
+					var p = "<li><a style='cursor:pointer' id='pren'>上一页</a></li>";
+					for (var i=1;i<=pageCount;i++){
+						if (i>3){
+							break;
+						}
+						if (i == 3 && pageCount>=5){
+							p +="<li><a style='cursor:pointer' id='n"+i+"'>"+i+"</a>...</li>"
+						}else{
+							p += "<li><a style='cursor:pointer' id='n"+i+"'>"+i+"</a></li>"
+						}
+					}
+					if (pageCount>3){
+						p += "<li><a id='endn'>"+pageCount+"</a></li>"
+					}
+					p += "<li><a style='cursor:pointer' id='nextn'>下一页</a></li>"
+					$(data).html(p); 
+					//注册点击分页事件
+					var conditions = $("#conditions1").val();
+				    $("#n1").on("click",function(){
+				    	querySearchResume(1,positionId,keyWord)  
+				    })
+					$("#n2").on("click",function(){
+				    	
+						querySearchResume(1,positionId,keyWord)  
+					});
+				    $("#n3").on("click",function(){
+				    
+				    	querySearchResume(1,positionId,keyWord)
+	  	
+					});
+					$("#pren").on("click",function(){
+						
+						querySearchResume(1,positionId,keyWord)
+
+					});
+					$("#nextn").on("click",function(){
+					
+						querySearchResume(1,positionId,keyWord) 
+
+					});
+					$("#endn").on("click",function(){
+						
+						querySearchResume(1,positionId,keyWord)
+			
+					});
+			}
+		}
+		function keyWordSearch(){
+			keyWord = $("#keyWordVal").val();
+			queryRecommendResume(1,keyWord,companyId);
+		}
+		function createPosition(){
+			location.href="${pageContext.request.contextPath }/mcbn/services/position/cPosition?companyId="+companyId
+		}
+	</script>
+</body>
+</html>

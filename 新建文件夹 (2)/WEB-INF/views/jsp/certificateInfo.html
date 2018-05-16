@@ -1,0 +1,171 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+    <title>认证信息</title>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+
+<script>
+    $(document).ready(function() {
+        $("#lusername").html($.cookie('userName')+"<b></b>");
+		var data = {};
+		data.id = "${companyId}";
+		ajax("/mcbn/services/company/detail", data, function (result) {
+			var companyinfo = result.datas[0];
+            var resultCode = result.resultCode;
+			if (resultCode=="1") {
+				$("#name").html(companyinfo.name);
+                $("#businessLicenseNo").html(companyinfo.businessLicenseNo);
+                $("#companyPropertyName").html(companyinfo.companyPropertyName);
+                $("#address").html(companyinfo.addressProvince+"-"+companyinfo.addressCityName);
+                $("#legalPersonName").html(companyinfo.legalPerson);
+                $("#registeredCapital").html(companyinfo.registeredCapital);
+                $("#businessScope").html(companyinfo.businessScope);
+                $("#businessLicenseImageUrl").attr("src","/images/"+companyinfo.businessLicenseImageUrl);
+                $("#establishmentDate").html(companyinfo.establishmentDate);
+                var buslimitstr = "";
+                if(companyinfo.startBusinessDate && companyinfo.startBusinessDate != null){
+                    buslimitstr = companyinfo.startBusinessDate+"-";
+                }
+                if(companyinfo.endBusinessDate && companyinfo.endBusinessDate != null){
+                    buslimitstr += companyinfo.endBusinessDate;
+                } else {
+                    buslimitstr += "长期";
+                }
+                $("#buslimit").html(buslimitstr);
+			}
+		})
+	})
+</script>
+
+<body>
+<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+<div class="Header">
+    <dl class="Login_topdl">
+		<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+        <dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+	</dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+<div class="main_fff mar_box">
+    <dl class="Login_tit">
+		<dt>认证信息</dt>
+	</dl>
+    <div class="person_box">
+    	<div class="person_list">
+        	<div class="person_list_name">
+            	企业名称：
+            </div>
+            <div class="person_list_box" id="name">
+
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	企业统一社会信用代码：
+            </div>
+            <div class="person_list_box" id="businessLicenseNo">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name" >
+            	企业类型：
+            </div>
+            <div class="person_list_box" id="companyPropertyName">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	企业所在地：
+            </div>
+            <div class="person_list_box" id="address">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	法定代表人：
+            </div>
+            <div class="person_list_box" id="legalPersonName">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	注册资本：
+            </div>
+            <div class="person_list_box" id="registeredCapital">
+            </div>&nbsp;万元
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	成立日期：
+            </div>
+            <div class="person_list_box" id="establishmentDate">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	营业期限：
+            </div>
+            <div class="person_list_box" id="buslimit">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	经营范围：
+            </div>
+            <div style="float: left;width: 71%; word-wrap: break-word;margin-top: 16px; line-height: 32px;"  id="businessScope">
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	营业执照：
+            </div>
+            <div class="person_list_box">
+            	<img style="width: 50%;margin-left: 200px;" id="businessLicenseImageUrl" src=""/>
+            </div>
+        </div>
+        
+    </div>
+	
+	
+</div>
+</div>	
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+</body>
+</html>

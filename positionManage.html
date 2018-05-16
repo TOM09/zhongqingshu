@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>职位管理</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+		<meta name="toTop" content="true">
+		<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!--bootstrap框架↓-->
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+		<!--本页面CSS↓-->
+		<link rel="stylesheet" href="/static/css/swiper.css">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="css/util.css">
+		<!--bootstrap框架↓-->
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+		<script type="text/javascript" src="/static/js/index.js"></script>
+		<script type="text/javascript" src="/static/js/util.js"></script>
+	</head>
+
+	<body>
+		<!--头部引用了header.js-->
+		<!--头部end-->
+		<div class="w1200">
+			<div class="main_fff">
+				<dl class="Login_tit">
+					<dt>职位管理</dt>
+				</dl>
+				<div class="jd_box_table" style="position:relative">
+					<ul class="jd_qh">
+						<li id='l1' class='active'>
+							<a style='cursor:pointer' onclick='change_1()'>在线职位</a>
+						</li>
+						<li id='l2'>
+							<a style='cursor:pointer' onclick='change_2()'>下线职位</a>
+						</li>
+					</ul>
+					<button class="fabuzw_btn" style="top: 9px;position:absolute;">发布职位</button>
+					<div id="table_1" style="display:block;">
+						<div id="div_1"></div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_1">
+							</ul>
+						</div>
+					</div>
+					<div id="table_2">
+						<div id="div_2"></div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_2">
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--尾部end-->
+		<script type="text/javascript" src="js/header.js"></script>
+		<script type="text/javascript" src="js/footer.js"></script>
+
+		<script type="text/javascript">
+			var companyId = +localStorage.getItem('companyId');
+			var pre
+			var next
+			var pageCount
+			var rows
+			$(function() {
+				queryAllPositionOnline(1);
+				if('${show}' == 'rePublish') {
+					queryAllPositionOffline(1);
+					change_2()
+				}
+			})
+
+			//查看职位
+			function queryPositionD(positionId) {
+				location.href = "${pageContext.request.contextPath}/mcbn/services/position/queryPositionD?positionId=" + positionId
+			}
+
+			//已发布职位
+			function queryAllPositionOnline(data) {
+				var queryData = {};
+				queryData.companyId = companyId;
+				queryData.isOnline = true;
+				queryData.clientType = 102500;
+				queryData.data = data
+				//上线职位
+				console.log(queryData)
+				ajax("/services/position/list", queryData, function(msg) {
+				console.log(msg)
+					var datas = msg.datas[0].datas
+					//将msg的各项值赋于变量
+					pre = msg.pre;
+					next = msg.next;
+					pageCount = msg.pageCount;
+					rows = msg.rows;
+					var trs = "";
+					var workCity;
+					//循环msg.datas的 rows的长度
+					for(var i = 0; i < datas.length; i++) {
+						console.log(datas)
+						workCity = datas[i].workCity.split('_');
+						//拼接的字符串
+						trs += "<dl class='fabuzw_dl'><dd>" +
+							"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo(" + datas[i].id + ")\">" + datas[i].name + "</a>" +
+							(datas[i].isVideo == true ? "<b>" + "视频" + "</b>" : "&nbsp;&nbsp;") +
+							"<span>" + datas[i].salaryScopeName + "</span></h1>" +
+							"<p>" + datas[i].workExperienceName + "&nbsp;" + datas[i].degreeLevel + "&nbsp;" + datas[i].jobCategory + "&nbsp;" + workCity[1] + "</p></dd>" +
+							"<dt><button class='person_fabuzw' onclick=\"queryPositionD(" + datas[i].id + ")\">查看职位</button><button class='person_fabuzw' onclick=\"updateStatus(" + datas[i].id + ")\">下线职位</button></dt></dl>"
+					};
+					//装发布的职位内容的div
+					$("#div_1").html(trs);
+					buildPage2("pagenumber_1", msg.currentPage, pageCount, "queryAllPositionOnline", "");
+				});
+			}
+
+			function queryAllPositionOffline(data) {
+//				queryData.currentPage = data;
+				var queryData = {};
+				queryData.companyId = companyId;
+				queryData.isOnline = false;
+				queryData.clientType = 102500;
+				queryData.data = data
+				//成功部分
+				ajax("/services/position/list", queryData, function(msg) {
+					console.log(msg)
+					var datas = msg.datas[0].datas
+					pre = msg.pre;
+					next = msg.next;
+					pageCount = msg.pageCount;
+					rows = msg.rows;
+					var trs = "";
+					var workCity;
+					for(var i = 0; i < datas.length; i++) {
+						console.log(datas[i].id)
+						workCity = datas[i].workCity.split('_');
+						trs += "<dl class='fabuzw_dl'><dd>" +
+							"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo(" + datas[i].id + ")\">" + datas[i].name + "</a>" +
+							(datas[i].isVideo == true ? "<b>" + "视频" + "</b>" : "&nbsp;&nbsp;") +
+							"<span>" + datas[i].salaryScopeName + "</span></h1>" +
+							"<p>" + datas[i].workExperienceName + "&nbsp;" + datas[i].degreeLevel + "&nbsp;" + datas[i].jobCategory + "&nbsp;" + workCity[1] + "</p></dd>" +
+							"<dt><button class='person_fabuzw' onclick=\"queryPositionD(" + datas[i].id + ")\">查看职位</button><button class='person_fabuzw' onclick=\"rePublish(" + datas[i].id + ")\">重新发布</button></dt></dl>"
+					};
+					$("#div_2").html(trs);
+					buildPage2("pagenumber_2", msg.currentPage, pageCount, "queryAllPositionOnline", "");
+				});
+			}
+
+			function createPage(data, flag) {
+				if(flag == "on") {
+					if(rows.length != 0) {
+						var p = "<li><a style='cursor:pointer' id='pren'>上一页</a></li>";
+						for(var i = 1; i <= pageCount; i++) {
+							if(i > 3) {
+								break;
+							}
+							if(i == 3 && pageCount >= 5) {
+								p += "<li><a style='cursor:pointer' id='n" + i + "'>" + i + "</a>...</li>"
+							} else {
+								p += "<li><a style='cursor:pointer' id='n" + i + "'>" + i + "</a></li>"
+							}
+						}
+						if(pageCount > 3) {
+							p += "<li><a id='endn'>" + pageCount + "</a></li>"
+						}
+						p += "<li><a style='cursor:pointer' id='nextn'>下一页</a></li>"
+						$(data).html(p);
+						//注册点击分页事件
+
+						$("#n1").on("click", function() {
+							queryAllPositionOnline(companyId, 1);
+						})
+						$("#n2").on("click", function() {
+
+							queryAllPositionOnline(companyId, 2);
+						});
+						$("#n3").on("click", function() {
+
+							queryAllPositionOnline(companyId, 3);
+
+						});
+						$("#pren").on("click", function() {
+
+							queryAllPositionOnline(companyId, pre);
+
+						});
+						$("#nextn").on("click", function() {
+
+							queryAllPositionOnline(companyId, next);
+
+						});
+						$("#endn").on("click", function() {
+
+							queryAllPositionOnline(companyId, pageCount);
+
+						});
+					}
+				} else {
+					if(rows.length != 0) {
+						var p = "<li><a style='cursor:pointer' id='pref'>上一页</a></li>";
+						for(var i = 1; i <= pageCount; i++) {
+							if(i > 3) {
+								break;
+							}
+							if(i == 3 && pageCount >= 5) {
+								p += "<li><a style='cursor:pointer' id='f" + i + "'>" + i + "</a>...</li>"
+							} else {
+								p += "<li><a style='cursor:pointer' id='f" + i + "'>" + i + "</a></li>"
+							}
+						}
+						if(pageCount > 3) {
+							p += "<li><a id='endf'>" + pageCount + "</a></li>"
+						}
+						p += "<li><a style='cursor:pointer' id='nextf'>下一页</a></li>"
+						$(data).html(p);
+						//注册点击分页事件
+
+						$("#f1").on("click", function() {
+							queryAllPositionOffline(companyId, 1);
+						})
+						$("#f2").on("click", function() {
+
+							queryAllPositionOffline(companyId, 2);
+						});
+						$("#f3").on("click", function() {
+
+							queryAllPositionOffline(companyId, 3);
+
+						});
+						$("#pref").on("click", function() {
+
+							queryAllPositionOffline(companyId, pre);
+
+						});
+						$("#nextf").on("click", function() {
+
+							queryAllPositionOffline(companyId, next);
+
+						});
+						$("#endf").on("click", function() {
+
+							queryAllPositionOffline(companyId, pageCount);
+
+						});
+					}
+				}
+			}
+			$(".fabuzw_btn").click(function() {
+				location.href = "createPosition.html?companyId=" + companyId
+			})
+			//点击在线职位
+			function change_1() {
+				$("#table_2").css('display', 'none');
+				$("#table_1").css('display', 'block');
+				$("#l1").addClass('active');
+				$("#l2").removeClass('active');
+				queryAllPositionOnline(1)
+			}
+
+			//点击下线职位
+			function change_2() {
+				$("#table_1").css('display', 'none');
+				$("#table_2").css('display', 'block');
+				$("#l2").addClass('active');
+				$("#l1").removeClass('active');
+				queryAllPositionOffline(1)
+			}
+			//点击下线职位
+			function updateStatus(data) {
+				var udata = {};
+				udata.positionId = data
+//				udata.isOnline = false;
+				udata.clientType = 102500;
+//				udata.data = data;
+				//成功部分
+				console.log(udata)
+				ajax("/services/position/offline", udata, function(msg) {
+					console.log(msg)
+					if(msg.status == 'success') {
+						queryAllPositionOnline(1)	
+					}
+				});
+			}
+
+			//跳转页面
+			function rePublish(data) {
+				location.href = "createPosition.html?data=" + data
+			}
+		</script>
+
+	</body>
+
+</html>

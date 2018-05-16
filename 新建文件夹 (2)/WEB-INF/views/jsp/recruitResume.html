@@ -1,0 +1,278 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>简历</title>
+	<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/static/manager/css/css.css">
+	<script type="text/javascript" src="/static/js/util.js"></script>
+	<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+	<!--bootstrap框架↓-->
+	<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<style type="text/css">
+		.changeorderimg {
+			background: url("/static/images/icon_time.png") no-repeat right;
+		}
+	</style>
+</head>
+<body style="background-color: white;">
+	<div class="jd_box_table" style="border: 10px solid #EFEFEF;">
+
+		<ul class="jd_qh">
+	           	<li id='l1' class='active'><a style='cursor:pointer' onclick='change_1()'>投递简历</a></li>
+				<li id='l2'><a style='cursor:pointer' onclick='change_2()'>下载简历</a></li>
+		</ul>
+		&nbsp;
+		<div id="table_1" style="margin-top:-20px; display:block" >
+			<div class="jianl_shx">选择职位：
+				<select class="person_list_selects" id="choicePosition_1" onChange='queryByPosition1()'>
+	          	  		
+	          	</select>
+			</div>
+		    <div class="search">
+			    <input id="name1" type="text" placeholder="搜索姓名">
+		        <button id='search1' onclick='search1()' class="searchBtn" type="button"></button>
+		    </div>
+		    <table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+		    	<thead>
+			        <tr>
+			            <th width="25%">姓名</th>
+			            <th width="25%">职位名称</th>
+			            <th width="25%">投递日期</th>
+			            <th width="25%">操作</th>
+			        </tr>
+		        </thead>
+		      	<tbody id="data1"></tbody>
+		    </table>
+			<ul class="pagination" id="pagenumber_1">
+			</ul>
+		</div>
+		<div id="table_2" style="margin-top:-20px; display:none" >
+			<div class="jianl_shx">选择职位：
+				<select class="person_list_selects" id="choicePosition_2" onChange='queryByPosition2()'>
+	          	  		
+	          	</select>
+	          	<a href="#" class="jianl_paix changeorderimg" onclick='changeOrder(this)'>时间排序</a>
+			</div>
+			<div class="search">
+		      <input id="name2" type="text" placeholder="搜索姓名">
+		      <button id='search2' onclick='search2()' class="searchBtn" type="button"></button>
+		    </div>
+			<table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+		    	<thead>
+				<tr>
+					<th width="*">姓名</th>
+					<th width="*">职位名称</th>
+					<th width="120px">投递日期</th>
+					<th width="120px">手机号</th>
+					<th width="120px">邮箱</th>
+					<th width="100px" >操作</th>
+				</tr>
+		        </thead>
+		      	<tbody id="data2"></tbody>
+		    </table>
+			<ul class="pagination" id="pagenumber_2">
+			</ul>  
+		</div>
+	</div>
+	  <script>
+		  	var companyId = '${companyId}'
+		  	/* var companyId = 0 */
+			var positionId = ''
+			var order = 'desc'
+			var pageCount;
+			var rows
+			var name=''
+		  	$(function(){
+                if(isSubAccount == 1){
+                    $(".linkChild").eq(1).addClass("accordionActive");
+                    $(".submenu").eq(0).css({
+                        "display": "block"
+                    });
+                } else {
+                    $(".linkChild").eq(5).addClass("accordionActive");
+                    $(".submenu").eq(2).css({
+                        "display": "block"
+                    });
+				}
+		  		queryPosition()
+		  		queryAllRecruitResume(1);
+		  		queryAllRecruitResumeDown(1)
+			 })
+			 function queryAllRecruitResume(data){
+                 var resumedata={};
+                 resumedata.currentPage=data;
+                 resumedata.position=positionId;
+                 resumedata.companyId=companyId;
+                 resumedata.name=name;
+				$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath }/mcbn/services/admint/resume/queryAllResume",
+                    data:JSON.stringify(resumedata),
+                    contentType: "application/json",
+					dataType:"json",
+					success:function(msg){
+						pre =   msg.pre;
+						next =	msg.next;
+						pageCount = msg.pageCount;
+						rows = msg.rows;
+						var trs="";
+						$.each(msg.rows,function(i,resume){
+							trs+="<tr><td>"+resume.btruName
+							  +"</td><td>"+(resume.pName==null?'':resume.pName)+"</td><td>"+(resume.sendDate==null?'':resume.sendDate)+"</td><td><button button type='button'"+
+							"onclick=\"queryDetails("+resume.bturId+","+resume.pId+")\">查看详情</button></td></tr>"
+					    });
+						if(msg.rows.length == 0) {
+		                  trs = "<tr><td colspan='4'>无此搜索内容</td></tr>";
+						}
+						$("#data1").html(trs);
+						buildPage2("pagenumber_1", msg.currentPage, pageCount, 'queryAllRecruitResume', "")
+					}
+				})
+			} 
+			function queryAllRecruitResumeDown(data){
+                var resumedata={};
+                resumedata.currentPage=data;
+                resumedata.position=positionId;
+                resumedata.companyId=companyId;
+                resumedata.name=name;
+                resumedata.order=order;
+				$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath }/mcbn/services/admint/resume/queryAllResume",
+                    data:JSON.stringify(resumedata),
+                    contentType: "application/json",
+					dataType:"json",
+					success:function(msg){
+						pre =   msg.pre;
+						next =	msg.next;
+						pageCount = msg.pageCount;
+						rows = msg.rows;
+						var trs="";
+						$.each(msg.rows,function(i,resume){
+							trs+="<tr><td>"+resume.btruName
+							  +"</td><td>"+(resume.pName==null?'':resume.pName)+"</td><td>"+(resume.sendDate==null?'':resume.sendDate)+"</td><td>"+resume.phone+"</td><td>"+resume.email+"</td><td><button button type='button'"+
+							"onclick=\"queryDetails("+resume.bturId+","+resume.pId+")\">查看详情</button></td></tr>"
+		
+					    });
+						if(msg.rows.length == 0) {
+		                  trs = "<tr><td colspan='6'>无此搜索内容</td></tr>";
+						}
+						$("#data2").html(trs);
+						buildPage2("pagenumber_2", msg.currentPage, pageCount, 'queryAllRecruitResumeDown', "")
+					}
+				})
+			}
+
+
+		  	function queryPosition(){
+			    var positiondata={};
+                positiondata.companyId=companyId;
+				$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryPosition",
+                    data:JSON.stringify(positiondata),
+					dataType:"json",
+                    contentType: "application/json",
+					success:function(msg){
+			    		  var ops="<option value=''>全部职位</option>";
+						  $.each(msg,function(i,position){
+				    			ops+="<option value='"+position.id+"'>"+position.name+"</option>";
+		      			  });
+		 			      
+		 			      $("#choicePosition_1").html(ops);
+		 			      $("#choicePosition_2").html(ops);
+	   
+					}
+				});
+			} 
+			function queryPosition(){
+                var positiondata={};
+                positiondata.companyId=companyId;
+				$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryPosition",
+                    data:JSON.stringify(positiondata),
+                    dataType:"json",
+                    contentType: "application/json",
+					success:function(msg){
+			    		  var ops="<option value=''>全部职位</option>";
+						  $.each(msg,function(i,position){
+				    			ops+="<option value='"+position.id+"'>"+position.name+"</option>";
+		      			  });
+		 			      
+		 			      $("#choicePosition_1").html(ops);
+		 			      $("#choicePosition_2").html(ops);
+	   
+					}
+				});
+			} 
+			function search1(){
+		  		name = $("#name1").val()
+		  		queryAllRecruitResume(1)
+			}
+			function search2(){
+		  		name = $("#name2").val()
+		  		queryAllRecruitResumeDown(1);
+			}
+		  	function queryByPosition1(){
+			  	positionId = $("#choicePosition_1").val()
+		 		queryAllRecruitResume(1)
+		 	}
+		  	function queryByPosition2(){
+		  		positionId = $("#choicePosition_2").val()
+		  		queryAllRecruitResumeDown(1)
+		  	}
+		  	function change_1(){
+				 $("#table_2").css('display','none');
+				 $("#table_1").css('display','block'); 
+				 $("#l1").addClass('active');
+				 $("#l2").removeClass('active');
+				 positionId = ''
+				 name=''
+				 queryAllRecruitResume(1)
+			 }
+			 function change_2(){
+				 $("#table_1").css('display','none');
+				 $("#table_2").css('display','block'); 
+				 $("#l2").addClass('active');
+				 $("#l1").removeClass('active');
+				 positionId = ''
+				 name=''
+				 queryAllRecruitResumeDown(1);
+			 }
+			var flag = true
+			function changeOrder(obj){
+				 if (flag){
+                     $(obj).removeClass("changeorderimg");
+					 order = 'asc';
+					 flag = false
+				 }else{
+                     $(obj).addClass("changeorderimg");
+					 order = 'desc';
+					 flag = true
+				 }
+				 queryAllRecruitResumeDown(1)
+			 }
+			function queryDetails(resumeId,pId){
+				if (pId == null){
+					 location.href="${pageContext.request.contextPath}/mcbn/services/admint/resume/queryResumeDetails?resumeId="+resumeId+"&flag=admin"
+				 }else{
+					 location.href="${pageContext.request.contextPath}/mcbn/services/admint/resume/queryResumeDetails?resumeId="+resumeId+"&sendPositionId="+pId+"&flag=admin"
+				 }
+			}
+	  </script>
+	  <script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+	  <script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+	  <link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+	  <link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</body>
+</html>

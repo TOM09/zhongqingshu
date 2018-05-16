@@ -1,0 +1,71 @@
+<%@ page language="java" import="com.gqt.cms.model.*" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>政策详情</title>
+    <script type="text/javascript" src="/static/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/static/manager/css/css.css">
+	<style type="text/css">
+		body{
+			font-family: "Microsoft YaHei";
+			font-size: 16px;
+			line-height: 26px;
+		}
+		.contentHead {
+			width: 93%;
+			margin-left: 7%;
+			margin-top: 3%;
+		}
+		.content {
+			width: 93%;
+			float: right;
+		}
+
+	</style>
+</head>
+<body style="background-color: white;">
+<div style="border: 10px solid #EFEFEF;">
+	<script>
+	$(function(){
+        if(isSubAccount == 1) {
+            $('.link').removeClass('accordionActive').eq(2).addClass('accordionActive');
+        } else {
+            $('.link').removeClass('accordionActive').eq(7).addClass('accordionActive');
+        }
+		var trainInfoId = "<%=request.getParameter("policyId")%>"
+	})
+	
+	</script>
+	<h1 class="contentHead" style="width:100%;margin: 0px;">政策详情</h1>
+	<div class="content" style="float: none;">
+		<dl class="gongy_xxtop" style="width: 100%;margin: 0px;" >
+			<dt style="width:15%;"><img src='/images/${policy.imageUrl}' style="width:150px;height:80px"/></dt>
+			<dd  style="width: 80%;">
+				<h1>${policy.title}</h1>
+                <span style="float: left;">发布日期：${time}</span>
+				<span style="float: left;margin-left: 20px;">${policy.browseCount}人浏览</span>
+				<span></span>
+			</dd>
+		</dl>
+		    <div class="gongy_xxbox">
+				${policy.text}
+			</div>
+		
+			
+	</div>
+</div>
+</body>
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</html>

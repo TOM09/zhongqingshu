@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>500</title>
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/error.css">
+</head>
+<body>
+<div class="errorHeader">
+    <div class="headerBorder">
+        <img style="vertical-align: middle;" src="../../static/images/logo.png" alt="">
+        <div class="headerRight">
+            <a id="buttonGotoCompanyLogin">返回登录</a>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <img src="../../static/images/image.png" alt="">
+    <img src="../../static/images/500.png" alt="">
+    <div class="text">网络请求无法响应，请稍后再试</div>
+    <button type="button" class="reBtn">刷新页面</button>
+</div>
+<footer class="footer">
+    © 中青数联科技（北京）有限公司 <br>
+    京ICP备18013705号-1 中青树
+</footer>
+</body>
+<script>
+    $(document).ready(function () {
+        $('.reBtn').click(function () {
+            history.go(-1);
+        })
+    })
+</script>
+</html>

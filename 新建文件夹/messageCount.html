@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<body>
+	<script type="text/javascript">
+		
+   		queryCountNotRead()
+	    autoPlay2();
+	
+		function autoPlay2(){
+			time = setInterval(function(){
+				queryCountNotRead()
+			},10000);
+		} 
+		function queryCountNotRead(){
+			var countNotRead  = "/services/message/count/not/read/";
+			var data5 = {}
+			data5.clientType=102500;
+			ajax((countNotRead),data5, function (result) {
+		    	if (result.status == "success"){
+		    		if (result.datas[0]){
+		    			$("#messageCount").text(result.datas[0].count)
+		    		}
+		    	}
+		   	}); 
+		}
+	</script>
+</body>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="css/swiper.css">
+<link rel="stylesheet" href="css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+<!--头部开始-->
+<div class="top_bg">
+	   <div id="site-nav">
+			<ul class="quick-menu">
+				<li><a href="">消息</a><i>10</i>|</li>
+			  <li><a href="">发布职位</a>|</li>
+			  <li><a href="">简历管理</a>|</li>
+			  <li><a href="">职位管理</a>|</li>
+			  <li class="menu-item">
+				  <div class=menu>
+					  <a class=menu-hd href="#" >赛诺派<b></b></a> 
+					  <div class=menu-bd>
+						  <a href="#">认证信息</a>
+						  <a href="#">个人信息</a>
+						  <a href="#">企业信息</a>
+						  <a href="#">账号设置</a>
+						  <a href="#">退出登录</a>
+					  </div>
+				  </div>
+			  </li>
+		    </ul>
+		</div>
+<SCRIPT type=text/javascript>
+	TB.Header.init();
+</SCRIPT>
+</div>
+<div class="Header">
+    <dl class="Login_topdl">
+		<dt>就业平台</dt>
+        <dd class="nav"><a href="/services/dispense/approveSuccess">首页</a><a href="">招聘</a><a href="/services/publicgood/query">公益</a><a href="/services/train/train">培训</a><a href="">政策</a><a href="">APP</a></dd>
+	</dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+<div class="main_fff mar_box">
+    <dl class="Login_tit">
+		<dt>发布职位</dt>
+	</dl>
+    <div class="person_box">
+    	<div class="person_list">
+        	<div class="person_list_name">
+            	职位分类：
+            </div>
+            <div class="person_list_box">
+            	<label class="yy_check">
+						<input type="radio" class="yy_danx">
+						<span></span>普通职位
+				</label>
+				
+				<label class="yy_check">
+						<input type="radio" class="yy_danx">
+						<span></span>视频面试职位
+				</label>
+				
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	视频面试时间：
+            </div>
+            <div class="person_list_box">
+            	<input class="person_spms" value="2017.09.20"/>
+				<input class="person_spms2" value="09:00"/>至
+				<input class="person_spms" value="2017.09.20"/>
+				<input class="person_spms2" value="09:00"/>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	职位类型：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects">
+            	  <option value="设计">设计</option>
+            	</select>
+                <select class="person_list_selects">
+                  <option value="UI设计师">UI设计师</option>
+                </select>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	职位名称：
+            </div>
+            <div class="person_list_box">
+            	<input class="person_list_inputs"/>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	月薪范围：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects">
+            	  <option value="3k-5k">3k-5k</option>
+            	</select>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	工作地点：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_select" id="selectCompanyLocation"><option></option></select>
+                <select class="person_list_select" style="margin-left: 15px;"><option></option></select>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	详细地址：
+            </div>
+            <div class="person_list_box">
+            	<input class="person_list_inputs"/><span><img src="images/icon_location.png"/></span>
+            </div>
+        </div>        
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	工作性质：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects">
+            	  <option value="全职">全职</option>
+            	</select>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	经验要求：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects">
+				<option value="五年及以上">五年及以上</option>
+				</select>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	学历要求：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects">
+            	  <option value="本科及以上">本科及以上</option>
+            	</select>
+            </div>
+        </div>
+        
+        <div class="person_list" style="line-height:36px;">
+        	<div class="person_list_name">
+            	职位标签：
+            </div>
+            <div class="person_list_box" style="line-height:36px;width: 584px;">
+				<span class="person_biaoq"><a href="#" class="hover">带薪年假</a></span>
+				<span class="person_biaoq"><a href="#" class="hover">公司氛围好</a></span>
+				<span class="person_biaoq"><a href="#" class="hover">扁平管理</a></span>
+				<span class="person_biaoq"><a href="#">交通方便</a></span>
+				<span class="person_biaoq"><a href="#">年度旅游</a></span>
+				<span class="person_biaoq"><a href="#">环境优越</a></span>
+				<span class="person_biaoq"><a href="#">年终分红</a></span>
+				<span class="person_biaoq"><a href="#">领导Nice</a></span>
+				<span class="person_biaoq"><a href="#">免费零食</a></span>
+				<span class="person_biaoq"><a href="#">提供住宿</a></span>
+				<span class="person_biaoqNO">标签最多选择5个</span>
+            </div>
+        </div>
+        
+        <div class="person_list" style="line-height:36px;">
+        	<div class="person_list_name">
+            	岗位职责：
+            </div>
+            <div class="person_list_box" style="line-height:36px;">
+				<textarea class="person_list_texteara"></textarea><span class="textare_ts">0-500</span>
+            </div>
+        </div>
+		
+		<div class="person_list" style="line-height:36px;">
+        	<div class="person_list_name">
+            	职位描述：
+            </div>
+            <div class="person_list_box" style="line-height:36px;">
+				<textarea class="person_list_texteara"></textarea><span class="textare_ts">0-500</span>
+            </div>
+        </div>
+        <button class="person_list_btn">发布职位</button>    
+        
+    </div>
+	
+	
+</div>
+</div>	
+<!--尾部开始-->
+<div class="footer">
+
+</div>
+<!--尾部end-->
+</body>
+</html>

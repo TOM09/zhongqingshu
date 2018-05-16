@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>认证信息</title>
+</head>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/verification.js"></script>
+<link rel="stylesheet" type="text/css" href="js/reset-min.css">
+<link rel="stylesheet" type="text/css" href="js/util.css">
+<link rel="stylesheet" href="css/util.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+<script type="text/javascript"
+        src="https://webapi.amap.com/maps?v=1.3&key=e699ed6a0205523a6388dc348138f282&plugin=AMap.Geocoder"></script>
+<!--日期插件引用↓ -->
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+<!--<script src="/static/bootstrap-3.3.7-dist/js/moment-with-locales.min.js"></script>-->
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+<body>
+<div class="w1200">
+    <div class="main_fff mar_box">
+        <dl class="Login_tit">
+            <dt>认证信息</dt>
+            <input type="text" id="companyId" hidden="true">
+        </dl>
+        <div class="person_box">
+            <div class="person_list">
+                <div class="person_list_name">
+                    企业名称：
+                </div>
+                <div class="person_list_box" id="name">
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    企业统一社会信用代码：
+                </div>
+                <div class="person_list_box" id="businessLicenseNo">
+
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    企业类型：
+                </div>
+                <div class="person_list_box">
+                    <select class="person_list_selects" id="select_type">
+                    </select>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    企业所在地：
+                </div>
+                <div class="person_list_box">
+                    <select class="person_list_select" id="addressProvince" name="addressProvince"
+                            style="width: 80px;"></select>
+                    <select class="person_list_select" id="addressCity" name="addressCity"
+                            style="margin-left: 10px;width: 80px;"></select>
+                    <input class="person_list_inputs" id="addressDetail" name="addressDetail"
+                           style="margin-left: 10px;width: 380px;"/>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    法定代表人：
+                </div>
+                <input class="person_list_selects" id="legal_representative"/>
+            </div>
+
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    注册资本：
+                </div>
+                <input onkeyup="num(this)" class="person_list_selects" id="registerMoney"/>&nbsp;万元
+            </div>
+
+            <div class="person_list">
+
+            </div>
+
+            <div id="interViewTime">
+
+                <div class="form-group">
+                    <div class="person_list_name">
+                        成立日期：
+                    </div>
+                    <!--指定 date标记-->
+                    <div style="float:left;margin-top:10px;" class='input-group date col-sm-3' id='datetimepicker3'>
+                        <input type='text' id="establish_date" name="establish_date" class="form-control"
+                               style="height:40px;"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="clear:both;">
+                    <div class="person_list_name">
+                        营业期限：
+                    </div>
+                    <!--指定 date标记-->
+                    <label class="yy_check" style="margin-top:20px;">
+                        <input type="radio" checked class="yy_danx" name="businessTerm">
+                        <span></span>
+                    </label>
+                    <div style="float:left;margin-top:10px;" class='input-group date col-sm-3' id='datetimepicker1'>
+                        <input type='text' id="startTime" name="startTime" class="form-control" style="height:40px;"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div class="textAlign">至</div>
+                    <div style="float:left;margin-top:10px;" class='input-group date col-sm-3' id='datetimepicker2'>
+                        <input type='text' id="endTime" name="endTime" class="form-control" style="height:40px;"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <label class="yy_check" style="margin-top:20px;">
+                        <input type="radio" class="yy_danx" name="businessTerm">
+                        <span></span>
+                    </label><div class="textAlign">长期</div>
+                </div>
+            </div>
+
+            <div class="person_list">
+                <div class="person_list_name">
+                    经营范围：
+                </div>
+                <div class="person_list_box">
+                    <textarea class="person_list_texteara" id="scopeOfBusiness" style="line-height: 30px;"></textarea>
+                </div>
+            </div>
+            <div class="person_list">
+                <div class="person_list_name">
+                    &nbsp;
+                </div>
+                <div class="person_list_box">
+                    <button class="person_list_btn">提交审核</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="js/loginHeader.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+<script>
+    function ChineseToNumber(chnStr) {
+        var str = chnStr.replace(/[元圆整人民币]/g, "").split('');
+        var reg = /^[0-9]+.?[0-9]$/;
+        var reg2 = /^[0-9]+.?[0-9][万]$/;
+        var numStr = str.join("");
+        if (reg.test(numStr)) {
+            return numStr;
+        }
+        if (reg2.test(numStr)) {
+            return numStr.replace(/[万]/g, "");
+
+        }
+        var chnNumChar = {零: 0, 壹: 1, 贰: 2, 叁: 3, 肆: 4, 伍: 5, 陆: 6, 柒: 7, 捌: 8, 玖: 9};
+        var chnNameValue = {
+            拾: {value: 10, secUnit: false},
+            佰: {value: 100, secUnit: false},
+            仟: {value: 1000, secUnit: false},
+            万: {value: 10000, secUnit: true},
+            亿: {value: 100000000, secUnit: true}
+        };
+        var rtn = 0;
+        var section = 0;
+        var number = 0;
+        var secUnit = false;
+
+        for (var i = 0; i < str.length; i++) {
+            var num = chnNumChar[str[i]];
+            if (typeof num !== 'undefined') {
+                number = num;
+                if (i === str.length - 1) {
+                    section += number;
+                }
+            } else {
+                var unit = chnNameValue[str[i]].value;
+                secUnit = chnNameValue[str[i]].secUnit;
+                if (secUnit) {
+                    section = (section + number) * unit;
+                    rtn += section;
+                    section = 0;
+                } else {
+                    section += (number * unit);
+                }
+                number = 0;
+            }
+        }
+        return ((rtn + section) / 10000);
+    }
+
+//    http://localhost/certificationInfo.html?data=temp\user\image\2018\05\07\15-05-57-4646061703607132866.jpg
+    $(function () {
+        var typeDate = {};
+        typeDate.clientType = 102500;
+        typeDate.type = "company_property";
+        ajax("/services/dict/type/list", typeDate,function (resultDate) {
+            var result = resultDate.datas;
+            for (var i = 0; i < result.length; i++) {
+                $("#select_type").append("<option value='" + result[i].name + "'>" + result[i].name + "</option>");
+            }
+        });
+        var ocrdata = {};
+        ocrdata.clientType = 102500;
+        ocrdata.businessLicenseImageUrl = getSearch("data");
+        var data = {};
+        data.clientType = "102500";
+        data.id = +localStorage.getItem("companyId");
+        ajax("/services/company/view/own", data, function (resulta) {
+            var resultStatus = resulta.datas[0].status;
+            if (resultStatus == "100851") {
+                window.location.href = "approving.html";
+            }
+        })
+        ajax("/services/company/ocr/get", ocrdata, function (returnData) {
+            if (returnData.resultCode == 1) {
+                var jsondata = jQuery.parseJSON(returnData.datas[0]);
+                var name = jsondata.name;
+                var regCode = jsondata.reg_num;
+                if (name == "FailInRecognition" || regCode == "FailInRecognition") {
+                    toast('企业名称和注册码等关键信息无法识别')
+                    return;
+                }
+                $("#name").html(jsondata.name);
+                $("#businessLicenseNo").html(jsondata.reg_num);
+                var detailAddress = jsondata.address;
+                $("#addressDetail").val(detailAddress);
+
+                var data = {};
+                data.type = "province";
+                data.clientType = "102500";
+                ajax(("/services/dict/type/list"), data, function (result) {
+                    var resultCode = result.resultCode;
+                    if (resultCode == "1") {
+                        provinceList = result.datas;
+                        var data1 = {};
+                        data1.type = "city";
+                        data1.clientType = "102500";
+                        ajax(("/services/dict/type/list"), data1, function (result) {
+                            cityList = result.datas;
+                            var paId = "";
+                            for (var c = 0; c < cityList.length; c++) {
+                                if (realCity == cityList[c].name) {
+                                    paId = cityList[c].parentId;
+                                }
+                            }
+                            for (var i = 0; i < provinceList.length; i++) {
+                                if (provinceList[i].id == paId) {
+                                    firstProvince = provinceList[i].code;
+                                }
+                                $("#addressProvince").append("<option value='" + provinceList[i].name + "'>" + provinceList[i].name + "</option>");
+                            }
+                            $("#addressProvince").val(firstProvince);
+
+                            var geocoder = new AMap.Geocoder({
+                                radius: 1000 //范围，默认：500
+                            });
+                            var city, province;
+                            geocoder.getLocation($("#addressDetail").val(), function (status, result) {
+                                if (status === 'complete' && result.info === 'OK') {
+                                    city = result.geocodes[0].addressComponent.city;
+                                    province = result.geocodes[0].addressComponent.province;
+                                    $("#addressProvince").val(province);
+                                    showCityList($("#addressProvince").val());
+                                    $("#addressCity").val(city);
+
+                                } else {
+                                    alert("获取省市失败，请手动选择")
+                                }
+                            });
+
+
+                        });
+                    }
+                });
+                $("#legal_representative").val(jsondata.person);
+                $("#registerMoney").val(ChineseToNumber(jsondata.captial));
+                var str1 = (jsondata.establish_date.substring(0, 4) + "." + jsondata.establish_date.substring(4, 6) + "." + jsondata.establish_date.substring(6, 8));
+                var str2 = (jsondata.valid_period.substring(0, 4) + "." + jsondata.valid_period.substring(4, 6) + "." + jsondata.valid_period.substring(6, 8));
+                if (str1 == "..") {
+                    str1 = "";
+                }
+                if (str2 == "..") {
+                    str2 = "";
+                }
+                if (jsondata.valid_period.substring(0, 4) >= 2999) {
+                    $(".yy_danx").eq(1).prop("checked", true).siblings().prop("checked", false);
+                    str2 = "";
+                }
+                $("#startTime").val(str1);
+                $("#endTime").val(str2);
+                $("#establish_date").val(str1);
+                $("#scopeOfBusiness").val(jsondata.business);
+                $("#addressProvince").change(function () {
+                    var pname = $(this).children('option:selected').val();
+                    showCityList(pname);
+                });
+                var sdata = {};
+                sdata.clientType = 102500;
+                sdata.id = "${companyId}";
+                sdata.name = "businessLicenseImageUrl";
+                sdata.value = getSearch("data");
+//                ajax(("/mcbn/services/company/modifydetail"), sdata, function (returnData1) {
+//
+//                });
+            }
+        });
+
+
+
+        $('#datetimepicker1').datetimepicker({
+            format: 'yyyy.mm.dd',
+            language: 'zh-CN',
+            minView: 2,
+            maxView: 4
+        });
+        $('#datetimepicker2').datetimepicker({
+            format: 'yyyy.mm.dd',
+            language: 'zh-CN',
+            minView: 2,
+            maxView: 4
+        });
+        $('#datetimepicker3').datetimepicker({
+            format: 'yyyy.mm.dd',
+            language: 'zh-CN',
+            minView: 2,
+            maxView: 4
+        });
+    });
+    var provinceList = [];
+    var cityList = [];
+    var firstProvince = "";
+    var twowiList = [];
+    var realCity = "";
+    function showCityList(provinceName) {
+        $("#addressCity").empty();
+        for (var j = 0; j < provinceList.length; j++) {
+            var prodata = provinceList[j];
+            if (prodata.name == provinceName) {
+                for (var i = 0; i < cityList.length; i++) {
+                    var data = cityList[i];
+                    if (data.parentId == prodata.id && data.name != realCity) {
+                        $("#addressCity").append("<option value='" + data.name + "'>" + data.name + "</option>");
+                    }
+                    if (data.parentId == prodata.id && data.name == realCity) {
+                        $("#addressCity").append("<option selected value='" + data.name + "'>" + data.name + "</option>");
+                    }
+                }
+                return;
+            }
+        }
+    }
+    function showWiList(pid) {
+        $("#workIndustryId").empty();
+        for (var i = 0; i < twowiList.length; i++) {
+            var data = twowiList[i];
+            if (data.parentId == pid) {
+                $("#workIndustryId").append("<option value='" + data.id + "'>" + data.name + "</option>");
+            }
+        }
+    }
+    var address;
+    $(document).ready(function () {
+//        $("#username").html($.cookie('userName') + "<b></b>");
+
+        $("#addressProvince").change(function () {
+            var pid = $(this).children('option:selected').val();
+            $("#addressProvince option").eq(0).remove();
+            showCityList(pid);
+        });
+        $("#workIndustryParentId").change(function () {
+            var pid = $(this).children('option:selected').val();
+            showWiList(pid);
+        });
+
+        $("#postAddress").click(function () {
+            $("#addressDetail").val(address);
+        });
+
+        $(".person_list_btn").click(function () {
+            var data = {};
+            data.clientType = 102500;
+            data.companyType = 100700;
+            data.companyId = +localStorage.getItem("companyId");
+            data.name = $("#name").html();
+            data.businessLicenseNo = $("#businessLicenseNo").html();
+            data.companyProperty = $("#select_type").val();//企业类型
+            data.addressProvince = $("#addressProvince").val();
+            data.addressCity = $("#addressCity").val();
+            data.addressDetail = $("#addressDetail").val();
+            data.legalPerson = $("#legal_representative").val();
+            data.registeredCapital = $("#registerMoney").val();
+            data.establishmentDate = $("#establish_date").val();
+            data.businessLicenseImageUrl = getSearch('data');
+            //此处需要营业期限
+            var timeLimit = document.getElementsByName('businessTerm');
+            if (timeLimit[0].checked) {
+                data.startBusinessDate = $("#startTime").val();
+                data.endBusinessDate = $("#endTime").val();
+            } else {
+                data.startBusinessDate = $("#startTime").val();
+            }
+            data.businessScope = $("#scopeOfBusiness").val();
+            if (data.companyProperty == "") {
+                toast('请选择企业类型')
+            } else if (data.addressDetail == "") {
+                toast('请填写详细地址')
+            } else if (data.legalPerson == "") {
+                toast('请填写法定代表人')
+            } else if (data.registeredCapital == "") {
+                toast('请填写注册资本')
+            } else if (data.establishmentDate == "") {
+                toast('请填写成立时间')
+            } else if (data.businessScope == "") {
+                toast('请填写经营范围')
+            } else {
+                ajax(("/services/company/certificate/request"), data, function (result) {
+                    var resultCode = result.resultCode;
+                    if (resultCode == "1") {
+                        window.location.href = "approving.html";
+                    } else {
+                        toast('该营业执照信息已注册')
+                    }
+                });
+            }
+        })
+
+    })
+</script>
+</html>

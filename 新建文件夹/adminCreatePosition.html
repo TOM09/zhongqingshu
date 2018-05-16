@@ -1,0 +1,760 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>发布职位</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+	<meta name="toTop" content="true">
+	<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+	<!--bootstrap框架↓-->
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+	<!--本页面CSS↓-->
+	<link rel="stylesheet" href="/static/css/swiper.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<!--bootstrap框架↓-->
+	<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+	<script type="text/javascript" src="/static/js/util.js"></script>
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<link href="/static/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<script src="/static/bootstrap-3.3.7-dist/js/moment-with-locales.min.js"></script>
+	<script src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	<script src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=8e2c24150d9743810be9ae4fa2461da5"></script>
+
+
+</head>
+<body style="background-color: white;">
+<!--头部end-->
+<div class="w1200" style="border: 10px solid #EFEFEF;margin: 0px;width: auto;">
+<div class="main_fff mar_box" style="margin: 0;">
+    <dl class="Login_tit">
+		<dt>发布职位</dt>
+	</dl>
+    <div class="person_box">
+    	<!-- <div class="person_list">
+        	<div class="person_list_name">
+            	职位分类：
+            </div>
+            <div class="person_list_box" onclick="getRadio()">
+            	<label class="yy_check">
+						<input type="radio" class="yy_danx" name="posi"  value="yes" checked>
+						<span></span>普通职位
+				</label>
+				
+				<label class="yy_check">
+						<input type="radio" class="yy_danx" name="posi"  value="no">
+						<span></span>视频面试职位
+				</label>
+				
+            </div> 
+        </div> -->
+	
+		 <!-- <div  id="interViewTime" style='display:none'>  
+	        <div class="form-group">  
+	            <div class="person_list_name">
+            		视频面试时间：
+            	</div>
+	           	 指定 date标记  
+	            <div  style="float:left" class='input-group date col-sm-3'' id='datetimepicker1' >  
+	                <input type='text' id="startTime" name="startTime" class="form-control" style="height:40px;"/>
+	                <span class="input-group-addon">
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+  	            </div>
+  	           	<div style="float:left">至</div>
+  	            <div style="float:left" class='input-group date col-sm-3'' id='datetimepicker2' >  
+	                <input type='text' id="endTime" name="endTime" class="form-control" style="height:40px;"/>  
+	                <span class="input-group-addon">  
+	                    <span class="glyphicon glyphicon-calendar"></span>
+	                </span>
+  	            </div><lable id="lable_trainTime" style="color:red;"></lable>
+   	        </div>  
+   		</div>  -->
+   		 
+		<div class="person_list">
+        	<div class="person_list_name">
+            	职位类型：
+            </div>
+            <div class="person_list_box" >
+            	<select class="person_list_selects" id="positionTypeId1" onchange='queryWorkPositionTypeId2()'>
+            	  
+            	</select>
+                <select class="person_list_selects" id="positionTypeId2">
+                  
+                </select>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	职位名称：
+            </div>
+            <div class="person_list_box">
+            	<input class="person_list_inputs" id="pname"/>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	月薪范围：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects" id="salaryScope">
+            	  
+            	</select>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	工作地点：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_select" id="province" onchange='queryCity()'></select>
+                <select class="person_list_select" id="city" style="margin-left: 15px;" onchange='queryDistrict()'></select>
+				<select class="person_list_select" id="district" style="margin-left: 15px;"></select>
+            </div>
+        </div>
+            
+         <div class="person_list">
+                <div class="person_list_name">
+                   	 详细地址：
+                </div>
+                <div class="person_list_box">
+                    <input class="person_list_inputs" readonly id="addressDetail" name="addressDetail"/><span><img onclick="showMap()" src="/static/images/icon_location.png"/></span>
+                    <input id="lon" name="lon" type="hidden" value=""/>
+                    <input id="lat" name="lat" type="hidden" value=""/>
+                </div>
+         </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	工作性质：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects" id="natureWork">
+            	  
+            	</select>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	经验要求：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects" id="workExperience">
+				
+				</select>
+            </div>
+        </div>
+		
+		<div class="person_list">
+        	<div class="person_list_name">
+            	学历要求：
+            </div>
+            <div class="person_list_box">
+            	<select class="person_list_selects" id="education">
+            	  
+            	</select>
+            </div>
+        </div>
+        
+        <div class="person_list" style="line-height:36px;">
+        	<div class="person_list_name">
+            	职位标签：
+            </div>
+            <div  id='plabel' class="person_list_box" style="line-height:36px;width: 584px;">
+			 
+            </div>
+        </div>
+        
+        <div class="person_list" style="line-height:36px;">
+        	<div class="person_list_name">
+            	岗位职责：
+            </div>
+            <div class="person_list_box" style="line-height:36px;">
+				<textarea style="overflow-y:scroll;" class="person_list_texteara" id="responsibility" onkeyup="limitTextarea(this)"></textarea><span class="textare_ts"><b class="nowTextLength">0</b>/500</span>
+
+            </div>
+        </div>
+		
+		<div class="person_list" style="line-height:36px;">
+        	<div class="person_list_name" >
+            	职位描述：
+            </div>
+            <div class="person_list_box" style="line-height:36px;">
+
+				<textarea  style="overflow-y:auto;" class="person_list_texteara" id="description" onkeyup="limitTextarea(this)"></textarea><span class="textare_ts"><b class="nowTextLength">0</b>/500</span>
+				
+            </div>
+        </div>
+        <button class="person_list_btn" onclick="submit()">发布职位</button>    
+        
+    </div>
+	
+	
+<!--尾部开始-->
+<div class="footer">
+</div>
+<div class="modal fade" id="map" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="margin-top: 5px;width: 98%;">
+		<div id="container" tabindex="0" style="position: relative;height: 600px;margin-top:  50px;"></div>
+		<div style="position:absolute;top:20px;left:30px;">
+			<input id="mapAddress" type="text" style="width:500px;;height:50px;border:1px solid #ccc;" value="" />
+			<button type="button"  style="text-align: center;margin: 20px 0;width: 100px;height: 46px;line-height:32px;background: rgba(232,13,34,1);border-radius: 4px;color: #fff;font-size: 18px;border: 0px;"  onclick="searchMap()" id="searchAddress">搜索
+			</button>
+			<button type="button" style="text-align: center;margin: 20px 0;width: 100px;height: 46px;line-height:32px;background: rgba(232,13,34,1);border-radius: 4px;color: #fff;font-size: 18px;border: 0px"  id="postAddress">确定</button>
+		</div>
+		<a href="javascript:void(0);" id="closeMap" style="position:absolute;right: -10px;top: -15px;font-size: 30px;background: #f5efef;border-radius: 30px;width: 35px;height: 30px;text-align:  center;">X</a>
+	</div>
+</div>
+
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 300px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body" id="prompt">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--尾部end-->
+<script type="text/javascript">
+	var companyId = "${companyId}"
+	/* var companyId = 0 */
+	var address;
+	var markers=[];
+	var lngData;
+	var latData;
+	var type="province";
+	var arr = [];
+	var mark = '${mark}';
+    function limitTextarea(obj){
+        var num = $(obj).val().length;
+        $(obj).siblings('span').find('.nowTextLength').css('color','#9B9B9B').text(num)
+        if(num>500)
+        {
+            $(obj).siblings('span').find('.nowTextLength').css('color','#E80D22');
+        }
+    }
+	$(function () {
+        limitTextarea($("#responsibility")[0]);
+        limitTextarea($("#description")[0]);
+        $('#closeMap').click(function(){
+            $('#map').modal('hide');
+        })
+        $(".linkChild").eq(4).addClass("accordionActive");
+        $(".submenu").eq(2).css({
+            "display": "block"
+        });
+        if(isSubAccount == 1){
+            $(".linkChild").eq(0).addClass("accordionActive");
+            $(".submenu").eq(0).css({
+                "display": "block"
+            });
+        } 
+        $("#lusername").html($.cookie('userName')+"<b></b>");
+		var parentId = 0
+		var code=null;
+		queryWorkPositionTypeId1(parentId)
+		querySalaryScope()
+		queryAddress(type,parentId)
+		queryNatureWork()
+		queryWorkExperience()
+		queryEeducation()
+		queryLabel()
+		
+	   /*  $('#datetimepicker1').datetimepicker({
+            language:  'zh-CN',
+            format: 'yyyy.mm.dd hh:ii',
+            minView : 0,
+            maxView: 4
+	    });   
+	    $('#datetimepicker2').datetimepicker({
+            language:  'zh-CN',
+            format: 'yyyy.mm.dd hh:ii',
+            minView : 0,
+            maxView: 4
+	    });   */
+	    
+	    
+	    map = new AMap.Map('container',{
+            resizeEnable: true,
+            zoom: 15,
+            center: [116.480983, 40.0958]
+        });
+        map.on('click', function(e) {
+            lngData = e.lnglat.getLng();
+            latData = e.lnglat.getLat();
+            var lnglatXY = [e.lnglat.getLng(),e.lnglat.getLat()];
+            $("#lon").val(e.lnglat.getLng())
+            $("#lat").val(e.lnglat.getLat())
+            geocoder.getAddress(lnglatXY, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                    address = result.regeocode.formattedAddress;
+                    $("#mapAddress").val(address);
+                    map.remove(markers);
+                    marker = new AMap.Marker({
+                        position: lnglatXY,
+                        title: address,
+                        map: map
+                    });
+                    markers.push(marker);
+                }else{
+                }
+            });
+
+        });
+        AMap.service('AMap.Geocoder',function(){
+            geocoder = new AMap.Geocoder({
+                city: "010"//城市，默认：“全国”
+            });
+        })
+        map.plugin('AMap.Geolocation', function() {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,
+                timeout: 10000,
+                buttonOffset: new AMap.Pixel(10, 20),
+                zoomToAccuracy: true,
+                buttonPosition:'RB'
+            });
+            map.addControl(geolocation);
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+        });
+        AMap.service(["AMap.PlaceSearch"], function() {
+            placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+                pageSize: 1,
+                pageIndex: 1,
+                city: "010"//城市
+            });
+        });
+	});
+
+    $("#postAddress").click(function () {
+        $("#addressDetail").val(address);
+        $("#lon").val(lngData);
+        $("#lat").val(latData);
+        $('#map').modal('hide');
+    })
+	
+	/* 查询职位类型 */
+	function queryWorkPositionTypeId1(parentId){
+	    var queryData={};
+        queryData.parentId=parentId;
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryPositionType",
+            data:JSON.stringify(queryData),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+	    		  var ops="<option value='-1'>====请选择职位类型====</option>";
+				  $.each(msg,function(i,workPositionType){
+		    			ops+="<option value='"+workPositionType.id+"'>"+workPositionType.name+"</option>";
+      			  });
+    			  if (parentId == 0){
+    				    $("#positionTypeId1").html(ops);
+    			  }else{
+    				    $("#positionTypeId2").html(ops);
+    			  }
+			}
+		});
+	}
+	function queryWorkPositionTypeId2(){
+		var data = $("#positionTypeId1").val()
+		queryWorkPositionTypeId1(data)
+	}
+	
+	/* 查询工资范围 */
+	function querySalaryScope(){
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/querySalaryScope",
+			data:"",
+			dataType:"json",
+			success:function(msg){
+	    		  var ops="<option value='-1'>=====请选月薪范围=====</option>";
+				  $.each(msg,function(i,salaryScope){
+		    			ops+="<option value='"+salaryScope.id+"'>"+salaryScope.name+"</option>";
+      			  });
+ 			      $("#salaryScope").html(ops);
+			}
+		});
+	}
+	
+	/* 获得标签 */
+	function queryLabel(){
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryLabel",
+			data:"",
+			dataType:"json",
+			success:function(msg){
+	    		  var ops="";
+				  $.each(msg,function(i,positionLabel){
+					  var labelId = i+1
+				      ops+="<span class='person_biaoq' style='display: inline-block;'><a style='cursor:pointer' id='"+positionLabel.code+"' value='"+positionLabel.name+"'>"+positionLabel.name+"</a></span>";
+      			  });
+				  ops += "<span class='person_biaoqNO'>标签最多选择5个</span>";
+ 			      $("#plabel").html(ops);
+ 			      var spans = $("#plabel").find("span") 
+	   			  $("#plabel>span").each(function(){
+	   					var obj = this.children[0]	
+	   					$(obj).click(function(){
+	   						if (IsInArray(arr,this.id)){
+	   							$(this).css('color','#8A8A8A');
+	   							var n;
+	   							for (var i=0;i<arr.length;i++){
+	   								if (arr[i] == this.id){
+	   									n=i;
+	   					   				break;
+	   								}
+	   							}
+	   							arr.splice(n,1)
+	   							return
+	   						}
+	   						if (arr.length < 5){
+	   							$(this).css('color','#33CCFF');
+	   							arr.push(this.id)
+	   						}
+	   					}); 
+   				
+   				});
+ 			} 
+			
+		});
+	}
+	
+	function IsInArray(arr,val){  
+		if (arr != null){
+			var testStr=','+arr.join(",")+",";  
+	
+			return testStr.indexOf(","+val+",")!=-1; 
+		}
+		return false
+	}  
+	/* 查询工作性质 */
+	function queryNatureWork(){
+		var type="job_category";
+		var  typeData={};
+        typeData.type=type;
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryNatureWork",
+            data:JSON.stringify(typeData),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+	    		  var ops="<option value='-1'>=====请选工作性质=====</option>";
+				  $.each(msg,function(i,dictItem){
+		    			ops+="<option value='"+dictItem.code+"'>"+dictItem.name+"</option>";
+      			  });
+ 			      
+ 			      $("#natureWork").html(ops);
+ 			     
+			}
+		});
+	} 
+	/* 查询工作地点 */
+	function queryAddress(type,code){
+	    var data={};
+	    data.type=type;
+        data.code=code;
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryAddress",
+            data:JSON.stringify(data),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+				  var ops = '';
+				  if (type == 'province'){
+	    		  	 ops="<option value='-1'>=请选省份=</option>";
+				  }else if(type == 'city'){
+					 ops="<option value='-1'>=请选城市=</option>"; 
+				  }else{
+					ops="<option value='-1'>=请选区域=</option>";
+	              }
+				  $.each(msg,function(i,dictItem){
+		    			ops+="<option value='"+dictItem.code+"'>"+dictItem.name+"</option>";
+      			  });
+ 			      if (type == "province"){
+ 			    	 $("#province").html(ops);
+ 			      }else if (type == "city"){
+ 			    	 $("#city").html(ops);
+ 			      }else if(type == "district"){
+				     $("#district").html(ops);
+	              }
+			}
+		});
+	}
+	function queryCity(){
+		var data = $("#province").val()
+		type = "city"
+		queryAddress(type,data)
+	}
+	function queryDistrict(){
+	   var data = $("#city").val()
+	   type = "district"
+	   queryAddress(type,data)
+	}
+	
+	/* 查询工作经验 */
+	function queryWorkExperience(){
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryWorkExperience",
+			data:"type=" + type,
+			dataType:"json",
+			success:function(msg){
+	    		  var ops="<option value='-1'>====请选工作经验要求====</option>";
+				  $.each(msg,function(i,workExperience){
+		    			ops+="<option value='"+workExperience.id+"'>"+workExperience.name+"</option>";
+      			  });
+ 			      
+ 			    $("#workExperience").html(ops);
+ 			     
+			}
+		});
+	} 
+	
+	/* 查询学历*/
+	function queryEeducation(){
+		var type="degree_level";
+		var typeData={};
+        typeData.type=type;
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/queryEducation",
+            data:JSON.stringify(typeData),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+	    		  var ops="<option value='-1'>====请选择学历要求====</option>";
+				  $.each(msg,function(i,dictItem){
+		    			ops+="<option value='"+dictItem.code+"'>"+dictItem.name+"</option>";
+      			  });
+ 			      
+ 			    $("#education").html(ops);
+ 			     
+			}
+		});
+	} 
+	/* function  getRadio(){ 
+	   		e  =  event.srcElement;
+  	        if(e.value=="yes"){
+	    	 	 $('#interViewTime').hide('slow');  
+	        	 $("#interViewTime").css('display','none');  
+	    	}else{
+     		 	 $('#interViewTime').show('slow');  
+	    		 $("#interViewTime").css('display','block');  
+	     	}
+        
+    }*/
+ 
+	function submit(){
+		var label = arr.join(",");
+		if ($("#positionTypeId1").val() == -1){
+            $('#prompt').html('请选择职位类型');
+            $('#myModal').modal('show');
+            return;
+		}
+		if ($("#pname").val() == ""){
+            $('#prompt').html('请输入职位名称');
+            $('#myModal').modal('show');
+            return;
+		}
+		if ($("#salaryScope").val() == -1){
+            $('#prompt').html('请选择月薪范围');
+            $('#myModal').modal('show');
+            return;
+		}
+		if (label == ""){
+            $('#prompt').html('请选择标签');
+            $('#myModal').modal('show');
+            return;
+		}
+		
+		if ($("#province").val() == -1){
+            $('#prompt').html('请输选择省份');
+            $('#myModal').modal('show');
+            return;
+		}else if ($("#city").val() == -1){
+            $('#prompt').html('请输选择城市');
+            $('#myModal').modal('show');
+            return;
+		}else if ($("#district").val() == -1){
+			$('#prompt').html('请输选择区域');
+			$('#myModal').modal('show');
+			return;
+		}
+		
+		if ($("#natureWork").val() == -1){
+            $('#prompt').html('请选择工作性质');
+            $('#myModal').modal('show');
+            return;
+		}
+		if ($("#workExperience").val() == -1){
+            $('#prompt').html('请选择工作经验');
+            $('#myModal').modal('show');
+            return;
+		}
+		if ($("#education").val() == -1){
+            $('#prompt').html('请选择学历要求');
+            $('#myModal').modal('show');
+            return;
+		}
+		if ($("#description").val() == ""){
+            $('#prompt').html('请输入职位描述');
+            $('#myModal').modal('show');
+            return;
+		}else if($("#description").val().length >500){
+			$('#prompt').html('职位描述超出字数限制');
+            $('#myModal').modal('show');
+            return;
+		}
+		if ($("#responsibility").val() == ""){
+            $('#prompt').html('请输入岗位职责');
+            $('#myModal').modal('show');
+            return;
+		}else if($("#responsibility").val().length > 500){
+			$('#prompt').html('岗位职责超出字数限制');
+            $('#myModal').modal('show');
+            return;
+		}
+		
+		if ($("#addressDetail").val() == ""){
+            $('#prompt').html('请选择详细地址');
+            $('#myModal').modal('show');
+            return;
+		}
+		
+		/* if ($("#interViewTime").css("display")=="block"){
+			if ($("#startTime").val() == "" || $("#endTime").val() == ""){
+	            $('#prompt').html('请输入面试时间');
+	            $('#myModal').modal('show');
+	            return;
+			}
+			if ($("#startTime").val() > $("#endTime").val()){
+				$('#prompt').html('请正确填写开始时间和结束时间');
+	            $('#myModal').modal('show');
+	            return;
+			}
+		} */
+		var data={};
+		var workCity = $("#province").val()+'_'+$("#city").val()+'_'+$("#district").val();
+		data.isVideoInterview = false
+		/* data.isVideoInterview = $("input[name='posi']:checked").val()=='yes'?false:true; */
+		data.companyId = companyId;
+		if($("#positionTypeId2").val() == -1){
+			data.workPositionTypeId = $("#positionTypeId1").val();
+		}else{
+			data.workPositionTypeId = $("#positionTypeId2").val();
+		}
+		data.name = $("#pname").val();
+		data.salaryScopeId = $("#salaryScope").val()
+		data.workCity = workCity;
+		data.jobCategory = $("#natureWork").val();
+		data.workExperienceId = $("#workExperience").val();
+		data.degreeLevel = $("#education").val();
+		data.label = label
+		data.description = $("#description").val();
+	/* 	data.videoInterviewStartDate = $("#startTime").val();
+		data.videoInterviewEndDate = $("#endTime").val(); */
+		data.detailedAddress = $("#addressDetail").val();
+		data.responsibility = $("#responsibility").val();
+		data.lon = $("#lon").val()
+		data.lat = $("#lat").val()
+	    loginPostData = JSON.stringify(data)
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/create",
+			data:loginPostData,
+			dataType:"json",
+			contentType: 'application/json;charset=UTF-8',
+			success:function(msg){
+				if (msg == 1){
+					location.href="${pageContext.request.contextPath}/mcbn/services/admint/position/jumpAdminPositionManage?companyId="+companyId;
+				}
+			}
+		});
+	}
+	
+    function searchMap() {
+        var serchaddress = $("#mapAddress").val();
+        if(serchaddress != ""){
+            placeSearch.search(serchaddress, searchAddressfunc);
+        }
+    }
+    function showMap(){
+        $('#map').modal('show');
+        if($("#addressDetail").val() == "") {
+            geolocation.getCurrentPosition();
+        } else {
+            $("#mapAddress").val($("#addressDetail").val());
+            makeMarker(lngData,latData,$("#addressDetail").val());
+        }
+    }
+    function searchAddressfunc(status, result) {
+        if(status == "complete" && result.info == "OK"){
+            var f = result.poiList.pois[0];
+            address = f.name + f.address;
+            $("#mapAddress").val(address);
+            lngData = f.location.lng;
+            latData = f.location.lat;
+            makeMarker(lngData, latData, address);
+        }
+    }
+    function makeMarker(lng, lat, address){
+        map.remove(markers);
+        markers = [];
+        var marker = new AMap.Marker({
+            position: [lng, lat],
+            title: address,
+            map: map
+        });
+        marker.setMap(map);
+        markers.push(marker);
+        map.setCenter([lng, lat]);
+    }
+    function onComplete(data){
+        lngData = data.position.getLng();
+        latData = data.position.getLat();
+        var lnglatXY = [lngData,latData];
+        address = data.formattedAddress;
+        $("#mapAddress").val(address);
+        map.remove(markers);
+        markers = [];
+        marker = new AMap.Marker({
+            position: lnglatXY,
+            title: address,
+            map: map
+        });
+        markers.push(marker);
+    }
+</script>
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+
+</body>
+</html>

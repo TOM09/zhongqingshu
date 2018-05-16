@@ -1,0 +1,98 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
+<html manifest="" lang="ch">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>政策详情</title>
+<meta charset="utf-8">
+<meta name="apple-touch-fullscreen" content="YES">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="pragram" content="no-cache">
+<meta name="viewport" content="width=device-width, intitial-scale=1,maxnum-scale=1.user-scalable=no">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+	<style type="text/css">
+		#content {
+			font-family: Microsoft yahei;
+			font-size: 16px;
+			line-height: 26px;
+		}
+		#content img{
+			margin-top: 30px;
+			margin-bottom: 30px;
+			max-width: 100% !important;
+		}
+		#content div{
+			max-width: 100% !important;
+		}
+		#content table{
+			border: 1px solid #EDEDED;
+			border-collapse: collapse;
+		}
+		#content table td{
+			border: 1px solid #EDEDED;
+			padding: 5px;
+		}
+		table,th,td,input,textarea,select,p{font-size:16px;outline:none;font-family:"PingFang SC Medium","Microsoft YaHei";}
+	</style>
+    <script>
+        $(function(){
+            var data={};
+            data.id="${id}";
+            $.ajax({
+                type:"post",
+                url:"/mcbn/services/policy/policyDetailajax",
+                data:JSON.stringify(data),
+                contentType: "application/json",
+                dataType:"json",
+                success:function(msg){
+                    var data = msg.policy;
+                    $("#title").html(data.title);
+                    $("#browseCount").html(data.browseCount);
+                    $("#createDate").html(data.createDate);
+                    $("#content").html(data.text);
+                    $("#imageUrl").attr("src","/images/"+data.imageUrl);
+
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    <style type="text/css">
+    body{
+    font-family: "Microsoft YaHei";
+    font-size: 16px;
+    line-height: 26px;
+    }
+    </style>
+<!--头部开始-->
+
+<!--头部end-->
+<div class="shouj_ban"><img id="imageUrl" src="/static/images/tp.png" /></div>
+<div class="main_fff" style="margin:0;">
+<dl class="shouj_gongy_xxtop shouj_gongy_xxtop2">
+	<dd>
+	<h1 id="title"></h1>
+	<span>发布时间：<font id="createDate"></font><b><font id="browseCount"></font>人浏览</b></span>
+	</dd>
+</dl>
+	<div class="shouj_gongy_xxbox" id="content">
+	</div>
+	
+</div>	
+</body>
+</html>

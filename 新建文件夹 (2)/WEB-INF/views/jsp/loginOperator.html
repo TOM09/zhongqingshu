@@ -1,0 +1,221 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+    <title>个人信息</title>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+    <script>
+        function uploadImg(){
+            var flag = false;
+            var arr = ["jpg","png","gif"];
+            var filename = $('#file')[0].files[0].name;
+            var index = filename.lastIndexOf(".");
+            var ext = filename.substr(index+1);
+            for(var i=0;i<arr.length;i++)
+            {
+                if(ext == arr[i])
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag)
+            {
+                $('#prompt').html('请上传格式为jpg/png/gif的图片');
+                $('#myModal').modal('show');
+                return;
+            }
+
+            var fileSize = 0;
+            fileSize = $('#file')[0].files[0].size;
+            fileSize=Math.round(fileSize/1024*100)/100; //单位为KB
+            if(fileSize>500){
+                $('#prompt').html('照片最大尺寸为500KB，请重新上传');
+                $('#myModal').modal('show');
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append("file", $('#file')[0].files[0]);
+            $.ajax({
+                type: "POST",
+                url: "${servicefix}/services/upload/user/image/file",
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#slt").attr("src","${imgprefix}"+data.datas[0]);
+                    $("#operationPersonImageUrl").val(data.datas[0]);
+                },
+                error: function(data) {
+                    $('#prompt').html('头像修改失败');
+                    $('#myModal').modal('show');
+                }
+            });
+        }
+
+        function submitForm(){
+            var myReg=/^[a-zA-Z0-9_-]+@([a-zA-Z0-9]+\.)+(com|cn|net|org)$/;
+            if($("#operationPersonImageUrl").val() == "") {
+                $('#prompt').html('请上传头像图片');
+                $('#myModal').modal('show');
+            } else if($("#companyPropertyName").val() == "") {
+                $('#prompt').html('请输入姓名');
+                $('#myModal').modal('show');
+            } else if($("#operationPersonPosition").val() == "") {
+                $('#prompt').html('请输入职位');
+                $('#myModal').modal('show');
+            } else if($("#operationEmail").val() == "") {
+                $('#prompt').html('请输入邮箱');
+                $('#myModal').modal('show');
+            }  else  if(!myReg.test($("#operationEmail").val())) {
+                $('#prompt').html('邮箱格式错误');
+                $('#myModal').modal('show');
+            } else {
+                        var data = {};
+                        data.id = $("#id").val();
+                        data.operationPersonImageUrl = $("#operationPersonImageUrl").val();
+                        data.operationPerson = $("#operationPerson").val();
+                        data.operationPersonPosition = $("#operationPersonPosition").val();
+                        data.operationEmail = $("#operationEmail").val();
+                        ajax("/mcbn/services/company/updateOperator", data, function (result) {
+                            var resultCode = result.resultCode;
+                            if (resultCode=="1" ) {
+                                window.location.href = "/mcbn/services/dispense/certification";
+                            }
+                        });
+            }
+        }
+
+        $(document).ready(function() {
+            var data = {};
+            data.id = "${companyId}";
+            ajax("/mcbn/services/company/detail", data, function (result) {
+                var companyinfo = result.datas[0];
+                var resultCode = result.resultCode;
+                if (resultCode=="1" && companyinfo) {
+                    $("#operationPersonImageUrl").val(companyinfo.operationPersonImageUrl);
+                    if(companyinfo.operationPersonImageUrl) {
+                        $("#slt").attr("src","/images/"+companyinfo.operationPersonImageUrl);
+                    }
+
+                    $("#operationPerson").val(companyinfo.operationPerson);
+                    $("#operationPersonPosition").val(companyinfo.operationPersonPosition);
+                    $("#operationEmail").val(companyinfo.operationEmail);
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div class="Header">
+    <dl class="Login_topdl">
+		<dt><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+		<dd><a href="">我是求职者</a> | <a href="">APP</a></dd>
+	</dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+<div class="main_fff mar_box">
+    <dl class="Login_tit">
+		<dt>个人信息</dt>
+	</dl>
+    <input id="id" name="id" type="hidden" value="${companyId}"/>
+    <div class="person_box">
+    	<div class="person_lista">
+        	<div class="person_lista_name">
+            	头像：
+            </div>
+            <div class="person_lista_box">
+                <input name="operationPersonImageUrl" id="operationPersonImageUrl" type="text" style="display: none"/>
+            	<div class="touxiang_box"><img style="width: 114px;height: 114px;margin-left: -2px;margin-top: -2px;" id="slt" src="/static/images/image_user.png"/></div>
+				<span class="touxiang_textabtn"><a href="" id="buttonGotoImageUpload" onclick="file.click();">上传头像</a></span>
+				<span class="touxiang_textb" style="float:left;width: 320px;margin-top: 35px;color:#9B9B9B;">建议使用招聘者真实头像提升真实性、专业性，图片小于500KB，格式为jpg/png/gif</span>
+                <div style="position: absolute;top: 35px;left: 140px;width: 100px;overflow: hidden;filter: alpha(opacity=0);-moz-opacity:0;opacity:0; cursor: pointer; height: 40px;"><input type="file" accept="image/jpeg,image/png,image/gif" name="file"  style="cursor: pointer;border: 41px solid black;" id="file" onchange="uploadImg()" style="position: absolute;top: 45px;left: 131px;"/></div>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	姓名：
+            </div>
+            <div class="person_list_box">
+            	<input id="operationPerson" name="operationPerson" class="person_list_input"/>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	职位：
+            </div>
+            <div class="person_list_box">
+                <input id="operationPersonPosition" name="operationPersonPosition" class="person_list_input"/>
+            </div>
+        </div>
+        
+        <div class="person_list">
+        	<div class="person_list_name">
+            	邮箱：
+            </div>
+            <div class="person_list_box">
+                <input id="operationEmail" name="operationEmail" class="person_list_input"/>
+            </div>
+        </div>
+        
+        <button class="person_list_btn" id="buttonNext" onclick="submitForm()">下一步</button>
+        
+        
+    </div>
+	
+	
+</div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 300px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body" id="prompt">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+</body>
+</html>

@@ -1,0 +1,85 @@
+body,html{
+    height: 100%;
+}
+body{
+    padding-top: 60px;
+    padding-left: 160px;
+}
+.navbar-header a{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.caret {
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color: #FFFFFF;
+    position: absolute;
+    top: 27px;
+    margin-left: 5px;
+}
+.btnRight span{
+    color: #FFFFFF;
+    font-size: 20px;
+}
+.navbar-top {
+    background-color: #2D2D2D;
+    border: 0;
+    min-width: 400px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 20px;
+    color: #FFFFFF;
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.navbar-compony-name {
+    color: #ffffff;
+    float: right;
+    margin-right: 20px;
+    cursor: pointer;
+    position: relative;
+}
+.navbar-compony-name button:hover,
+.navbar-compony-name button.active {
+    font-weight: bolder;
+}
+.navbar-compony-name button {
+    height: 52px;
+    background-color: #2D2D2D;
+    border: 0;
+}
+.navbar-compony-name button:focus {
+    outline: none;
+}
+.navbar-compony-name .information{
+    position: absolute;
+    z-index: 99;
+    top: 58px;
+    width: 94px;
+    height: 125px;
+    background: #303030 ;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    display: none;
+}
+.navbar-compony-name .information li {
+    height: 35px;
+    line-height: 35px;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 100;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+.navbar-compony-name .information li:hover{
+    background: #4A4A4A ;
+}
+#logout{
+    width: 77% !important;
+}

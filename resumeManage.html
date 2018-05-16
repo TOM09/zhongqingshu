@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+	<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!--<%@ include file="messageCount.jsp" %>-->
+		<title>简历管理</title>
+		<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript" src="/static/js/util.js"></script>
+		<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!-- 本页面CSS↓ -->
+		<link rel="stylesheet" href="/static/css/swiper.css">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="css/util.css">
+		<!-- bootstrap框架↓ -->
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+		<script type="text/javascript" src="/static/js/index.js"></script>
+		<script type="text/javascript" src="/static/js/util.js"></script>
+		
+		<style type="text/css">
+			.changeorderimg {
+				background: url("/static/images/icon_time.png") no-repeat right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--头部引用了外部js-->
+		<div class="w1200">
+			<div class="main_fff">
+				<dl class="Login_tit" style="border-bottom:0px solid #fff">
+					<dt>简历管理</dt>
+				</dl>
+				<div class="jd_box_table">
+					<ul class="jd_qh">
+						<li id='l1' class='active'>
+							<a style='cursor:pointer' onclick='change_1()'>投递简历</a>
+						</li>
+						<li id='l2'>
+							<a style='cursor:pointer' onclick='change_2()'>下载简历</a>
+						</li>
+					</ul>
+					<div id="table_1" style="margin-top:-20px; display:block">
+						<div class="jianl_shx" style="margin: 30px 30px;">选择职位：
+							<select class="person_list_selects" id="choicePosition_1" onChange='queryByPosition1()'>
+
+							</select>
+						</div>
+						<div id="div_1"></div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_1">
+							</ul>
+						</div>
+					</div>
+					<div id="table_2" style="margin-top: -20px; display: none;">
+						<div class="jianl_shx">选择职位：
+							<select class="person_list_selects" id="choicePosition_2" onChange='queryByPosition2()'>
+
+							</select>
+							<a href="javascript:void(0);" class="jianl_paix changeorderimg" onclick='changeOrder(this)'>时间排序</a>
+						</div>
+						<div id="div_2"></div>
+						<div class="pageDiv">
+							<ul class="pagination clearfix" id="pagenumber_2">
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!--尾部开始-->
+	<script type="text/javascript" src="js/header.js"></script>
+	<script type="text/javascript" src="js/footer.js"></script>
+		<!--尾部end-->
+		<script>
+			var companyId =+ localStorage.getItem('companyId');
+			var positionId = ''
+			var order = 'desc'
+			var pageCount;
+			var rows
+			$(function() {
+				queryPosition()
+				queryAllResume(1)
+				queryDownResume(1)
+				/* var data1 = {};
+              data1.type = "chinese_zodiac";
+              data1.clientType = "102500";
+		  		ajax(("${servicefix}/services/dict/type/list"), data1, function (result) {
+	           
+	            });  */
+			})
+
+			function queryAllResume(data) {
+				var resumedata = {};
+				resumedata.companyId = companyId;
+				resumedata.currentPage = data;
+				resumedata.position = positionId;
+				resumedata.clientType = 102500;
+				//成功部分
+//				var parentIdData={};
+//		        parentIdData.parentId=parentId;
+//		        parentIdData.clientType = 102500;
+		ajax("/mcbn/services/position/queryAllPosition",resumedata,function(msg){
+						pre = msg.pre;
+						next = msg.next;
+						pageCount = msg.pageCount;
+						rows = msg.rows;
+						var trs = "";
+			  		for(var i = 0; i<msg.rows.length; i++){
+			  			trs += "<dl class='jianl_tddl'><dt>应聘职位：" + msg.rows[i].pName + "</dt><dd><div class='jianl_div'>"
+						if(msg.rows[i].video != null && msg.rows[i].auditStatus == 102651) {
+							trs += "<div style='float:left'><image  style='width:90px;height:90px' src='" + msg.rows[i].videoImage + "' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+						} else {
+							trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/" + msg.rows[i].headImage + "' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+						}
+						trs += "<h1><a href='#'>" + msg.rows[i].btruName + "</a><b>" + (msg.rows[i].wiName == null ? '' : msg.rows[i].wiName + "·") + (msg.rows[i].btujiwptName == null ? '' : msg.rows[i].btujiwptName) + "</b><span>" + (msg.rows[i].salary == null ? '' : msg.rows[i].salary) + "</span></h1>" +
+							"<p>" + msg.rows[i].sex + " | " + msg.rows[i].age + " | " + msg.rows[i].address + "| " + (msg.rows[i].degreeLevel == null ? '' : msg.rows[i].degreeLevel + " | ") + msg.rows[i].weName + "</p></div>" +
+							"<button class='person_fabuzw' onclick=\"queryResumeDetails(" + msg.rows[i].bturId + "," + msg.rows[i].pId + ")\">查看简历</button></dd></dl>"
+						};
+						$("#div_1").html(trs);
+						buildPage2("pagenumber_1", msg.currentPage, pageCount, 'queryAllResume', "")
+			}
+		);
+//		
+//				$.ajax({
+//					type: "post",
+//					url: "${pageContext.request.contextPath }/mcbn/services/resume/queryAllResume",
+//					data: JSON.stringify(resumedata),
+//					dataType: "json",
+//					contentType: "application/json",
+//					success: function(msg) {
+//						pre = msg.pre;
+//						next = msg.next;
+//						pageCount = msg.pageCount;
+//						rows = msg.rows;
+//						var trs = "";
+//						$.each(msg.rows, function(i, msg.rows[i]) {
+//							trs += "<dl class='jianl_tddl'><dt>应聘职位：" + msg.rows[i].pName + "</dt><dd><div class='jianl_div'>"
+//							if(msg.rows[i].video != null && msg.rows[i].auditStatus == 102651) {
+//								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='" + msg.rows[i].videoImage + "' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+//							} else {
+//								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/" + msg.rows[i].headImage + "' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+//							}
+//							trs += "<h1><a href='#'>" + resume.btruName + "</a><b>" + (resume.wiName == null ? '' : resume.wiName + "·") + (resume.btujiwptName == null ? '' : resume.btujiwptName) + "</b><span>" + (resume.salary == null ? '' : resume.salary) + "</span></h1>" +
+//								"<p>" + resume.sex + " | " + resume.age + " | " + resume.address + "| " + (resume.degreeLevel == null ? '' : resume.degreeLevel + " | ") + resume.weName + "</p></div>" +
+//								"<button class='person_fabuzw' onclick=\"queryResumeDetails(" + resume.bturId + "," + resume.pId + ")\">查看简历</button></dd></dl>"
+//						});
+//						$("#div_1").html(trs);
+//						/* createPage("#pagenumber_1","send") */
+//						buildPage2("pagenumber_1", msg.currentPage, pageCount, 'queryAllResume', "")
+//					}
+//				})
+			}
+
+			function queryDownResume(data) {
+				var resumedata = {};
+				resumedata.companyId = companyId;
+				resumedata.currentPage = data;
+				resumedata.position = positionId;
+				resumedata.order = order;
+				resumedata.clientType = 102500
+				//成功部分
+//				var parentIdData={};
+//		        parentIdData.parentId=parentId;
+//		        parentIdData.clientType = 102500;
+				ajax("/mcbn/services/position/queryAllPosition",resumedata,function(msg){
+						pre = msg.pre;
+						next = msg.next;
+						pageCount = msg.pageCount;
+						rows = msg.rows;
+						var trs = "";
+				  		for(var i = 0; i<msg.rows.length; i++){
+				  			if(msg.rows[i].pName != null) {
+								trs += "<dl class='jianl_tddl'><dt>应聘职位：" + msg.rows[i].pName + "</dt><dd><div class='jianl_div'>"
+							} else {
+								trs += "<dl class='jianl_tddl'><dd><div class='jianl_div'>"
+							}
+							if(msg.rows[i].video != null && msg.rows[i].auditStatus == 102651) {
+								trs += "<div style='float:left;position:relative;'><image  style='width:90px;height:90px;border-radius:0px!important;;' src='" + msg.rows[i].videoImage + "' controls='controls' id='media' poster='images/tp2.png' ></image><div style='width:90px;height:90px;position:absolute;top:0px;left:0px;background:#000;filter: alpha(opacity=0.5);-moz-opacity:0.5;opacity:0.5;'><img src='../../../static/images/image_video.png' style='border-radius:0;'></div></div>"
+							} else {
+								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/" + msg.rows[i].headImage + "' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+							}
+							trs += "<h1><a href='javascript:void(0);'>" + msg.rows[i].btruName + "</a><b>" + (msg.rows[i].wiName == null ? '' : msg.rows[i].wiName + "·") + (msg.rows[i].btujiwptName == null ? '' : msg.rows[i].btujiwptName) + "</b><span>" + (msg.rows[i].salary == null ? '' : msg.rows[i].salary) + "</span></h1>" +
+								"<p>" + msg.rows[i].sex + " | " + msg.rows[i].age + " | " + msg.rows[i].address + "| " + (msg.rows[i].degreeLevel == null ? '' : msg.rows[i].degreeLevel + " | ") + msg.rows[i].weName + "</p></div>" +
+								"<button class='person_fabuzw' onclick=\"queryResumeDetails(" + msg.rows[i].bturId + "," + msg.rows[i].pId + ")\">查看简历</button></dd></dl>"
+						};
+						$("#div_2").html(trs);
+						buildPage2("pagenumber_2", msg.currentPage, pageCount, 'queryDownResume', "")
+					}
+				)};
+		
+//				$.ajax({
+//					type: "post",
+//					url: "${pageContext.request.contextPath }/mcbn/services/resume/queryAllResume",
+//					data: JSON.stringify(resumedata),
+//					dataType: "json",
+//					contentType: "application/json",
+//					success: function(msg) {
+//						pre = msg.pre;
+//						next = msg.next;
+//						pageCount = msg.pageCount;
+//						rows = msg.rows;
+//						var trs = "";
+//						$.each(msg.rows, function(i, resume) {
+//							if(resume.pName != null) {
+//								trs += "<dl class='jianl_tddl'><dt>应聘职位：" + resume.pName + "</dt><dd><div class='jianl_div'>"
+//							} else {
+//								trs += "<dl class='jianl_tddl'><dd><div class='jianl_div'>"
+//							}
+//							if(resume.video != null && resume.auditStatus == 102651) {
+//								trs += "<div style='float:left;position:relative;'><image  style='width:90px;height:90px;border-radius:0px!important;;' src='" + resume.videoImage + "' controls='controls' id='media' poster='images/tp2.png' ></image><div style='width:90px;height:90px;position:absolute;top:0px;left:0px;background:#000;filter: alpha(opacity=0.5);-moz-opacity:0.5;opacity:0.5;'><img src='../../../static/images/image_video.png' style='border-radius:0;'></div></div>"
+//							} else {
+//								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/" + resume.headImage + "' controls='controls' id='media' poster='images/tp2.png' ></image></div>"
+//							}
+//							trs += "<h1><a href='javascript:void(0);'>" + resume.btruName + "</a><b>" + (resume.wiName == null ? '' : resume.wiName + "·") + (resume.btujiwptName == null ? '' : resume.btujiwptName) + "</b><span>" + (resume.salary == null ? '' : resume.salary) + "</span></h1>" +
+//								"<p>" + resume.sex + " | " + resume.age + " | " + resume.address + "| " + (resume.degreeLevel == null ? '' : resume.degreeLevel + " | ") + resume.weName + "</p></div>" +
+//								"<button class='person_fabuzw' onclick=\"queryResumeDetails(" + resume.bturId + "," + resume.pId + ")\">查看简历</button></dd></dl>"
+//						});
+//						$("#div_2").html(trs);
+//						/* createPage("#pagenumber_2","down") */
+//						buildPage2("pagenumber_2", msg.currentPage, pageCount, 'queryDownResume', "")
+//					}
+//				})
+//			}
+
+			function queryPosition(){
+				var pdata = {};
+				pdata.companyId = companyId;
+		        pdata.clientType = 102500;
+				 //成功部分
+				ajax("/services/base/data/work/position/type/list",pdata,function(msg){
+					var ops = "<option value=''>全部职位</option>";
+						for(var i = 0; i<msg.datas.length; i++){
+							ops += "<option value='" + msg.datas[i].id + "'>" + msg.datas[i].name + "</option>";
+		      			  };
+	    			 	$("#choicePosition_1").html(ops);
+						$("#choicePosition_2").html(ops);
+					}
+				);
+		
+//				$.ajax({
+//					type: "post",
+//					url: "${pageContext.request.contextPath }/mcbn/services/position/queryPosition",
+//					data: JSON.stringify(pdata),
+//					dataType: "json",
+//					contentType: "application/json",
+//					success: function(msg) {
+//						var ops = "<option value=''>全部职位</option>";
+//						$.each(msg, function(i, position) {
+//							ops += "<option value='" + position.id + "'>" + position.name + "</option>";
+//						});
+//						$("#choicePosition_1").html(ops);
+//						$("#choicePosition_2").html(ops);
+//					}
+//				});
+			}
+
+			function queryByPosition1() {
+				positionId = $("#choicePosition_1").val()
+				queryAllResume(1)
+			}
+
+			function queryByPosition2() {
+				positionId = $("#choicePosition_2").val()
+				queryDownResume(1)
+			}
+
+			function change_1() {
+				$("#choicePosition_1").val("")
+				$("#table_2").css('display', 'none');
+				$("#table_1").css('display', 'block');
+				$("#l1").addClass('active');
+				$("#l2").removeClass('active');
+				positionId = ''
+				queryAllResume(1)
+			}
+
+			function change_2() {
+				$("#choicePosition_1").val("")
+				$("#table_1").css('display', 'none');
+				$("#table_2").css('display', 'block');
+				$("#l2").addClass('active');
+				$("#l1").removeClass('active');
+				positionId = ''
+				queryDownResume(1)
+			}
+			var flag = true
+
+			function changeOrder(obj) {
+				if(flag) {
+					$(obj).removeClass("changeorderimg");
+					order = 'asc';
+					flag = false
+				} else {
+					$(obj).addClass("changeorderimg");
+					order = 'desc';
+					flag = true
+				}
+				queryDownResume(1)
+			}
+
+
+			function queryResumeDetails(resumeId, pId) {
+				if(pId == null) {
+					location.href = "${pageContext.request.contextPath}/mcbn/services/resume/queryResumeDetails?resumeId=" + resumeId
+				} else {
+					location.href = "${pageContext.request.contextPath}/mcbn/services/resume/queryResumeDetails?resumeId=" + resumeId + "&sendPositionId=" + pId
+				}
+
+			}
+		</script>
+	</body>
+
+	</html>

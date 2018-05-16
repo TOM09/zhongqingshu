@@ -1,0 +1,218 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>培训</title>
+	<script type="text/javascript" src="/static/manager/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/static/manager/css/css.css">
+	<script type="text/javascript" src="/static/js/util.js"></script>
+	<style type="text/css">
+		.contentHead {
+			width: 100%;
+			margin-top: 10px;
+			position:relative;
+		}
+		.content {
+			width: 93%;
+			float:right;
+		}
+	</style>
+</head>
+<div class="tc_box" id="linecloseBox">
+	<div class="tc_box_con" style="height:280px;">
+		<div class="close_tc" id="closeL">
+			<img src="/static/images/Group 2.png"/>
+		</div>
+		<div class="box-title"></div>
+		<button class="cancleBtn">取消</button><button class="onlineBtn" >确定</button>
+	</div>
+</div>
+<body style="background-color: white;">
+<div style="border: 10px solid #EFEFEF;">
+	<div class="financeHead">
+		<ul style="padding-left:0;">
+			<li style="text-align:left;">培训</li>
+			<%--<li>草稿箱</li>--%>
+		</ul>
+		<%--<span class="underLine"></span>--%>
+	</div>
+	<div class="contentBorder">
+		<div class="content" style="float: none;">
+			<div class="search">
+				<button type="button" class="createBtn">发布培训信息</button>
+				<input id="conditions" type="text" placeholder="搜索关键词">
+				<button class="searchBtn" type="button"></button>
+			</div>
+			<table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+				<thead>
+					<tr>
+						<th width="*">标题</th>
+						<th width="100px">状态</th>
+						<th width="430px">操作</th>
+					</tr>
+				</thead>
+				<tbody id="data"></tbody>
+			</table>
+			<ul class="pagination" id="pagenumber">
+			</ul>
+		</div>
+		<div class="content" style="float: none;display:none;">
+			<div class="search">
+				<input id="draftSearch" type="text" placeholder="搜索关键词">
+				<button class="searchBtn" type="button"></button>
+			</div>
+			<table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+				<thead>
+					<tr>
+						<th width="170px">标题</th>
+						<th width="180px">上次保存时间</th>
+						<th width="*">操作</th>
+					</tr>
+					<tr>
+						<td>捐助留守儿童</td>
+						<td>2018.02.12 09:20:12</td>
+						<td>
+							<button type="button" onclick="editDetail()">编辑</button>
+							<button type="button" onclick="deleteDraft()">删除</button>
+						</td>
+					</tr>
+				</thead>
+				<tbody id="draftData"></tbody>
+			</table>
+			<ul class="pagination" id="draftNumber">
+			</ul>
+		</div>
+	</div>
+	<script>
+	    var conditions=""
+	    var pageData
+		$(function(){
+            if(isSubAccount == 1) {
+                $('.link').removeClass('accordionActive').eq(1).addClass('accordionActive');
+            } else {
+                $('.link').removeClass('accordionActive').eq(6).addClass('accordionActive');
+			}
+			queryAllTrain(1,conditions);
+		}) 
+		function queryAllTrain(data,conditions){
+			var pageCount = "";
+			var trainInfoStatus;
+			pageData = data;
+			conditions = conditions;
+            var traindata={};
+            traindata.currentPage=data;
+            traindata.conditions=conditions;
+			$.ajax({
+				type:"post",
+				url:"/mcbn/services/admint/train/queryalltrain",
+				data:JSON.stringify(traindata),
+                contentType: "application/json",
+				dataType: "json",
+				success:function(msg){
+					pre =   msg.pre;
+					next =	msg.next;
+					pageCount = msg.pageCount;
+					var trs="";
+					$.each(msg.rows,function(i,trainInfo){
+						trs+="<tr><td style='line-height:30px;'>"+trainInfo.title+"</td>"
+							+"<td style='line-height:30px;'>"+(trainInfo.status=="1"?"已上线":"已下线")+"</td>"
+							+"<td><button type='button'"+"onclick=\"queryTrainDetails('"+trainInfo.id+"')\">查看详情</button>"
+						    +"<button type='button'"+"onclick=\"updateTrainDetails('"+trainInfo.id+"')\">编辑</button>"
+							+"<button type='button' class='"+(trainInfo.status=="1"?"forbid":"forbid2")+"'onclick=\"onlineShow('"+trainInfo.id+"','"+trainInfo.status+"')\">"+(trainInfo.status=="1"?"下线":"上线")+"</button></td></tr>"
+				    });
+					if(msg.rows.length == 0) {
+                        trs = "<tr><td colspan='3'>无此搜索内容</td></tr>";
+					}
+					$("#data").html(trs);
+                    buildPage("pagenumber",msg.currentPage,msg.pageCount,"queryAllTrain",conditions);
+				}
+			})
+		}
+	    function changeStatus(data,status){
+			var traindata={};
+            traindata.trainInfoId=data;
+		    if(status == "0") {
+                $.ajax({
+                    type:"post",
+                    url:"/mcbn/services/admint/train/changToOnline",
+                    data:JSON.stringify(traindata),
+                    dataType:"json",
+                    contentType: "application/json",
+                    success:function(msg){
+                        if (msg == 1){
+							$('#linecloseBox').hide();
+                        	queryAllTrain(pageData,conditions)
+                    	}
+                	}
+				})
+            }else{
+				$.ajax({
+					type:"post",
+					url:"/mcbn/services/admint/train/updateStatus",
+                    data:JSON.stringify(traindata),
+                    dataType:"json",
+                    contentType: "application/json",
+					success:function(msg){
+						if (msg == 1){
+							$('#linecloseBox').hide();
+							queryAllTrain(pageData,conditions)
+						}
+					}
+				})
+            }
+		}
+		function onlineShow(data,status){
+			if(status == '0'){
+				$('.box-title').text('是否确定上线？')
+			}else{
+				$('.box-title').text('是否确定下线？')
+	        }
+			$('#linecloseBox').show();
+			$('.onlineBtn').unbind('click').click(function(){
+				changeStatus(data,status)
+			});
+		}
+		$('#closeL,.cancleBtn').click(function(){
+			$('#linecloseBox').hide();
+		});
+
+		$(".searchBtn").click(function(){
+			var conditions = $("#conditions").val();
+			
+			queryAllTrain(1,conditions)
+		})
+	    $(".createBtn").click(function () {
+            window.location.href = "/mcbn/services/admint/train/createTrain";
+	    })
+	    var flag = 1
+	    function queryTrainDetails(trainInfoId){
+            window.location.href = "/mcbn/services/admint/train/trainDetailManage?id="+trainInfoId+"&flag="+flag;
+		}
+		function updateTrainDetails(trainInfoId){
+			window.location.href = "/mcbn/services/admint/train/queryTrainInfoBeforeUpdate?trainInfoId="+trainInfoId+"&flag="+flag;
+		}
+	$('.financeHead li').click(function () {
+		var _left = 20;
+		var num = $(this).index();
+		$(this).addClass('active').siblings().removeClass('active');
+		$('.content').eq(num).fadeIn().siblings().hide();
+		_left += num * $(this).width();
+		$(".underLine").animate({left: _left + "px"});
+	})
+	function editDetail(){
+		window.location.href = "/mcbn/services/dispense/goUpdateTrainDraft";
+	}
+	</script>
+</div>
+</body>
+
+<script type="text/javascript" src="/static/manager/js/accordion.js"></script>
+<script type="text/javascript" src="/static/manager/js/commomTop.js"></script>
+<link href="/static/manager/css/accordion.css" rel="stylesheet" type="text/css" />
+<link href="/static/manager/css/commonTop.css" rel="stylesheet" type="text/css" />
+</html>

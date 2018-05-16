@@ -1,0 +1,1 @@
+var TB=TB||{};TB.Header=function(){var g=function(v){return typeof(v)!="string"?v:document.getElementById(v)},s=navigator.userAgent.toLowerCase(),o=/msie/.test(s)&&!/opera/.test(s),l=o&&!/msie 7/.test(s)&&!/msie 8/.test(s),m="http://list.taobao.com/browse/cat-0.htm";}}}();

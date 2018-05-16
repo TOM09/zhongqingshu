@@ -1,0 +1,347 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<title>招聘搜索</title>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+  <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<%@ include file="messageCount.jsp" %>
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+	<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume" style="color: #E80D22;border-bottom: 2px solid #E80D22;">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="zhaop_so"><input id = 'keyWordVal' style="border:1px solid #ccc;" class="zhaop_text" type="text" placeholder="请输入关键词..."><button onclick='keyWordSearch()' class="zhaop_sobtn">搜索</button></div>
+	<div class="w1200">
+		<div class="main_fff so_main">
+			<dl class="sos_list">
+				<dt>性别：</dt>
+				<dd id="queryBySex"><a style='cursor:pointer' value="" onclick="queryBySex($(this))" class="hover">不限</a><a style='cursor:pointer' onclick="queryBySex($(this))" value="102400" >男</a><a style='cursor:pointer' value="102401" onclick="queryBySex($(this))">女</a></dd>
+			</dl>
+			<dl class="sos_list">
+				<dt>期望城市：</dt>
+				<dd id="">
+				  <select class="person_list_select" id="province" onchange='queryCity()'></select>
+                  <select class="person_list_select" id="city" style="margin-left: 15px;" onchange='queryByCity(this.value)'></select>
+				</dd>
+			</dl>
+			<dl class="sos_list">
+				<dt>工作经验：</dt>
+				<dd id="queryByWorkExperience"> 
+					<a style='cursor:pointer' value="" onclick="queryByWorkExperience($(this))" class="hover">不限</a>
+					<c:forEach items="${workExperienceList}" var="workExperience" varStatus="vs">
+						<a style='cursor:pointer' onclick="queryByWorkExperience($(this))" value="${workExperience.id}"><c:out value="${workExperience.name}"></c:out></a>
+					</c:forEach>
+				</dd> 
+			</dl>
+			<dl class="sos_list">
+				<dt>学历要求：</dt>
+				<dd id="queryByDegreeLevel">
+					<a style='cursor:pointer' value="" onclick="queryByDegreeLevel($(this))" class="hover">不限</a>
+					<c:forEach items="${degreeLevelList}" var="degreeLevel" varStatus="vs">
+						<a style='cursor:pointer' onclick="queryByDegreeLevel($(this))" value="${degreeLevel.code}"><c:out value="${degreeLevel.name}"></c:out></a>
+					</c:forEach>
+				</dd> 
+			</dl>
+			<dl class="sos_list">
+				<dt>期望薪资：</dt>
+				<dd id="queryBySalaryScope">
+					<a style='cursor:pointer' value="" onclick="queryBySalaryScope($(this))" class="hover">不限</a>
+					<c:forEach items="${salaryScopeList}" var="salaryScope" varStatus="vs">
+						<a style='cursor:pointer' onclick="queryBySalaryScope($(this))" value="${salaryScope.id}"><c:out value="${salaryScope.name}"></c:out></a>
+					</c:forEach> 
+				</dd>
+			</dl>
+			<dl class="sos_list">
+				<dt>期望工作性质：</dt>
+				<dd id="queryByJobCategory">
+					<a style='cursor:pointer' value="" onclick="queryByJobCategory($(this))" class="hover">不限</a>
+					<c:forEach items="${jobCategoryList}" var="jobCategory" varStatus="vs">
+						<a style='cursor:pointer' onclick="queryByJobCategory($(this))" value="${jobCategory.name}" ><c:out value="${jobCategory.name}"></c:out></a>
+					</c:forEach>
+				</dd> 
+			</dl>
+			
+		</div>
+	</div>
+	<div class="w1200">
+		<!--左侧-->
+		<div class="w805 left">
+ 				<div id="div_1"></div>
+        </div>
+		<!--右侧-->
+		<div class="w290 right">
+			<%--<img src="/static/images/tp.png"/>--%>
+		</div>
+
+	</div>
+	<!--尾部开始-->
+	<div class="pageDiv">
+		<ul class="pagination clearfix" id="pagenumber_1">
+		</ul>
+	</div>
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+	<script>
+		var code = "";
+		var type="province";
+		var oldKeyWord = '${keyWord}';
+		var keyWord = '';
+		var workExperienceId = '';
+		var degreeLevelCode = ''
+		var salaryScopeId = ''
+		var jobCategoryCode  = ''
+		var sex = ''
+		var city = ''
+		var c = $.cookie('mark');
+		var curPage = localStorage.getItem("currentPage");
+		$(function(){
+			queryAddress(type,code)
+			if (c != 'mark'){
+				localStorage.clear()
+				
+			}else{
+				
+				$.cookie('mark','');
+				workExperienceId = localStorage.getItem("workExperienceId");
+				if(workExperienceId != null){
+					$("#queryByWorkExperience a").each(function(){
+							if($(this).attr('value') == workExperienceId){
+								$(this).addClass("hover").siblings('a').removeClass("hover");
+							}
+					})
+				}else{
+					workExperienceId = '';
+				}
+				degreeLevelCode = localStorage.getItem("degreeLevelCode");
+				if(degreeLevelCode != null){
+					$("#queryByDegreeLevel a").each(function(){
+							if($(this).attr('value') == degreeLevelCode){
+								$(this).addClass("hover").siblings('a').removeClass("hover");
+							}
+					})
+				}else{
+					degreeLevelCode= '';
+				}
+				salaryScopeId = localStorage.getItem("salaryScopeId");
+				if(salaryScopeId != null){
+					$("#queryBySalaryScope a").each(function(){
+							if($(this).attr('value') == salaryScopeId){
+								$(this).addClass("hover").siblings('a').removeClass("hover");
+							}
+					})
+				}else{
+					salaryScopeId = '';
+				}
+				jobCategoryCode = localStorage.getItem("jobCategoryCode");
+				if(jobCategoryCode != null){
+					$("#queryByJobCategory a").each(function(){
+							if($(this).attr('value') == jobCategoryCode){
+								$(this).addClass("hover").siblings('a').removeClass("hover");
+							}
+					})
+				}else{
+					jobCategoryCode = '';
+				}
+				sex = localStorage.getItem("sex");
+				if(sex != null){
+					$("#queryBySex a").each(function(){
+							if($(this).attr('value') == sex){
+								$(this).addClass("hover").siblings('a').removeClass("hover");
+							}
+					})
+				}else{
+					sex = '';
+				}
+				city = localStorage.getItem("city");
+				province = localStorage.getItem("province")
+				if(city != null){
+					$("#province").val(province)
+				   if(("#province").val != ''){
+						queryCity();
+					}
+
+				}else{
+					city = ''
+				}
+				
+			}
+			$("#keyWordVal").val(oldKeyWord)
+			keyWord = $("#keyWordVal").val()
+			if (c == 'mark'){
+				if (curPage != null){
+					querySearchResume(curPage)
+				}
+			}else{
+				querySearchResume(1)
+			}
+		})
+		function querySearchResume(data){
+			curPage = data;
+			var  queryData={};
+            queryData.currentPage=data;
+            queryData.keyWord=keyWord;
+            queryData.workExperienceId=workExperienceId;
+            queryData.degreeLevelCode=degreeLevelCode;
+            queryData.salaryScopeId=salaryScopeId;
+            queryData.jobCategoryCode=jobCategoryCode;
+            queryData.sex=sex;
+            queryData.city=city;
+			$.ajax({
+					type:"post",
+					url:"${pageContext.request.contextPath }/mcbn/services/resume/querySearchResume",
+                   	data:JSON.stringify(queryData),
+				    dataType:"json",
+				    contentType: "application/json",
+					success:function(msg){
+						pre =   msg.pre;
+						next =	msg.next;
+						pageCount = msg.pageCount;
+						rows = msg.rows;
+					    var trs="";
+						$.each(msg.rows,function(i,resume){
+							trs += "<dl class='jianl_tddl' style='background: #fff;margin: 0 0px 15px 0px;'><dd><div class='jianl_div'>"
+							if (resume.video != null && resume.auditStatus == 102651){
+								trs +=	"<div style='float:left;position:relative;'><image  style='width:90px;height:90px;border-radius:0px!important;' src='"+resume.videoImage+"' controls='controls' id='media' poster='images/tp2.png' ></image><div style='width:90px;height:90px;position:absolute;top:0px;left:0px;background:#000;filter: alpha(opacity=0.5);-moz-opacity:0.5;opacity:0.5;'><img src='../../../static/images/image_video.png' style='border-radius:0;'></div></div>"
+							}else{
+								trs += "<div style='float:left'><image  style='width:90px;height:90px' src='/images/"+resume.headImage+"' controls='controls' id='media' poster='images/tp2.png' ></image></div>" 
+							}
+							trs += "<h1><a href='javascript:void(0);'>"+resume.btruName+"</a><b>"+(resume.wiName==null?'':resume.wiName+"·")+(resume.btujiwptName==null?'':resume.btujiwptName)+"</b><span>"+(resume.salary==null?'':resume.salary)+"</span></h1>"+
+									"<p>"+resume.sex+" | "+resume.age+" | "+resume.address+"| "+(resume.degreeLevel==null?'':resume.degreeLevel+" | ")+resume.weName+"</p></div>"+
+									"<button class='person_fabuzw' onclick=\"queryResumeDetails("+resume.bturId+")\">查看简历</button></dd></dl>"
+						});
+						$("#div_1").html(trs);
+						if (c == 'mark'){
+							if (curPage != null){
+								buildPage2("pagenumber_1", Number(curPage),pageCount, 'querySearchResume', "")
+							}
+						}else{
+							buildPage2("pagenumber_1", msg.currentPage,pageCount, 'querySearchResume', "")
+						}
+						localStorage.setItem("currentPage",msg.currentPage);
+					}
+				})
+		} 
+		function queryAddress(type,code){
+		    var queryData={};
+            queryData.type=type;
+            queryData.code=code;
+			$.ajax({
+				type:"post",
+				url:"${pageContext.request.contextPath }/mcbn/services/position/queryAddress",
+                data:JSON.stringify(queryData),
+                dataType:"json",
+                contentType: "application/json",
+				async:false,
+				success:function(msg){
+					  var ops = '';
+					  if (type == 'province'){
+		    		  	 ops="<option value='-1'>=请选省份=</option>";
+					  }else{
+						 ops="<option value='-1'>=请选城市=</option>"; 
+					  }
+					  $.each(msg,function(i,dictItem){
+			    			ops+="<option value='"+dictItem.code+"'>"+dictItem.name+"</option>";
+	      			  });
+	 			      if (type == "province"){
+	 			    	 $("#province").html(ops);
+	 			      }else if (type == "city"){
+	 			    	 $("#city").html(ops);
+	 			      }
+				}
+			});
+		} 
+		function queryCity(){
+			var dataPro = $("#province").val()
+			type = "city"
+			queryAddress(type,dataPro)
+			$("#city").val(city)
+		}
+		function queryResumeDetails(resumeId){
+			location.href="${pageContext.request.contextPath}/mcbn/services/resume/queryResumeDetails?resumeId="+resumeId+"&mark=search"
+		}
+		function keyWordSearch(){
+			keyWord = $("#keyWordVal").val();
+			location.href="${pageContext.request.contextPath}/mcbn/services/resume/Search?keyWord="+encodeURI(encodeURI(keyWord))
+		}
+		function queryByCity(data){
+			var dataP = $("#province").val()
+			localStorage.setItem("province",dataP)
+			city = data
+			localStorage.setItem("city",city)
+		    querySearchResume(1)
+		}
+		//性别选择
+		function queryBySex(obj){
+			sex=obj.attr('value');
+			localStorage.setItem("sex",sex);
+			obj.addClass("hover").siblings('a').removeClass("hover");
+			querySearchResume(1);
+		}
+		//工作经验
+		function queryByWorkExperience(obj){
+			workExperienceId = obj.attr('value');
+			$("#workExperienceId").val(workExperienceId)
+			localStorage.setItem("workExperienceId",workExperienceId)
+			obj.addClass("hover").siblings('a').removeClass("hover")
+			querySearchResume(1)
+		}
+		//学历要求：
+		function queryByDegreeLevel(obj){
+			degreeLevelCode = obj.attr('value');
+			localStorage.setItem("degreeLevelCode",degreeLevelCode)
+			obj.addClass("hover").siblings('a').removeClass("hover");
+			querySearchResume(1)
+		}
+		//期望薪资：
+		function queryBySalaryScope(obj){
+			salaryScopeId = obj.attr('value');
+			localStorage.setItem("salaryScopeId",salaryScopeId)
+			obj.addClass("hover").siblings('a').removeClass("hover");
+			querySearchResume(1)
+		}
+		//期望工作性质：
+		function queryByJobCategory(obj){
+			jobCategoryCode = obj.attr('value');
+			localStorage.setItem("jobCategoryCode",jobCategoryCode)
+			obj.addClass("hover").siblings('a').removeClass("hover");
+			querySearchResume(1)
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>city.html</title>
+		<!---->
+	</head>
+	<style>
+		#t select {
+			width: 150px;
+			height: 40px;
+			margin-left: 20px;
+			font-size: 24px;
+		}
+	</style>
+
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="123.js"></script>
+
+	<body>
+		<form class="form-horizontal" role="form" method="post" action="">
+			<div id="t">
+				<label for="province">省</label>
+				<select id="province" name="province" onchange="loadJson2()"></select>
+				<label for="city">市</label>
+				<select id="city" name="city"></select>
+				<div id="a" style="display:none;">
+					<label for="area">区</label>
+					<select id="area" name="area"></select>
+				</div>
+			</div>
+		</form>
+	</body>
+	
+<script type="text/javascript">
+	
+	$(document).ready(function () {
+            	console.log(window.history)
+            	window.history.back();
+		history.pushState({}, "页面标题", "xxx.html");
+            	console.log(window.history)
+		
+        	//向 history 添加当前页面的记录
+            if (window.history && window.history.pushState) {
+
+            	console.log(window.history.pushState)
+            	
+                $(window).on('popstate', function () {
+                    window.history.pushState('forward', null, '');
+                    window.history.forward(1);
+                });
+            }
+            window.history.pushState('forward', null, '');  //在IE中必须得有这两行
+            window.history.forward(1);
+        })
+	
+	console.log(arr)
+	function loadJson1() {
+        $.each(arr, function(entryIndex, entry){
+        	console.log(entry.name)
+            var html = '<option>'+entry.name+'</option>';
+            /*将省名插入*/
+            $("#province").append(html);
+            /*检测现在所选定的值*/
+            var select = ($("#province option:selected").text());
+            
+//          如果前面的值 = 现在选定的值的话
+            if(entry.name==select){
+            	//把城市名字存一个变量
+                var citys = entry.city;
+                city = '';
+                //循环城市名字，拼接
+                $.each(citys,function(entryIndex, entry){
+                	console.log(area)
+                    city+='<option>'+entry.name+'</option>';
+//                      area+='<option>'+entry.area+'</option>';
+                });
+            }
+        });
+        // $("#province").html(html);
+        /*初值，就是北京*/
+       		 $("#city").html(city);
+        // $("#area").html(area);
+}
+$(function(){
+    loadJson1();
+});
+function loadJson2(){
+        var select1 = ($("#province option:selected").text());
+        //循环数组
+        $.each(arr, function(entryIndex, entry){
+            /*检测现在所选定的值*/
+           //循环数据，如果数据的name等于选中的城市的话，
+            if(entry.name==select1){
+                var cityss = entry.city;
+                console.log(cityss)
+                 citysss='';
+                 //areasss='';
+                $.each(cityss,function(entryIndex, entry){
+                    citysss+='<option>'+entry.name+'</option>';
+       			});
+        	}
+        $("#city").html(citysss);
+    })
+}
+</script>
+</html>
+
+<!--
+
+带区的
+function loadJson1() {
+    $.getJSON('city.json',function(data){
+        $.each(data, function(entryIndex, entry){
+            var html = '<option>'+entry.name+'</option>';
+            /*将省名插入*/
+            $("#province").append(html);
+            /*检测现在所选定的值*/
+            var select = ($("#province option:selected").text());
+            if(entry.name==select){
+                var citys = entry.city;
+                city = '';
+                $.each(citys,function(entryIndex, entry){
+                    city+='<option>'+entry.name+'</option>';
+                    //  area+='<option>'+entry.area+'</option>';
+                });
+            }
+        });
+        // $("#province").html(html);
+        /*初值，就是北京*/
+        $("#city").html(city);
+        // $("#area").html(area);
+    });
+}
+$(function(){
+    loadJson1();
+});
+function loadJson2(){
+    $.getJSON('city.json',function(data){
+        var select1 = ($("#province option:selected").text());
+        $.each(data, function(entryIndex, entry){
+            /*检测现在所选定的值*/
+            if(entry.name==select1){
+                var cityss = entry.city;
+                 citysss='';
+                 //areasss='';
+                $.each(cityss,function(entryIndex, entry){
+                    citysss+='<option>'+entry.name+'</option>';
+                   // areasss+='<option>'+entry.area+'</option>';
+                });
+            }
+        });
+        // $("#province").html(html);
+        $("#city").html(citysss);
+        //$("#area").html(areasss);
+    })
+}
+-->

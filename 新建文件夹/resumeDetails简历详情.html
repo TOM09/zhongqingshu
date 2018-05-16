@@ -1,0 +1,382 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>简历详情</title>
+	<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+	<link href="/static/manager/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/static/js/util.js"></script>
+	<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!--本页面CSS↓-->
+	<link rel="stylesheet" href="/static/css/swiper.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<!--bootstrap框架↓-->
+	<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+	<script type="text/javascript" src="/static/js/index.js"></script>
+	<script language="JavaScript">
+		function myFunction() {
+		    /* var date = new Date();
+			date.setTime(date.getTime()+3*1000);
+			$.cookie("mark","mark",{expires: date}) */
+		}
+	</script>
+	
+</head>
+<body  ="return myFunction()">
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume" style="color: #E80D22;border-bottom: 2px solid #E80D22;">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+	<!--头部end-->
+	<div class="w800">
+		<div class="main_fff mar_box">
+			<div class="jianlxx_top">${resumeResult.btruName}的简历<a style='cursor:pointer' id='down' >下载简历</a></div>
+			<div class="jianlxx_tx">
+				<img src="/images/${resumeResult.headImage}"/>
+		    	<h1>${resumeResult.btruName}</h1><p id="p1"></p>
+			</div>
+			<div id="isVideo" style='display:none'>
+				<div class="jianlxx_bt"><span>视频简历</span></div>
+				<div class="swiper_video" style='width:auto;tex-align:center;'><video src="${resumeResult.video}" controls="controls" id="media" poster="${resumeResult.videoImage}" style="height:500px;display:block;width:auto;margin: 0 auto;" ></video></div>
+			</div>
+			
+			<div class="jianlxx_bt"><span>个人信息</span></div>
+			<style>
+				.resumeDetailsBaseLeft{text-align:right;width:auto;height:40px;min-width:110px;line-height:40px;font-size:16px;white-space: nowrap;}
+				.resumeDetailsBaseRight{text-align:left;width:auto;height:40px;font-size:16px;padding-right:17px;line-height:40px;white-space: nowrap;}
+				.longToo{min-width:100%;width:auto;overflow-x:auto;padding-left:20px;}
+				.longToo::-webkit-scrollbar { width:0px;height:5px; }
+				.longToo::-webkit-scrollbar-button    {background-color:#fff;}
+				.longToo::-webkit-scrollbar-track { background:#fff;}
+				.longToo::-webkit-scrollbar-thumb{background:#9B9B9B;border-radius:4px;}
+				.longToo::-webkit-scrollbar-corner {background:#82AFFF;}
+				.longToo::-webkit-scrollbar-resizer  {background:#FF0BEE;}
+			</style>
+				<div class="longToo">
+					<table class="jianlxx_ziliao" style="width:100%;">
+						<tr>
+							<td class="resumeDetailsBaseLeft">血型：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.bloodTypeName}</td>
+							<td class="resumeDetailsBaseLeft">属相：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.chineseZodiacName}</td>
+							<td class="resumeDetailsBaseLeft">星座：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.zodiacName}</td>
+						</tr>
+						<tr>
+							<td class="resumeDetailsBaseLeft">出生日期：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.birthdayString}</td>
+							<td class="resumeDetailsBaseLeft">工作年限：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.workTime}</td>
+							<td class="resumeDetailsBaseLeft">所在城市：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.address}</td>
+						</tr>
+						<tr>
+							<td class="resumeDetailsBaseLeft">婚姻状况：</td>
+							<td class="resumeDetailsBaseRight">${resumeResult.maritalStatusName}</td>
+							<td class="resumeDetailsBaseLeft">联系电话：</td>
+							<td class="resumeDetailsBaseRight" id="phone">下载后显示</td>
+							<td class="resumeDetailsBaseLeft">联系邮箱：</td>
+							<td class="resumeDetailsBaseRight" id="email">下载后显示</td>
+						</tr>
+					</table>
+				</div>
+			<div class="jianlxx_bt"><span>求职意向</span></div>
+			<div class="longToo">
+				<table class="jianlxx_ziliao" style="width:100%;">
+					<tr>
+						<td class="resumeDetailsBaseLeft">期望行业：</td>
+						<td class="resumeDetailsBaseRight">${resumeResult.wiName}</td>
+						<td class="resumeDetailsBaseLeft">期望薪资：</td>
+						<td class="resumeDetailsBaseRight">${resumeResult.salary}</td>
+						<td class="resumeDetailsBaseLeft">期望工作：</td>
+						<td class="resumeDetailsBaseRight">${resumeResult.ppName}</td>
+					</tr>
+					<tr>
+						<td class="resumeDetailsBaseLeft">期望职能：</td>
+						<td class="resumeDetailsBaseRight">${resumeResult.btujiwptName}</td>
+						<td class="resumeDetailsBaseLeft">期望城市：</td>
+						<td class="resumeDetailsBaseRight">${resumeResult.workCityName}</td>
+						<td class="resumeDetailsBaseLeft">目前状态：</td>
+						<td class="resumeDetailsBaseRight">${resumeResult.workStatusName}</td>
+					</tr>
+					<tr>
+						<td class="resumeDetailsBaseLeft">期望工作性质：</td>
+						<td  colspan='5' class="resumeDetailsBaseRight">${resumeResult.jobCategoryName}</td>
+					</tr>
+				</table>
+			  </div>
+			<div class="jianlxx_bt"><span>工作经历</span></div>
+	
+			  <c:forEach items="${resumeResult.workExperienceList}" var="workExperience" varStatus="vs">
+				<div class="jianlxx_con">
+					<h1 style='font-size:16px;'><c:out value="${workExperience.pName}"></c:out> | <c:out value="${workExperience.companyName}"></c:out></h1>
+					<p><c:out value="${workExperience.startWorkDateString}"></c:out>-<c:out value="${workExperience.endWorkDateString}"></c:out></p>
+					<ul>
+					<li>工作内容：</li>
+				    <li class="hzh"><c:out value="${workExperience.jobDescription}"></c:out> </li>
+
+					</ul>
+				</div> 
+			</c:forEach>   
+			<div class="jianlxx_bt"><span>教育经历</span></div>
+			<c:forEach items="${resumeResult.educationExperienceList}" var="educationExperience" varStatus="vs">
+			<div class="jianlxx_con">
+				<h2 style='font-size:16px;'><c:out value="${educationExperience.jobsUniversity}"></c:out><span><c:out value="${educationExperience.educationExperienceStartDateString}"></c:out>-<c:out value="${educationExperience.educationExperienceEndDateString}"></c:out></span></h2>
+				<ul>
+				<li><c:out value="${educationExperience.major}"></c:out> | <c:out value="${educationExperience.degreeLevel}"></c:out></li>
+				</ul>
+			</div>
+			</c:forEach>   
+			<div class="jianlxx_bt"><span>备注信息</span></div>
+			<div class="jianlxx_con">
+				<ul>
+				<li class="hzh">${resumeResult.selfComment}</li>
+				</ul>
+			</div>
+		</div>
+	</div>	
+	<!--尾部开始-->
+	<div class="footer">
+	<jsp:include page="footerpage.jsp"></jsp:include>
+	</div>
+	<!--尾部end-->
+	<!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top: 300px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body" id="prompt">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="sendInvitationsYes()">是
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="sendInvitationsNo()">否
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    <div class="tc_box" id="tcBox">
+		<div class="tc_box_con" style="height:280px;">
+	    	<div class="close_tc" id="#closeTc" onclick="sendInvitationsClose()">
+	    		<img src="../../../static/images/Group 2.png"/>
+	    	</div>
+	    	<div class="tc_box_contitle" style="margin-bottom: 20px;">
+	        	是否发送视频面试邀请
+	        </div>
+			<!-- <div class="tc_p">是否发送视频面试邀请</div> -->
+			<button class="tc_btn" id="buttonRegisterYse" onclick="sendInvitationsYes()">是</button>
+			<button class="tc_btn" id="buttonRegisterNo" onclick="sendInvitationsNo()">否</button>
+	    </div>
+	</div>
+	<script type="text/javascript">
+		var sendPositionId = '${sendPositionId}' 
+		var down = '${resumeResult.downLoadStatus}'
+		var mark = '${mark}'
+		var down2 = '${down2}'
+		var resumeId = '${resumeResult.bturId}'
+		var isVideoPosition = '${resumeResult.isVideoPosition}'
+		var sendInvitations = 102851
+		var terminalUserId = '${resumeResult.b2cTerminalUserId}'
+		var userId  = $.cookie('userId')
+		var url = "/services/message/push";
+		$(function(){
+			/* var date = new Date();
+			date.setTime(date.getTime()+3*1000);
+			$.cookie("mark","mark",{expires: date}) */
+			$.cookie("mark","mark")
+			$(".hzh").each(function(){
+		        $(this).html($(this).text());
+			})
+            var trs = [];
+            if ('${resumeResult.sex}' != ""){
+                trs.push('${resumeResult.sex}');
+            }
+            if ('${resumeResult.age}' != ""){
+                trs.push('${resumeResult.age}');
+            }
+            if ('${resumeResult.address}' != ""){
+                trs.push('${resumeResult.address}');
+            }
+            if ('${resumeResult.degreeLevel}' != ""){
+                trs.push('${resumeResult.degreeLevel}');
+            }
+            if ('${resumeResult.weName}' != ""){
+                trs.push('${resumeResult.weName}');
+            }
+            $("#p1").text(trs.join("|"));
+			videoUrl = '${resumeResult.video}'
+			auditStatus = '${resumeResult.auditStatus}'
+			if (videoUrl != ''){
+				if (auditStatus == 102651){
+					$("#isVideo").css('display','block');
+				}
+			} 
+			if (down != null && down != ''){
+				if (down == 1){
+					changeButton()
+				}
+			}else if(down2 == 'down'){
+				changeButton()
+			} 
+		})
+			$("#down").click( function(){
+			var resumeId = '${resumeResult.bturId}' 
+			if ($("#down").text()=="导出简历"){
+				return false;
+			}
+			if (mark == "search"){
+				downMark()
+			}else{
+				if (isVideoPosition == 1){
+					inquiry()
+				}else{
+					downResume()
+				}
+			}
+					
+		 })
+		function changeButton(){
+			$("#phone").html("${resumeResult.phone}");
+			$("#email").html("${resumeResult.email}");
+			$("#down").text("导出简历")
+			$("#down").unbind();
+			$("#down").bind('click',exportResume)
+		}
+		function downMark(){
+			$.ajax({
+	            type : 'POST',
+	            url : '${pageContext.request.contextPath}/mcbn/services/resume/downResumeMark' ,
+	            dataType:"json",
+	            async:true,
+	            data: "resumeId="+resumeId,
+	            success : function (msg) {
+	            	if (msg == 1){
+	            		changeButton()
+	            	}
+	            },
+	            error:function () {
+	                alert('服务器错误，请稍后再试');
+	            }
+			})
+		}
+		function inquiry(){
+			 /* $('#prompt').html('是否发送视频面试邀请');
+	         $('#myModal').modal('show'); */
+			$('#tcBox').show();
+		}
+		function downResume(){
+			$.ajax({
+	            type : 'POST',
+	            url : '${pageContext.request.contextPath}/mcbn/services/resume/downResume' ,
+	            dataType:"json",
+	            async:true,
+	            data: "resumeId="+resumeId+"&sendPositionId="+ sendPositionId+"&sendInvitations="+sendInvitations,
+	            success : function (msg) {
+	            	if (msg == 1){
+		            	  changeButton()
+	            	}
+	            },
+	            error:function () {
+	                alert('服务器错误，请稍后再试');
+	            }
+			})
+		}
+		function downResumeVideo(){
+			$.ajax({
+	            type : 'POST',
+	            url : '${pageContext.request.contextPath}/mcbn/services/resume/downResume' ,
+	            dataType:"json",
+	            async:true,
+	            data: "resumeId="+resumeId+"&sendPositionId="+ sendPositionId+"&sendInvitations="+sendInvitations,
+	            success : function (msg) {
+	            	if (msg == 1){
+		            		pushCompany()
+		        			pushUser()
+		            	    changeButton()
+	            	}
+	            },
+	            error:function () {
+	                alert('服务器错误，请稍后再试');
+	            }
+			})
+		}
+		function sendInvitationsYes(){
+			sendInvitations = 102853
+			downResumeVideo()
+			
+			changeButton()
+	    }
+		function sendInvitationsNo(){
+			downResume()
+			changeButton()
+        }
+		function pushCompany(){
+			//推送给企业
+			var data1 = {};
+		    data1.clientType=102500;
+		  	data1.title = "视频面试";
+		    data1.content = "您已预约"+'${resumeResult.btruName}'+"进行视频面试，请于"+'${resumeResult.startTimeString}'+"至"+'${resumeResult.endTimeString}'+"，开始呼叫"+'${resumeResult.btruName}'; 
+			data1.userIds = []
+		    	 data1.userIds.push(Number(userId))
+		    ajax((url), data1, function (result){
+		    	if (result.status == "success"){
+		    	}
+		   	});
+
+		}
+		function pushUser(){
+			//推送给终端用户
+		    var data2 = {};
+		    data2.clientType=102500;
+		  	data2.title = "视频面试";
+		    data2.content = "您已预约"+'${resumeResult.companyName}'+"进行视频面试，请于"+'${resumeResult.startTimeString}'+"至"+'${resumeResult.endTimeString}'+"，开始进行视频面试"; 
+		    data2.terminalUserIds = []
+		    	data2.terminalUserIds.push(Number(terminalUserId))
+			ajax((url), data2, function (result) {
+		    	if (result.status == "success"){
+		    	}
+		   	}); 
+		}
+		function exportResume(){
+            var viewUrl = "/services/position/resume/download"
+            var data = {};
+            data.clientType = 102500;
+            data.companyId='${resumeResult.companyId}';
+            if('${sendPositionId}') {
+                data.positionId = '${sendPositionId}';
+			}
+            data.b2cTerminalUserResumeId = '${resumeResult.bturId}';
+            ajax(viewUrl,data, function (result) {
+                if (result.status == "success"){
+                    window.open("/images/"+result.datas[0]);
+                }
+            });
+		}
+		$('.close_tc,#buttonRegisterYse,#buttonRegisterNo').click(function(){
+			$('#tcBox').hide();
+		});
+	</script>
+</body>
+
+</html>

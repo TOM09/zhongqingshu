@@ -1,0 +1,184 @@
+<%--
+Created by IntelliJ IDEA.
+User: mcbn
+Date: 2018/2/9
+Time: 13:30
+To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>认证信息</title>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1"/>
+    <meta name="toTop" content="true">
+    <link href="/static/css/base.css" rel="stylesheet" type="text/css"/>
+    <!--bootstrap框架↓-->
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+    <!--本页面CSS↓-->
+    <link rel="stylesheet" href="/static/css/swiper.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!--bootstrap框架↓-->
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+    <script type="text/javascript" src="/static/js/index.js"></script>
+    <script type="text/javascript" src="/static/js/util.js"></script>
+
+    <style type="text/css">
+        .zhizhao_t {
+            height: 21px;
+            font-size: 15px;
+            font-family: PingFangSC-Regular;
+            color: rgba(61, 61, 61, 1);
+            line-height: 21px;
+            margin: 20px 20px 0 40px;
+        }
+
+        .zhizhao {
+            display: inline-block;
+            width: 700px;
+            text-align: center;
+            height: auto;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            color: rgba(155, 155, 155, 1);
+            line-height: 24px;
+            text-align: left;
+
+        }
+
+        .zhizhao div {
+            float: left;
+        }
+    </style>
+    <script>
+        function loadFile() {
+            var read = new FileReader();
+            read.readAsDataURL($('#jobData')[0].files[0]); // 调用readAsDataURL方法读取文件;
+            read.onload = function () {
+                url = read.result;
+                $("#yyzz").attr("src", url);
+            }
+        }
+
+        function tijiao() {
+            if ($("#jobData").val() == "") {
+                $('#prompt').html('请输入缩略图');
+                $('#myModal').modal('show');
+            } else {
+                var data = {};
+                data.clientType = "102500";
+                data.id = +localStorage.getItem("companyId");
+                ajax("/mcbn/services/common/getApprovalStatus", data, function (resulta) {
+                    var resultStatus = resulta.datas[0].status;
+                    if (resultStatus == "100851") {
+                        $('#prompt').html('认证正在审核中，请耐心等待');
+                        $('#myModal').modal('show');
+                    } else {
+                        var formData = new FormData();
+                        formData.append("file", $('#jobData')[0].files[0]);
+                        $.ajax({
+                            type: "POST",//方法类型
+                            url: "${servicefix}/services/upload/company/business/license/file",//url  ORC接口
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function (result) {
+                                var sensitive = 'Some words are sensitive!';
+                                var errorMessage = '';
+                                !result.errorMessage ? errorMessage = result : errorMessage = result.errorMessage;
+                                if (isContains(errorMessage, sensitive)) {
+                                    $('#prompt').html('含有敏感词');
+                                    $('#myModal').modal('show');
+                                    return;
+                                }
+                                if (result.resultCode == 1)
+                                    window.location.href = "/mcbn/services/company/certificationInfo?data=" + result.datas[0];
+                            },
+                            error: function () {
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div class="Header">
+    <dl class="Login_topdl">
+        <dt><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+        <dd><a href="">我是求职者</a> | <a href="">APP</a></dd>
+    </dl>
+</div>
+<!--头部end-->
+<div class="w1200">
+    <div class="main_fff mar_box">
+        <dl class="Login_tit">
+            <dt>认证信息</dt>
+        </dl>
+        <div class="person_box" style="text-align:center;">
+            <div class="zhizhao">
+                <%--
+                <div class="gongsilogo_box"><img id="slt" src=""/></div>
+                --%>
+                <div class="zhizhao_t">营业执照：</div>
+                <input name="images" id="images" type="text" style="display: none"/>
+                <div style="overflow: hidden;width: 184px;height: 264px;position: relative;"><img
+                        style="width:180px;height: 260px;" id="yyzz" src="/static/images/image_zhizhao2.png">
+                    <input type="file" id="jobData" name="file" onchange="loadFile()"
+                           style="cursor: pointer;border: 120px solid black;position: absolute;top: 0px;filter: alpha(opacity=0);-moz-opacity:0;opacity:0;">
+                </div>
+                <div class="zhizhao_t" style="margin-left:100px;margin-right:10px;">样例：</div>
+                <div>
+                    <img src="/static/images/image_zhizhao1.png">
+                </div>
+            </div>
+
+            <div class="zhizhao" style="margin-top:34px;">
+                <p>1.图片要求必须为彩色、清晰的数码相机拍摄件或扫描件，涂改后无效（或黑白影印件加盖公司红色公章）。</p>
+                <p>2.图片上的公司名称必须与您公司信息中填写的公司名称完全一致。</p>
+                <p>3.图片必须清晰、完整、方向正确，不能带有无关的水印、标记或者其他网站的logo。</p>
+                <p>4.图片小于500KB，格式为jpg/png/gif。</p>
+            </div>
+            <button class="person_list_btn" id="buttonNext" onclick="tijiao()">下一步</button>
+        </div>
+
+    </div>
+</div>
+<!--尾部开始-->
+<div class="footer">
+    <jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 300px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body" id="prompt">
+
+            </div>
+            <div class="modal-footer" style="border: 0px;">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

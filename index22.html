@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="toTop" content="true">
+    <!--bootstrap框架↓-->
+    <script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+    <!--<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>-->
+    <!--<script type="text/javascript" src="/static/js/util.js"></script>-->
+    <!--<script type="text/javascript" src="js/common.js"></script>-->
+    
+    <style type="text/css">
+    	.box{
+    		width: 200px;
+    		height: 100px;
+    		background: red;
+    	}
+    </style>
+</head>
+<body>
+ <script type="text/javascript">
+        $(function () {
+		 	var dataType = {};
+            dataType.clientType = 102500;
+            dataType.type = 'company_scale';
+//          ajax("/services/base/data/work/position/type/list",dataType,function(msg){
+            ajax("/services/position/create/workCity",dataType,function(msg){
+            	
+			 			console.log(msg)
+			     });　
+							     
+							     
+//							$.ajax({
+//								type:"get",
+//								url:"https://company.zqtree.com/services/base/data/work/position/type/list",/*url写异域的请求地址*/
+//								dataType:"jsonp",/*加上datatype*/
+//								jsonpCallback:"cb",/*设置一个回调函数，名字随便取，和下面的函数里的名字相同就行*/
+//								success:function(data){
+//									console.log(data)
+//								}
+//							});
+//				    ajax("https://company.zqtree.com/services/base/data/work/position/type/list",industryDate,function(msg){
+//									  		console.log(msg)
+//								}
+//							);
+
+
+
+
+
+
+
+
+function ajax(url, data, successCallback, isAsync) {
+    if (typeof data === 'object') {
+        data = JSON.stringify(data)
+    }
+    isAsync === undefined ? isAsync = true : isAsync;
+    $.ajax({
+        method: 'POST',
+        url: url,
+        contentType: "application/json",
+        async: isAsync,
+        data: data,
+        success: function (result, status, xhr) {
+            var token = xhr.getResponseHeader('__token__');
+            setCookie('__token__', token, 30);
+            if (result.status === 'success') {
+                successCallback(result);
+                return false
+            }
+            var errorStr = 'authentication_failed';
+            var registeredStr = 'the phone number has been registered';
+            var newMobileStr = 'New mobile security code don\'t match';
+            var passwordStr = 'The password is not correct.';
+            var userNotStr = 'The user is not existed.';
+            var deliveryErroe = 'delivery security code is not correct.';
+            var lessMoney = 'Amount is not a valid number';
+            var countMax = 'Max retry count: 5';
+            var smsCountMax = "SMS message frequency too high.";
+            var accountError = 'Account not exists.';
+            var passwordError = 'Password not match';
+            var oldPasswordError = "Validate old password failed.";
+            var userTypeerror = 'Company type don\'t match.';
+            var mobileError = 'phone security code don\'t match.';
+            var emailError = 'Email security code don\'t match.';
+            var oldMobileError = 'Old mobile security code don\'t match.';
+            var oldEmailError = 'Old email security code don\'t match.';
+            var newMobileError = 'New phone security code don\'t match.';
+            var newEmailError = 'New email security code don\'t match.';
+            var accountDisabled = 'Your account has been disabled.';
+            var deletedError = 'this product has been sold, so this could not be deleted.';
+            var perfectResume = 'complete your resume first.';
+            var emailAddress = 'Email address should not be null.';
+            var accountNotExists = 'Account not exists.';
+            var denied = 'Permission denied.';
+            var sensitive = 'Some words are sensitive!';
+            var errorMessage = '';
+            !result.errorMessage ? errorMessage = result : errorMessage = result.errorMessage;
+//          if (isContains(errorMessage, emailAddress)) {
+//              toast("邮箱地址不能为空");
+//              return;
+//          }
+//          if (isContains(errorMessage, accountNotExists)) {
+//              toast("该账户不存在");
+//              return;
+//          }
+//          if (isContains(errorMessage, errorStr)) {
+//              alert('请重新登录！');
+//              window.parent.location.href = '/login.html'
+//          }
+//          if (isContains(errorMessage, denied)) {
+//              alert('该账号被顶下，请重新登录！');
+//              window.parent.location.href = '/login.html'
+//          }
+//          if (isContains(errorMessage, perfectResume)) {
+//              toast("请先完善简历");
+//              return;
+//          }
+//          if (isContains(errorMessage, accountDisabled)) {
+//              toast("您的账号已冻结");
+//              return;
+//          }
+//          if (isContains(errorMessage, passwordStr)) {
+//              toast("账号密码不匹配");
+//              return
+//          }
+//          if (isContains(errorMessage, userNotStr)) {
+//              toast("账号不存在");
+//              return
+//          }
+//          if (isContains(errorMessage, registeredStr)) {
+//              toast("该账户已被注册");
+//              return
+//          }
+//          if (isContains(errorMessage, countMax)) {
+//              toast('尝试次数过多，请稍后再试！');
+//              return
+//          }
+//          if (isContains(errorMessage, deletedError)) {
+//              toast('商品已经出售，不能删除！');
+//              return
+//          }
+//          if (isContains(errorMessage, smsCountMax)) {
+//              toast('短信频率过多，请稍后再试！');
+//              return
+//          }
+//          if (isContains(errorMessage, lessMoney)) {
+//              toast('余额不足！');
+//              return
+//          }
+//          if (isContains(errorMessage, userTypeerror)) {
+//              toast('账号类型错误,请重新登录！');
+//              return
+//          }
+//          if (isContains(errorMessage, passwordError)) {
+//              toast("密码错误");
+//              return
+//          }
+//          if (isContains(errorMessage, mobileError)) {
+//              toast('手机验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, newMobileStr)) {
+//              toast('新手机验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, emailError)) {
+//              toast('邮箱验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, oldMobileError)) {
+//              toast('原手机验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, oldEmailError)) {
+//              toast('原邮箱验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, newMobileError)) {
+//              toast('新手机验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, newEmailError)) {
+//              toast('新邮箱验证码错误！');
+//              return
+//          }
+//          if (isContains(errorMessage, oldPasswordError)) {
+//              toast('原密码填写错误，请重新填写！');
+//              return
+//          }
+//          if (isContains(errorMessage, sensitive)) {
+//              toast('含有敏感词');
+//              return;
+//          }
+            // alert(errorMessage)
+        },
+        error: function () {
+            alert('服务器错误，请稍后再试');
+            window.parent.location.href = '/login.html';
+        }
+    });
+}
+		})
+        
+        
+// function ajax(url, data, successCallback, isAsync) {
+//  if (typeof data === 'object') {
+//      data = JSON.stringify(data)
+//  }
+//  isAsync === undefined ? isAsync = true : isAsync;
+//  $.ajax({
+//      method: 'POST',
+//      url: url,
+//      contentType: "application/json",
+//      async: isAsync,
+//      data: data,
+//      success: function (result, status, xhr) {
+//  }
+//})
+// }
+    </script>
+</body>
+</html>

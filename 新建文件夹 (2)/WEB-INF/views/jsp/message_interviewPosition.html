@@ -1,0 +1,141 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>视频面试</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+</head>
+<body>
+	<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+	<div class="Header">
+	    <dl class="Login_topdl">
+			<dt style="margin-top:9px;"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></dt>
+			<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+		</dl>
+	</div>
+<!--头部end-->
+<div class="w1200">
+	<div class="main_fff">
+		<dl class="Login_tit">
+			<dt>视频面试职位列表</dt>
+		</dl>
+		<div class="jd_box_table" style="margin-top: 20px;">
+				<div id="div_1"></div>
+				<div class="pageDiv">
+				<ul class="pagination clearfix" id="pagenumber_1">
+				</ul>
+			</div>	
+		</div>	
+	</div>
+</div>
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+<script type="text/javascript">
+	var companyId = $.cookie('companyId')
+	$(function(){
+		queryAllInterViewPosition(1) 
+	})
+	function queryAllInterViewPosition(data){
+	    var mdata={};
+        mdata.companyId=companyId;
+        mdata.currentPage=data;
+		$.ajax({
+			type:"post",
+			url:"${pageContext.request.contextPath }/mcbn/services/position/queryAllVideoPosition",
+            data:JSON.stringify(mdata),
+            dataType:"json",
+            contentType: "application/json",
+			success:function(msg){
+				pre =   msg.pre;
+				next =	msg.next;
+				pageCount = msg.pageCount;
+				rows = msg.rows;
+				var trs="";
+				$.each(msg.rows,function(i,position){
+						trs += "<dl class='fabuzw_dl' style='border: 1px solid #EEEEEE;margin-bottom: 25px;'><dd>"+
+								"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo("+position.id+")\">" +position.positionName+"</a>"+
+								(position.isVideo==true?"<b>"+"视频"+"</b>":"&nbsp;&nbsp;")+
+								"<span>"+position.ssName+"</span></h1>"+
+								"<p>"+position.weName+"&nbsp;"+position.degreeLevelName+"&nbsp;"+position.jobCategoryName+"&nbsp;"+position.workCityName+"</p></dd>"+
+								"<dt><span>"+position.interviewStartDateString+"-"+position.interviewEndDateString+""
+						if (position.operation == "进行中"){
+							trs += "</span><button class='person_fabuzw' onclick=\"queryJobSeekerList("+position.id+")\">"+position.operation+"</button></dt></dl>"
+						}else{
+							trs += "</span><button class='person_fabuzw person_fabuzw2' onclick=\"queryJobSeekerList("+position.id+")\">"+position.operation+"</button></dt></dl>"
+						}
+				});
+				$("#div_1").html(trs);
+				/* createPage("#pagenumber_1") */
+				buildPage("pagenumber_1",msg.currentPage,msg.pageCount,"queryAllInterViewPosition","")
+			}
+		})
+	} 
+	/* function createPage(data){
+  		$(data).empty()
+		if (rows.length!=0){
+				var p = "<li><a style='cursor:pointer' id='pren'>上一页</a></li>";
+				for (var i=1;i<=pageCount;i++){
+					if (i>3){
+						break;
+					}
+					if (i == 3 && pageCount>=5){
+						p +="<li><a style='cursor:pointer' id='n"+i+"'>"+i+"</a>...</li>"
+					}else{
+						p += "<li><a style='cursor:pointer' id='n"+i+"'>"+i+"</a></li>"
+					}
+				}
+				if (pageCount>3){
+					p += "<li><a id='endn'>"+pageCount+"</a></li>"
+				}
+				p += "<li><a style='cursor:pointer' id='nextn'>下一页</a></li>"
+				$(data).html(p); 
+				//注册点击分页事件
+				$("#n1").on("click",function(){
+			    	
+					queryAllInterViewPosition(companyId,1)
+			    })
+				$("#n2").on("click",function(){
+			    	
+					queryAllInterViewPosition(companyId,2)
+				});
+			    $("#n3").on("click",function(){
+			    	queryAllInterViewPosition(companyId,3)
+  				});
+				$("#pren").on("click",function(){
+					queryAllInterViewPosition(companyId,pre)
+				});
+				$("#nextn").on("click",function(){
+					queryAllInterViewPosition(companyId,next)
+				});
+				$("#endn").on("click",function(){
+					queryAllInterViewPosition(companyId,pageCount)
+				});
+		}
+	} */
+	function queryJobSeekerList(positionId){
+		location.href="${pageContext.request.contextPath}/mcbn/services/resume/jumpJobSeekerList?positionId="+positionId
+	}
+</script>
+</body>
+</html>
