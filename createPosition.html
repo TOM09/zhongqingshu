@@ -858,10 +858,11 @@
 						//clientType
 						data.clientType = 102500;
 //						services/position/create
+							console.log(data)
 						ajax("/services/position/create", data, function(msg) {
-							console.log(typeof msg.status)
+							console.log(msg)
 							if(msg.status == "success") {
-								location.href="positionManage.html?companyId="+companyId; 
+//								location.href="positionManage.html?companyId="+companyId; 
 							}
 						})
 					};
