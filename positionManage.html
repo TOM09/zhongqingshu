@@ -79,7 +79,7 @@
 
 			//查看职位
 			function queryPositionD(positionId) {
-				location.href = "${pageContext.request.contextPath}/mcbn/services/position/queryPositionD?positionId=" + positionId
+				location.href = "positionDetails.html?positionId=" + positionId
 			}
 
 			//已发布职位
@@ -90,9 +90,7 @@
 				queryData.clientType = 102500;
 				queryData.data = data
 				//上线职位
-				console.log(queryData)
 				ajax("/services/position/list", queryData, function(msg) {
-				console.log(msg)
 					var datas = msg.datas[0].datas
 					//将msg的各项值赋于变量
 					pre = msg.pre;
@@ -118,6 +116,31 @@
 					buildPage2("pagenumber_1", msg.currentPage, pageCount, "queryAllPositionOnline", "");
 				});
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			function queryAllPositionOffline(data) {
 //				queryData.currentPage = data;

@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
 		<script type="text/javascript" src="/static/js/util.js"></script>
 		<script type="text/javascript" src="/static/js/index.js"></script>
+		<script type="text/javascript" src="/js/common.js"></script>
 		<link href="/static/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 		<script src="/static/bootstrap-3.3.7-dist/js/moment-with-locales.min.js"></script>
 		<script src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
@@ -264,7 +265,7 @@
 						queryWorkPositionTypeId1(parentId)
 						querySalaryScope()
 						//		queryAddress(type,parentId)
-						queryCity2(type, parentId)
+						queryAddress(type, parentId)
 						queryNatureWork()
 						queryWorkExperience()
 						queryEeducation()
@@ -404,7 +405,7 @@
 							var ops = "";
 							$.each(msgDatas, function(i, positionLabel) {
 								var labelId = i + 1
-								ops += "<span class='person_biaoq'><a href='javascript:void(0);' style='cursor:pointer;display: inline-block;' id='" + positionLabel.code + "' >" + positionLabel.name + "</a></span>";
+								ops += "<span class='person_biaoq'><a href='javascript:void(0);' style='cursor:pointer;display: inline-block;' id='" + positionLabel.id + "' >" + positionLabel.name + "</a></span>";
 							});
 							//    			  		循环生成的标签放入#plabel中
 							ops += "<span class='person_biaoqNO'>标签最多选择5个</span>";
@@ -416,23 +417,27 @@
 								//第一个span点击的时候
 								var obj = this.children[0]
 								$(obj).click(function() {
-									//如果这个span在数组内，颜色变化，循环
-									if(IsInArray(arr, this.id)) {
+										console.log(this.text)
+									//如果这个span.id在数组内，颜色变化，循环
+									if(IsInArray(arr, this.text)) {
+
 										$(this).css('color', '#8A8A8A');
 										var n;
+										//循环数组的长度，如果数组的第i个等于span的id，就让n=i  最后即等于标签数量
 										for(var i = 0; i < arr.length; i++) {
-											if(arr[i] == this.id) {
+											if(arr[i] == this.text) {
 												n = i;
 												break;
 											}
 										}
+										//从n开始  移除1个元素
 										arr.splice(n, 1)
 										return
 									}
-									//	   						如果数组长度大于5
+									//	   						如果数组长度小于5  加颜色  push其id
 									if(arr.length < 5) {
 										$(this).css('color', '#33CCFF');
-										arr.push(this.id)
+										arr.push(this.text)
 									}
 								});
 
@@ -457,16 +462,19 @@
 						ajax("/services/dict/type/list", data, function(msg) {
 							//			type=job_category
 							var ops = "<option value='-1'>====请选工作性质====</option>";
+							console.log(msg.datas)
+							
 							for(var i = 0; i < msg.datas.length; i++) {
-								ops += "<option value='" + msg.datas[i].code + "'>" + msg.datas[i].name + "</option>";
+								ops += "<option value='" + msg.datas[i].id + "'>" + msg.datas[i].name + "</option>";
 							};
+							console.log(ops)
 							$("#natureWork").html(ops);
 						});
 					}
 
 					/* 查询工作地点 （参考工作类型） */
 					//初始parentId为0 
-					function queryCity2(type, code) {
+					function queryAddress(type, code) {
 						var data = {};
 						data.type = type;
 						data.code = code;
@@ -491,16 +499,6 @@
 								}
 								$("#city").html(ops);
 							};
-//							ajax("/services/dict/type/list", data, function(msg) {
-//								var ops2 = "<option value='-1'>==选择区县==</option>";
-//								for(var i = 0; i < msgData.length; i++) {
-//									if(msgData[i].parentId == code) {
-//										ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
-//									}
-//									$("#district").html(ops2);
-//								};
-//							});
-
 						});
 					}
 
@@ -530,7 +528,7 @@
 						var data = $("#province").val()
 						//让type变成city，data为选中的某省
 						type = "city"
-						queryCity2(type, data)
+						queryAddress(type, data)
 					}
 
 					function queryDistrict() {
@@ -538,149 +536,6 @@
 						type = "district"
 						queryDistrict2(type, data)
 					}
-
-					//	 		var data = {};
-					//          data.type = "province";
-					//          data.clientType = "102500";
-					//          ajax('/services/dict/type/list', data, function (result) {
-					//          	console.log(result)
-					//          	//取得result.resultCode为1
-					//              var resultCode = result.resultCode;
-					//              //如果它为1  ，毫无影响
-					//              if (resultCode=="1") {
-					//              	//让provinceList = 所有数组
-					//                  provinceList = result.datas;
-					//                  console.log(provinceList.length)
-					//                  var data1 = {};
-					//                  data1.type = "city";
-					//                  data1.clientType = "102500";
-					//                  //data1.type = "city";  再次调ajax  取得所有的市
-					//                  ajax(("/services/dict/type/list"), data1, function (result) {
-					//                  	console.log(result)
-					//                  	//把所有的市放入数组
-					//                      cityList = result.datas;
-					//                      //循环省的个数
-					//                      for(var i = 0; i<provinceList.length; i++){
-					//                      	//当i为0  定义第一个省
-					//                          if(i == 0) {
-					//                              firstProvince = provinceList[i].name;
-					//                          }
-					//                          //给省加入数据
-					//                          $("#province").append("<option value='" + provinceList[i].name + "'>" + provinceList[i].name + "</option>");
-					//                      }
-					//                      //使省的内容为 第一个省  调用市函数
-					//                      $("#province").val(firstProvince);
-					//                      showCityList(firstProvince);
-					//                  });
-					//              }
-					//          });
-					//          
-					//          $("#province").change(function () {
-					//              var pid = $(this).children('option:selected').val();
-					//              showCityList(pid);
-					//          });
-					//          
-					//        function showCityList(provincename){
-					//          $("#city").empty();
-					//          //循环数组
-					//          for(var j=0;j<provinceList.length;j++){
-					//              var prodata = provinceList[j];
-					//              console.log(prodata)
-					//              //如果省名  == 选中的省名
-					//              if(prodata.name == provincename) {
-					//              	//循环所有城市
-					//                  for(var i = 0; i<cityList.length; i++){
-					//                      var data = cityList[i];
-					//                      //如果data的parentId = 省的id
-					//                      if(data.parentId == prodata.id) {
-					//                      	//添加到城市名中
-					//                          $("#city").append("<option value='" + data.name + "'>" + data.name + "</option>");
-					//                      }
-					//                  }
-					//                  return;
-					//              }
-					//          }
-					//      } 
-					//      
-					////      当市改变的时候
-					//      $("#city").change(function () {
-					//              var piid = $(this).children('option:selected').val();
-					//              showDistrictList(piid);
-					//          });
-					//        
-					//        function showDistrictList(districtname){
-					//          $("#district").empty();
-					//          //循环数组
-					//          for(var j=0;j<provinceList.length;j++){
-					//              var prodata = provinceList[j];
-					//              console.log(prodata)
-					//              //如果省名  == 选中的省名
-					//              if(prodata.name == provincename){
-					//              	//循环所有城市
-					//                  for(var i = 0; i<cityList.length; i++){
-					//                      var data = cityList[i];
-					//                      //如果data的parentId = 省的id
-					//                      if(data.parentId == prodata.id) {
-					//                      	//添加到城市名中
-					//                          $("#district").append("<option value='" + data.name + "'>" + data.name + "</option>");
-					//                      }
-					//                  }
-					//                  return;
-					//              }
-					//          }
-					//      }
-
-					//外包使用的方法
-					//	function queryAddress(type,code){
-					//	    var data={};
-					//	    data.type=type;
-					//      data.code=code;
-					//      data.clientType = 102500;
-					//      ajax("/services/dict/type/list",data,function(msg){
-					//      	console.log(msg)
-					////      	for(var key in msg) {
-					////				var provinceOption = document.createElement('option');
-					////				provinceOption.value = provinceOption.text = provinceArr[key];
-					////				province.options.add(provinceOption);
-					////				$("#province").html(provinceOption);
-					////			}
-					//				  var ops = '';
-					//				  if (type == 'province'){
-					//	    		  	 ops="<option value='-1'>=请选省份=</option>";
-					//				  }else if(type == 'city'){
-					//					 ops="<option value='-1'>=请选城市=</option>"; 
-					//				  }else{
-					//	                 ops="<option value='-1'>=请选区域=</option>";
-					//	              }
-					//				  for (var i = 0; i < msg.datas.length; i++) {
-					//		    			ops+="<option value='"+msg.datas[i].code+"'>"+msg.datas[i].name+"</option>";
-					//    			  }
-					// 			      if (type == "province"){
-					// 			    	 $("#province").html(ops);
-					// 			      }else if (type == "city"){
-					// 			    	 $("#city").html(ops);
-					// 			      }else if(type == "district"){
-					//	                 $("#district").html(ops);
-					//	              }
-					//// 			      
-					//// 			      
-					//			})
-					//	}
-
-					//	function queryDistrict(){
-					//		var data = $("#city").val()
-					//		type = "district"
-					//		queryAddress(type,data)
-					//	}
-					//	
-					//	//选择省的时候调用
-					//	function queryCity(){
-					//		var data = $("#province").val()
-					//		console.log(data,$("#province"))
-					//		//让type变成city，data为选中的某省
-					//		type = "city"
-					//		queryAddress(type,data)
-					//	}
 
 					/* 查询工作经验 */
 					function queryWorkExperience() {
@@ -730,6 +585,7 @@
 					function submit() {
 						//arr分割 字符串label
 						var label = arr.join(",");
+						console.log(arr)
 						//职位类型
 						if($("#positionTypeId1").val() == -1) {
 							$('#prompt').html('请选择职位类型');
@@ -833,18 +689,19 @@
 						data.name = $("#pname").val();
 						//月薪
 						data.salaryScopeId = $("#salaryScope").val()
-						var workCity = $("#province").val() + '_' + $("#city").val() + '_' + $("#district").val();
+						var workCity = $("#province option:selected").text() + '_' + $("#city option:selected").text() + '_' + $("#district option:selected").text();
 						//工作地点
 						data.workCity = workCity;
+						console.log(workCity)
 						//详细地点
 						data.detailedAddress = $("#addressDetail").val();
 						//地图
 						data.lon = $("#lon").val()
 						data.lat = $("#lat").val()
 						//工作性质，经验，学历，标签
-						data.jobCategory = $("#natureWork").val();
+						data.jobCategory = $("#natureWork  option:selected").text();
 						data.workExperienceId = $("#workExperience").val();
-						data.degreeLevel = $("#education").val();
+						data.degreeLevel = $("#education option:selected").text();
 						data.label = label
 						//岗位职责，描述
 						data.responsibility = $("#responsibility").val();
