@@ -348,7 +348,7 @@
             })
 
             $(".person_list_btn").click(function () {
-
+				console.log(1)
                 var logoImageUrl=$("#logoImageUrl").val();
                 var addressProvince=$("#addressProvince").val();
                 var addressCity=$("#addressCity").val();
@@ -386,7 +386,7 @@
                 var data={};
                 data.clientType = 102500;
                 //companyId
-                data.companyId = +localStorage.getItem('username');
+                data.companyId = +localStorage.getItem('companyId');
                 data.logoImageUrl=$("#logoImageUrl").val();
                 data.addressProvince=$("#addressProvince").val();
                 data.addressCity=$("#addressCity").val();
@@ -406,10 +406,12 @@
                     data.companyEnvironment=$("#companyEnvironment").val();
                 }
                 console.log(data)
+                
                 ajax("/services/company/info/update", data, function (result) {
                 	console.log(result)
-                    var resultCode = result.resultCode;
-                    if (resultCode=="1") {
+                    var resultCode = result.clientType;
+                    if (resultCode=="102500") {
+                    	console.log(1)
                         toast('修改成功')
                     }
                 });

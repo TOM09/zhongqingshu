@@ -150,7 +150,8 @@
 				companydata.id = +localStorage.getItem('companyId');
         		companydata.userId =+localStorage.getItem("username");
                 companydata.clientType = "102500";
-				ajax("/services/admin/operation/account/view", companydata, function(result) {
+				ajax("/services/company/info/view", companydata, function(result) {
+//				ajax("/services/admin/operation/account/view", companydata, function(result) {
 					console.log(result)
 					var indexdata = result.datas[0];
 					var resultCode = result.resultCode;

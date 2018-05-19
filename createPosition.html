@@ -59,17 +59,17 @@
 								视频面试时间：
 							</div>
 							<!--指定 date标记-->
-							<div style="float:left" class='input-group date col-sm-3' ' id='datetimepicker1 ' >  
-	                <input type='text ' id="startTime" name="startTime" class="form-control" style="height:40px;"/>
-	                <span class="input-group-addon">
-	                    <span class="glyphicon glyphicon-calendar"></span>
-	                </span>
-  	            </div>
-  	           	<div style="float:left">至</div>
-  	            <div style="float:left" class='input-group date col-sm-3 '' id='datetimepicker2'>
+							<div style="float:left" class='input-group date col-sm-3' ' id='datetimepicker1'>  
+	                        	<input type='text ' id="startTime" name="startTime" class="form-control" style="height:40px;"/>
+	                				<span class="input-group-addon">
+	                    				<span class="glyphicon glyphicon-calendar"></span>
+	               					 </span>
+  	           				 </div>
+  	           				<div style="float:left">至</div>
+  	            			<div style="float:left" class='input-group date col-sm-3 '' id='datetimepicker2'>
 								<input type='text' id="endTime" name="endTime" class="form-control" style="height:40px;" />
 								<span class="input-group-addon">  
-	                    <span class="glyphicon glyphicon-calendar"></span>
+	                    			<span class="glyphicon glyphicon-calendar"></span>
 								</span>
 							</div>
 							<lable id="lable_trainTime" style="color:red;"></lable>
@@ -85,6 +85,7 @@
 								<option value='-1'>====请选择职位类型====</option>
 							</select>
 							<select class="person_list_selects" id="positionTypeId2">
+								<option value='-1'>====请选择职位类型====</option>
 							</select>
 						</div>
 					</div>
@@ -364,13 +365,6 @@
 								}
 							}
 
-							var ops = "<option value='-1'>====请选择职位类型====</option>";
-							for(var i = 0; i < msgData.length; i++) {
-								if(msgData[i].parentId == datass) {
-									ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
-								}
-								$("#positionTypeId2").html(ops);
-							};
 						});
 					}
 
@@ -378,6 +372,37 @@
 						//option.id
 						var datass = $("#positionTypeId1").val()
 						queryWorkPositionTypeId1(datass)
+						fn22(datass)
+					}
+
+					function fn22(datass) {
+						var parentIdData = {};
+						parentIdData.parentId = datass;
+						parentIdData.clientType = 102500;
+						ajax("/services/base/data/work/position/type/list", parentIdData, function(msg) {
+							console.log(msg)
+							var msgData = msg.datas;
+							var positionTypeId2 = document.getElementById("positionTypeId2")
+							for(var i = 0; i < msgData.length; i++) {
+								console.log(positionTypeId2.innerHTML)
+
+								if(msgData[i].parentId == datass) {
+									var option = document.createElement("option");
+									option.value = msgData[i].id;
+									option.innerHTML = msgData[i].name;
+									positionTypeId2.append(option);
+									//									positionTypeId2.innerHTML = "";
+								}
+							}
+							//							var ops = "<option value='-1'>====请选择职位类型====</option>";
+							//							for(var i = 0; i < msgData.length; i++) {
+							//								if(msgData[i].parentId == datass) {
+							//									console.log(msgData[i])
+							//									ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
+							//								}
+							//								$("#positionTypeId2").html(ops);
+							//							};
+						})
 					}
 
 					/* 查询工资范围 */
@@ -417,7 +442,7 @@
 								//第一个span点击的时候
 								var obj = this.children[0]
 								$(obj).click(function() {
-										console.log(this.text)
+									console.log(this.text)
 									//如果这个span.id在数组内，颜色变化，循环
 									if(IsInArray(arr, this.text)) {
 
@@ -463,7 +488,7 @@
 							//			type=job_category
 							var ops = "<option value='-1'>====请选工作性质====</option>";
 							console.log(msg.datas)
-							
+
 							for(var i = 0; i < msg.datas.length; i++) {
 								ops += "<option value='" + msg.datas[i].id + "'>" + msg.datas[i].name + "</option>";
 							};
@@ -502,7 +527,7 @@
 						});
 					}
 
-					function queryDistrict2(type,code) {
+					function queryDistrict2(type, code) {
 						var data = {};
 						data.type = type;
 						data.code = code;
@@ -541,8 +566,8 @@
 					function queryWorkExperience() {
 						var parentIdData = {};
 						parentIdData.clientType = 102500;
-						
-//						ajax("/services/position/create", parentIdData, function(msg) {
+
+						//						ajax("/services/position/create", parentIdData, function(msg) {
 						ajax("/services/base/data/work/experience/list", parentIdData, function(msg) {
 							var ops = "<option value='-1'>====请选工作经验要求====</option>";
 							for(var i = 0; i < msg.datas.length; i++) {
@@ -580,8 +605,8 @@
 						}
 
 					}
-					
-				//登录
+
+					//登录
 					function submit() {
 						//arr分割 字符串label
 						var label = arr.join(",");
@@ -708,18 +733,23 @@
 						data.description = $("#description").val();
 						//是否视频
 						data.isVideoInterview = $("input[name='posi']:checked").val() == 'yes' ? false : true;
-//						$("#startTime").val('');
-//						$("#endTime").val('');
-						data.videoInterviewStartDate = 'null'
-						data.videoInterviewEndDate = 'null'
+						//		
+						if(data.isVideoInterview){
+							data.videoInterviewStartDate = $("#startTime").val('');
+							data.videoInterviewEndDate = $("#endTime").val('');
+						}else{
+							data.videoInterviewStartDate = 'null';
+							data.videoInterviewEndDate = 'null';
+						}
+						
 						//clientType
 						data.clientType = 102500;
-//						services/position/create
-							console.log(data)
+						//						services/position/create
+						console.log(data)
 						ajax("/services/position/create", data, function(msg) {
 							console.log(msg)
 							if(msg.status == "success") {
-//								location.href="positionManage.html?companyId="+companyId; 
+								//								location.href="positionManage.html?companyId="+companyId; 
 							}
 						})
 					};
