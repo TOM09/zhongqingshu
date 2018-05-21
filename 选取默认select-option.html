@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+	<button id="btn">按钮</button>
+	<select id="selec">
+		<option value="里面">外面</option>
+		<option value="里面2" selected>外面2</option>
+		<option value="里面3">外面3</option>
+	</select>
+	<script src="js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+//	v	ar  obj=document.getElementById( 'selec' );
+//	var  index=obj.selectedIndex;  //序号，取当前选中选项的序号
+//	var  val = obj.options[index].text;
+		var obj2 = "里面3"
+		
+		var $options=$("#selec option:selected"); //获取选中的项
+		console.log($options.text())
+//
+//2:alert(options.val()); //拿到选中项的值
+//
+//3:alert(options.text()); //拿到选中项的文本
+//
+//4:alert(options.attr('url')); //拿到选中项的url值
+		
+		
+		
+console.log($options)
+//	for (var i = 0; i < obj.length; i++) {
+//		if(obj[i].value ==  obj2){
+//			obj[i].selected = true;
+//		}
+//	}
+	
+	
+	
+</script>
+</body>
+</html>

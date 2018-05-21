@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>职位详情</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+		<meta name="toTop" content="true">
+		<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!--bootstrap框架↓-->
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+		<!--本页面CSS↓-->
+		<link rel="stylesheet" href="/static/css/swiper.css">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="css/util.css">
+		<!--bootstrap框架↓-->
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+		<script type="text/javascript" src="/static/js/index.js"></script>
+		<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=8e2c24150d9743810be9ae4fa2461da5"></script>
+		<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+		<script type="text/javascript" src="/static/js/util.js"></script>
+		<!-- <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+	</head>
+
+	<body>
+		<!--头部已引入-->
+		<div class="w1200">
+			<div class="main_fff">
+				<dl class="zhiw_topdl" style="padding:10px 0;">
+					<dd>
+						<h1 style="font-size:25px;">
+							<a href="javascript:void(0);" class="titleAclick">
+								
+							</a>
+							<!--<font id="view"></font>-->
+							<span style="font-size:24px;" class="titleSpan"></span></h1>
+						<p style="font-size:15px;" class="baseInfo"></p>
+						<h2 id="le">
+						</h2>
+						<!--几天前发布-->
+						<strong style="font-size:14px;" class="dateTime">天前发布</strong>
+					</dd>
+					<dt><button id='offLine' class="person_fabuzw">下线职位</button></dt>
+				</dl>
+				<div class="zhiw_tit">岗位职责：</div>
+				<ul class="zhiw_ul zhiw_titBlame">
+				</ul>
+				<div class="zhiw_tit">职位描述：</div>
+				<ul class="zhiw_ul zhiw_titDepict">
+				</ul>
+				<div class="zhiw_tit" id="videoTime" style='display:none'>视频面试时间：</div>
+				<ul class="zhiw_ul" style='display:none' id='vt'>
+					<li>${startTime}-${endTime}</li>
+				</ul>
+				<div class="zhiw_tit">工作地址：</div>
+				<ul class="zhiw_ul">
+					<li class="workAddress">
+						<a class="bluefont" style='cursor:pointer' id="showMap">查看地图</a>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+		<!--尾部开始-->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">工作地点</h4>
+					</div>
+					<div class="modal-body" id="container" style="position: relative;height: 642px;width: 80%;margin-top:  50px;"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+<script type="text/javascript" src="js/header.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+		<script>
+			var lnglatXY
+			var b
+			$(function() {
+				
+				function GetRequest() { 
+				    var url = location.search; //获取url中"?"符后的字串 
+				   	if (url.indexOf("?") != -1) { 
+				        var str = url.substr(1); 
+					      strs = str.split("=")[1]; 
+					   } 
+					   return strs; 
+					}
+				let positionId = GetRequest();
+				console.log(positionId)
+				var data  = {};
+				data.positionId = positionId;
+				data.clientType = 102500;
+				ajax('/services/position/view',data,function(msg){
+					console.log(msg.datas[0])
+					//名字和薪水
+					$(".titleAclick").text(msg.datas[0].name)
+					$(".titleSpan").text(msg.datas[0].salaryScopeName)
+					//标题下的小字
+					var oj= ''
+					oj += msg.datas[0].workExperienceName +" "+ msg.datas[0].degreeLevel +" "+ msg.datas[0].jobCategory +" "+ msg.datas[0].detailedAddress;
+					$(".baseInfo").text(oj);
+					//标签
+					var labelsArray = msg.datas[0].label.split(",");
+					var sp = '';
+					for(var i = 0; i < labelsArray.length; i++) {
+						sp += "<span style='margin-right:'>" + labelsArray[i] + "</span>";
+					}
+					$("#le").html(sp);
+					//几天前发布  createDate 时间戳参数
+					var dateTimeBefor = getDateTimeBefor(msg.datas[0].createDate)
+					console.log(dateTimeBefor)
+					$('.dateTime').prepend(dateTimeBefor);
+
+					//岗位职责
+					$(".zhiw_titBlame").text(msg.datas[0].responsibility);
+					//岗位描述
+					$(".zhiw_titDepict").text(msg.datas[0].description);
+					//工作地址
+					$(".workAddress").prepend(msg.datas[0].detailedAddress);
+					var vb = msg.datas[0].isVideoInterview? '视频': '普通';
+						if(vb == "视频") {
+						$("#videoTime").css('display', 'block');
+						$("#vt").css('display', 'block');
+					}
+					//地图
+					lnglatXY = [msg.datas[0].lon, msg.datas[0].lat]; //已知点坐标
+					console.log(lnglatXY)
+					var map = new AMap.Map('container', {
+						resizeEnable: true,
+						zoom: 11,
+						center: lnglatXY
+					});
+					marker = new AMap.Marker({
+						position: lnglatXY
+					});
+					marker.setMap(map);
+					map.plugin(["AMap.ToolBar"], function() {
+						map.addControl(new AMap.ToolBar());
+					});
+					//判断是重新发布还是下线按钮
+					b = msg.datas[0].status
+					if(b == 102751) {
+						$("#offLine").text("重新发布");
+					}
+				})
+				 $('.person_fabuzw').click(function(){
+				 		offLine(data.positionId)
+				 	console.log(data.positionId)
+				 })
+				/* if(vb == "视频") {
+				$("#view")[0].outerHTML="<b>"+vb+"</b>";
+			} */
+			})
+			
+		//时间戳判断多久前发布
+			function getDateTimeBefor(publishtime) { 
+		        var currTime = Date.parse(new Date());; 
+		        var l = parseInt(currTime) - parseInt(publishtime); 
+		        // 少于一分钟 
+		        var time = l / 1000; 
+		        //秒转天数 
+		        var days = time / 3600 / 24; 
+		        if (days < 30) { 
+		            return Math.floor(days); 
+		        } 
+		        //秒转月 
+		        var months = time / 3600 / 24 / 30; 
+		        if (months < 12) { 
+		            return Math.floor(months); 
+		        } 
+		        //秒转年 
+		        var years = time / 3600 / 24 / 30 / 12; 
+		        return Math.floor(years); 
+		    } 
+		    
+
+		//点击下线
+			function offLine(data) {
+		    	console.log(data)
+				if(b == 102751) {
+					location.href = "adminRePublish.html?data=" + data
+				} else {
+				var udata = {};
+				udata.positionId = data
+				udata.clientType = 102500;
+				ajax("/services/position/offline", udata, function(msg) {
+					console.log(msg)
+					if(msg.status == 'failure') {
+						window.history.go(-1);	
+					}
+				});
+				}
+			}
+
+			$("#showMap").click(function() {
+				$("#myModal").modal("show");
+			})
+		</script>
+	</body>
+
+</html>

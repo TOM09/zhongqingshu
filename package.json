@@ -1,0 +1,19 @@
+{
+  "name": "jsp-html",
+  "version": "1.0.0",
+  "description": "",
+  "main": "123.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TOM09/zhongqingshu.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TOM09/zhongqingshu/issues"
+  },
+  "homepage": "https://github.com/TOM09/zhongqingshu#readme"
+}
