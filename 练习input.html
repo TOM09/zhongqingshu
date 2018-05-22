@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>city.html</title>
+		<!---->
+	</head>
+	<style>
+		#t select {
+			width: 150px;
+			height: 40px;
+			margin-left: 20px;
+			font-size: 24px;
+		}
+	</style>
+	<body>
+		<input type="text" name="" id="startTime" value="" />
+		<select class="box" name="" id="province">
+			<option value="1">稍微</option>
+			<option value="2">稍微2</option>
+			
+		</select>
+
+	<script src="js/jquery-1.8.3.min.js"></script>
+	<script src="123.js"></script>
+	<script type="text/javascript">
+		var province = document.getElementById("province")
+		for (var i = 0; i < province.length; i++) {
+			if(province[i].text == "稍微2"){
+			province[i].selected = true;
+			}
+		}
+		console.log(province.value)
+		
+		
+		
+		
+		
+		console.log($('startTime').val())
+		var pa12 = "pa12"
+		var pa34 = "pa34"
+		
+		var id = pa12.replace(pa34, "") 
+		console.log(id)
+	</script>
+	</body>
+	

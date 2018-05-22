@@ -268,7 +268,7 @@
             $("#addressDetail").val(address);
             $("#lon").val(lngData);
             $("#lat").val(latData);
-            $('#map').modal('hide');
+            $('#map ').modal('hide ');
         })
         $(".linkChild").eq(4).addClass("accordionActive");
         $(".submenu").eq(2).css({
@@ -291,8 +291,7 @@
 		queryNatureWork()
 		queryWorkExperience()
 		queryEeducation()
-		//type值
-		queryAddress2(type,parentId)
+		queryAddress(type,parentId)	
 		queryLabel()
 	    $('#datetimepicker1 ').datetimepicker({  
 	        format: 'YYYY-MM-DD HH:mm ',  
@@ -384,27 +383,27 @@
 				
 		
 		
-				var obj = {};
-				obj.positionId = dataObj.id;
-				obj.companyId = dataObj.companyId;
-				obj.workPositionTypeId = dataObj.workPositionTypeId;
-				obj.salaryScopeId = dataObj.salaryScopeName;
-				obj.detailedAddress = dataObj.detailedAddress;   
-				obj.lon = dataObj.lon;
-				obj.lat = dataObj.lat;
-				obj.workExperienceId = dataObj.workExperienceId;
-				obj.degreeLevel = dataObj.degreeLevel;
+							var obj = {};
+							obj.positionId = dataObj.id;
+							obj.companyId = dataObj.companyId;
+							obj.workPositionTypeId = dataObj.workPositionTypeId;
+							obj.salaryScopeId = dataObj.salaryScopeName;
+							obj.detailedAddress = dataObj.detailedAddress;   
+							obj.lon = dataObj.lon;
+							obj.lat = dataObj.lat;
+							obj.workExperienceId = dataObj.workExperienceId;
+							obj.degreeLevel = dataObj.degreeLevel;
 
-				obj.responsibility = dataObj.responsibility;
-				obj.isVideoInterview = dataObj.isVideoInterview;
-				obj.videoInterviewStartDate =dataObj.videoInterviewStartDate;
-				obj.videoInterviewEndDate = dataObj.videoInterviewEndDate;
-					console.log(dataObj)
+							obj.responsibility = dataObj.responsibility;
+							obj.isVideoInterview = dataObj.isVideoInterview;
+							obj.videoInterviewStartDate =dataObj.videoInterviewStartDate;
+							obj.videoInterviewEndDate = dataObj.videoInterviewEndDate;
+								console.log(dataObj)
 					})
 		
 		console.log($("#province").html())
 		if(("#province").val != ' '){
-			queryCity();
+			<!--queryCity();-->
 		}
 		if ('${workPositionType.parentId} ' == null ||'${workPositionType.parentId} ' == ' '){
 			$("#positionTypeId1").val('${workPositionType.id} ')
@@ -508,7 +507,7 @@
 	}
 	
 	/* 查询职位类型 */
-	function quWoPoTyId(datass){
+		function quWoPoTyId(datass){
 		//成功部分
 		var parentIdData = {};
 		parentIdData.parentId = datass;
@@ -603,8 +602,6 @@
 			};
 		});
 	}
-	
-	//change 事件
 	function queryWorkPositionTypeId2() {
 		//option.id
 		var datass = $("#positionTypeId1").val()
@@ -670,12 +667,12 @@
 					
 					
 	/* 查询工作地点 （参考工作类型）  初始parentId为0  */
-		function queryAddress2(type,code) {
-			console.log(province,0)
+		function queryAddress(type, code) {
 			var data = {};
 			data.type = type;
 			data.code = code;
 			data.clientType = 102500;
+			data.clientType = "102500";
 			ajax("/services/dict/type/list", data, function(msg) {
 				var msgData = msg.datas;
 				var province = document.getElementById("province")
@@ -687,158 +684,96 @@
 						province.append(option);
 					}
 				}
-	
-				for(var i = 0; i < msgData.length; i++) {
-					if(msgData[i].parentId == 0) {
-						var option = document.createElement("option");
-						option.value = msgData[i].id;
-						option.innerHTML = msgData[i].name;
-						province.append(option);
-					}
-				}
-				//设定第一格默认
 						var queryData = {};
 						queryData.clientType = 102500;
 						queryData.positionId = positionId;
 					//职位详情
 						ajax("/services/position/view", queryData, function(msg){
 					//获取了省份
-							var datas = msg.datas[0].workCity.split('_')[0];
+							var datas = msg.datas[0].workCity.split('_ ')[0];
+							console.log(datas)
 							for (var i = 0; i < province.length; i++) {
 								if(province[i].text == datas){
-									console.log(province[i])
 									province[i].selected = true;
 								}
 							}
 				  		})
-				  		
-				//设定第二格的数据
-				var queryData = {};
-				queryData.clientType = 102500;
-				queryData.positionId = positionId;
-				queryData.type = "city";
-				ajax("/services/dict/type/list", queryData, function(msg){
-					var ops = "<option value='-1 '>==选择城市==</option>";
-					var city = document.getElementById("city")
-					for(var i = 0; i < msg.datas.length; i++) {
-						console.log(msg.datas[i])
-						if(msg.datas[i].parentId == province.value) {
-							console.log(msg.datas[i])
-							ops += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
-						}
-					};			
+	
+				var ops = "<option value='-1 '>==选择城市==</option>";
+				for(var i = 0; i < msgData.length; i++) {
+					if(msgData[i].parentId == code) {
+						ops += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
+					}
 					$("#city").html(ops);
-			//下面再想操作msg.datas 发现只有一个了  
-			// console.log（msg.datas.length）的结果是1
-			
-			//设定第二格的默认值
-					var queryData = {};
-					queryData.clientType = 102500;
-					queryData.positionId = positionId;
-					ajax("/services/position/view", queryData, function(msg){
-						var datas2 = msg.datas[0].workCity.split('_')[1];
-						for (var i = 0; i < city.length; i++) {
-							if(city[i].text == datas2){
-								city[i].selected = true;
+					//城市的默认值
+						var queryData = {};
+						queryData.clientType = 102500;
+						queryData.positionId = positionId;
+					//职位详情
+						var city = document.getElementById("city")
+						ajax("/services/position/view", queryData, function(msg){
+					//获取了省份
+							var datas = msg.datas[0].workCity.split('_ ')[1];
+							for (var i = 0; i < city.length; i++) {
+								if(city[i].text == datas){
+									city[i].selected = true;
+								}
 							}
-			  			}
-			  		})
-						  		
-					//设定第三格的默认值
-						var queryData3 = {};
-						queryData3.clientType = 102500;
-						queryData3.positionId = positionId;
-						queryData3.type = "district";
-						ajax("/services/dict/type/list", queryData3, function(msg){
-							var ops3 = "<option value='-1 '>==选择区县==</option>"
-							var district = document.getElementById("district")
-							for (var i = 0; i < msg.datas.length; i++) {
-								if(msg.datas[i].parentId == city.value){
-									ops3 += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
-									}
-								}
-							$("#district").html(ops3);
-							
-							var queryData4 = {};
-							queryData4.clientType = 102500;
-							queryData4.positionId = positionId;
-							ajax("/services/position/view", queryData4, function(msg){
-								console.log(msg)
-								var datas = msg.datas[0].workCity.split('_')[2];
-								for (var i = 0; i < district.length; i++) {
-									if(district[i].text == datas){
-										district[i].selected = true;
-									}
-								}
-					  		})
-						})
-				  	})
+				  		})
+					};
 				});
 			}
 
-		
-		//选择省的时候调用
-		function queryCity() {
-			var data = $("#province").val()
-			type = "city"
-			queryAddress(type, data)
-		}
-	
-		//选择市的时候调用
-		function queryDistrict(){
-			var data = $("#city").val()
-			type = "district"
-			queryDistrict2(type, data)
-		}
-		
-		//选择区县
 		function queryDistrict2(type,code) {
 			var data = {};
 			data.type = type;
+			data.code = code;
 			data.clientType = 102500;
+			//      data.type = "province";
+			data.clientType = "102500";
+			console.log(type, code)
 			ajax("/services/dict/type/list", data, function(msg) {
+				console.log(msg)
 				var msgData = msg.datas;
-				console.log(msgData)
 				var ops2 = "<option value='-1 '>==选择区县==</option>";
 				for(var i = 0; i < msgData.length; i++) {
 					if(msgData[i].parentId == code) {
 						ops2 += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
 					}
-				}
-				$("#district").html(ops2);
-				});
-			}
-
-
-		function queryAddress(type, code) {
-			var data = {};
-			data.type = type;
-			data.code = code;
-			data.clientType = 102500;
-			ajax("/services/dict/type/list", data, function(msg) {
-				var msgData = msg.datas;
-				var province = document.getElementById("province")
-				for(var i = 0; i < msgData.length; i++) {
-					if(msgData[i].parentId == 0) {
-						var option = document.createElement("option");
-						option.value = msgData[i].id;
-						option.innerHTML = msgData[i].name;
-						province.append(option);
-					}
-				}
-				var ops = "<option value='-1 '>==选择城市=</option>";
-				for(var i = 0; i < msgData.length; i++) {
-					if(msgData[i].parentId == code) {
-						ops += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
-					}
-						$("#city").html(ops);
-					};
-					var ops2 = "<option value='-1 '>==选择区县=</option>";
 					$("#district").html(ops2);
-				
+					//县区的默认值
+						var queryData = {};
+						queryData.clientType = 102500;
+						queryData.positionId = positionId;
+					//职位详情
+						var district = document.getElementById("district")
+						ajax("/services/position/view", queryData, function(msg){
+					//获取了省份
+							var datas = msg.datas[0].workCity.split('_ ')[2];
+							console.log(datas)
+							for (var i = 0; i < district.length; i++) {
+								if(district[i].text == datas){
+									district[i].selected = true;
+								}
+							}
+				  		})
+					};
 				});
 			}
-	
+
+		//选择省的时候调用
+		function queryCity() {
+			var data = $("#province").val()
+			//让type变成city，data为选中的某省
+			type = "city"
+			queryAddress(type, data)
+		}
+
+		function queryDistrict(){
+			var data = $("#city").val()
+			type = "district"
+			queryDistrict2(type, data)
+		}
 					
 			
 

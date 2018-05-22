@@ -169,27 +169,41 @@ function buildPage(elem, currPage, totalPage, func, conditions) {
 
 }
 
+//buildPage2函数   （目标，当前页，页码总数，回调函数(即，点击分页按钮触发的方法)）
 function buildPage2(elem, currPage, totalPage, func, conditions) {
+	//上一页，currpage <=1 返回-1，否则返回currPage-1
     var pre = currPage <= 1 ? -1 : currPage - 1;
+    //下一页。
     var next = currPage >= totalPage ? -1 : currPage + 1;
     var p = "<li><a style='cursor:pointer' class='pagena' id='" + elem + pre + "' >上一页</a></li>";
     if (pre == -1) {
+    	//如果只有一页，id叫这个名字
         p = "<li><a style='cursor:pointer;color:#C0C0C0;' class='pagena' id='" + elem + "pren' >上一页</a></li>";
     }
+    //开始页 = 当前页数-2
     var startPage = currPage - 2;
+    //如果开始页数<1   就让它等于1  即不满20
     if (startPage < 1) {
         startPage = 1;
     }
+    //循环页码长度
+    //
     for (var i = startPage; i <= totalPage; i++) {
+    	//如果i = 初始页 +3 并且 i<总页码数  说明是首页 并且有多页
         if (i == (startPage + 3) && i < totalPage) {
+        	//使id+
             p += "<li><a class='pagena' style='cursor:pointer' id='" + elem + i + "'>...</a></li>"
         } else if (i > (startPage + 3) && i < totalPage) {
+        	//如果i》3页 且  <总页数，继续
             continue;
         } else {
+        	//
             p += "<li><a class='pagena' style='cursor:pointer;" + (i == currPage ? 'color:white;background-color:#E80D22' : '') + "' id='" + elem + i + "'>" + i + "</a></li>"
         }
     }
+    //
     var p2 = "<li><a class='pagena' style='cursor:pointer' id='" + elem + next + "'>下一页</a></li>"
+    //如果next 为-1   p2
     if (next == -1) {
         p2 = "<li><a style='cursor:pointer;color:#C0C0C0;' id='" + elem + "nextn' >下一页</a></li>";
     }
@@ -203,11 +217,12 @@ function buildPage2(elem, currPage, totalPage, func, conditions) {
     }
 
     //注册点击分页事件
-    $(".pagena").on("click", function () {
+    $(".pagena").on("click", function(){
         var id = $(this).attr("id");
+        //点击后执行queryAllPositionOnline函数
         eval(func + "(" + id.replace(elem, "") + ",'" + conditions + "')");
-    });
 
+    });
 }
 function replaceRealImgPath(content) {
     $("body").append('<div id="tempUediv" style="display: none;">' + content + '</div>');

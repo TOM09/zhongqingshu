@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
-
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>发布职位</title>
@@ -60,7 +59,7 @@
 							</div>
 							<!--指定 date标记-->
 							<div style="float:left" class='input-group date col-sm-3' ' id='datetimepicker1'>  
-	                        	<input type='text ' id="startTime" name="startTime" class="form-control" style="height:40px;"/>
+	                        	<input type='text' id="startTime" name="startTime" class="form-control" style="height:40px;"/>
 	                				<span class="input-group-addon">
 	                    				<span class="glyphicon glyphicon-calendar"></span>
 	               					 </span>
@@ -369,42 +368,26 @@
 					}
 
 					function queryWorkPositionTypeId2() {
-						//option.id
 						var datass = $("#positionTypeId1").val()
-						queryWorkPositionTypeId1(datass)
-						fn22(datass)
+//						queryWorkPositionTypeId1(datass)
+						queryWorkPositionTypeId3(datass)
 					}
 
-					function fn22(datass) {
+					function queryWorkPositionTypeId3(datass) {
 						var parentIdData = {};
 						parentIdData.parentId = datass;
 						parentIdData.clientType = 102500;
 						ajax("/services/base/data/work/position/type/list", parentIdData, function(msg) {
-							console.log(msg)
 							var msgData = msg.datas;
-							var positionTypeId2 = document.getElementById("positionTypeId2")
+							var ops = "<option value='-1'>====请选择职位类型====</option>";
 							for(var i = 0; i < msgData.length; i++) {
-								console.log(positionTypeId2.innerHTML)
-
 								if(msgData[i].parentId == datass) {
-									var option = document.createElement("option");
-									option.value = msgData[i].id;
-									option.innerHTML = msgData[i].name;
-									positionTypeId2.append(option);
-									//									positionTypeId2.innerHTML = "";
+									ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
 								}
-							}
-							//							var ops = "<option value='-1'>====请选择职位类型====</option>";
-							//							for(var i = 0; i < msgData.length; i++) {
-							//								if(msgData[i].parentId == datass) {
-							//									console.log(msgData[i])
-							//									ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
-							//								}
-							//								$("#positionTypeId2").html(ops);
-							//							};
+								$("#positionTypeId2").html(ops);
+							};
 						})
 					}
-
 					/* 查询工资范围 */
 					function querySalaryScope() {
 						var parentIdData = {};
@@ -417,11 +400,9 @@
 							$("#salaryScope").html(ops);
 						});
 					}
-
 					/* 获得职位标签 */
 					function queryLabel() {
 						var parentIdData = {};
-						//      parentIdData.parentId=parentId;
 						parentIdData.clientType = 102500;
 						parentIdData.type = "position_label";
 						ajax("/services/dict/type/list", parentIdData, function(msg) {
@@ -502,10 +483,7 @@
 					function queryAddress(type, code) {
 						var data = {};
 						data.type = type;
-						data.code = code;
 						data.clientType = 102500;
-						//      data.type = "province";
-						data.clientType = "102500";
 						ajax("/services/dict/type/list", data, function(msg) {
 							var msgData = msg.datas;
 							var province = document.getElementById("province")
@@ -517,6 +495,8 @@
 									province.append(option);
 								}
 							}
+							
+							//刚进入的时候不应该有城市
 							var ops = "<option value='-1'>==选择城市==</option>";
 							for(var i = 0; i < msgData.length; i++) {
 								if(msgData[i].parentId == code) {
@@ -733,47 +713,49 @@
 						data.description = $("#description").val();
 						//是否视频
 						data.isVideoInterview = $("input[name='posi']:checked").val() == 'yes' ? false : true;
-						//		
+						//	formatDateTime(1526548849000)
+						var timeDate = new Date($("#startTime").val());
+						var timeDate2 = new Date($("#endTime").val());
+						
+					    // 有三种方式获取
+					    var timeDate = timeDate.getTime();
+					    var timeDate2 = timeDate2.getTime();
+					    console.log(timeDate,timeDate2)
 						if(data.isVideoInterview){
-							data.videoInterviewStartDate = $("#startTime").val('');
-							data.videoInterviewEndDate = $("#endTime").val('');
+							console.log(data.isVideoInterview)
+							data.videoInterviewStartDate = timeDate;
+							data.videoInterviewEndDate = timeDate2;
 						}else{
-							data.videoInterviewStartDate = 'null';
-							data.videoInterviewEndDate = 'null';
+							data.videoInterviewStartDate = null;
+							data.videoInterviewEndDate = null;
 						}
 						
-						//clientType
 						data.clientType = 102500;
-						//						services/position/create
 						console.log(data)
 						ajax("/services/position/create", data, function(msg) {
 							console.log(msg)
 							if(msg.status == "success") {
-								//								location.href="positionManage.html?companyId="+companyId; 
+								location.href="positionManage.html?companyId="+companyId; 
 							}
 						})
 					};
-					//封装的ajax中已经对data进行了字符串的转换。
-					//	    loginPostData = JSON.stringify(data)
-					//	    ajax("/services/position/create",data,function(msg){
-					//	    	console.log(msg)
-					//				if (msg == 1){
-					//					//调换页码还没有做，等待数据调试
-					//					location.href="${pageContext.request.contextPath}/mcbn/services/position/jumpPositionManage?companyId="+companyId; 
-					//				}
-					//			}
-					//		$.ajax({
-					//			type:"post",
-					//			url:"/services/base/data/work/position/type/admin/create",		
-					//			data:loginPostData,
-					//			dataType:"json",
-					//			contentType: 'application/json;charset=UTF-8',
-					//			success:function(msg){
-					//				if (msg == 1){
-					//					location.href="${pageContext.request.contextPath}/mcbn/services/position/jumpPositionManage?companyId="+companyId; 
-					//				}
-					//			}
-					//		});
+					
+					//时间戳转时间
+					function formatDateTime(inputTime) {    
+					    var date = new Date(inputTime);  
+					    var y = date.getFullYear();    
+					    var m = date.getMonth() + 1;    
+					    m = m < 10 ? ('0' + m) : m;    
+					    var d = date.getDate();    
+					    d = d < 10 ? ('0' + d) : d;    
+					    var h = date.getHours();  
+					    h = h < 10 ? ('0' + h) : h;  
+					    var minute = date.getMinutes();  
+					    var second = date.getSeconds();  
+					    minute = minute < 10 ? ('0' + minute) : minute;    
+					    second = second < 10 ? ('0' + second) : second;   
+					    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;    
+					};  
 
 					function searchMap() {
 						var serchaddress = $("#mapAddress").val();

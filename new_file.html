@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		
+		<script type="text/javascript">
+			
+			/* 查询职位类型 */
+		function quWoPoTyId(datass){
+		//成功部分
+		var parentIdData = {};
+		parentIdData.parentId = datass;
+		parentIdData.clientType = 102500;
+		ajax("/services/base/data/work/position/type/list", parentIdData, function(msg) {
+			var msgData = msg.datas;
+			var positionTypeId1 = document.getElementById("positionTypeId1")
+		//第一格里的全部数据
+			for(var i = 0; i < msgData.length; i++) {
+				if(msgData[i].parentId == 0) {
+					var option = document.createElement("option");
+					option.value = msgData[i].id;
+					option.innerHTML = msgData[i].name;
+					positionTypeId1.append(option);
+				}
+			}
+		//设定第一格默认
+			var queryData = {};
+			queryData.clientType = 102500;
+			queryData.positionId = positionId;
+			ajax("/services/position/view", queryData, function(msg){
+				console.log(msg)
+				var datas = msg.datas[0].workPositionTypeParentId;
+				for (var i = 0; i < positionTypeId1.length; i++) {
+					if(positionTypeId1[i].value == datas){
+						positionTypeId1[i].selected = true;
+					}
+				}
+	  		})
+		//给第二格添加数据
+			var ops = "<option value='-1 '>====请选择职位类型====</option>";
+			for(var i = 0; i < msgData.length; i++) {
+				if(msgData[i].parentId == datass) {
+					ops += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
+				}
+				$("#positionTypeId2").html(ops);
+			};
+		//设定第二格默认
+			var queryData = {};
+			queryData.clientType = 102500;
+			queryData.positionId = positionId;
+			queryData.type = "city";
+			ajax("/services/base/data/work/position/type/list", queryData, function(msg){
+				var ops2 = "<option value='-1 '>====请选择职位类型====</option>"
+				for (var i = 0; i < msg.datas.length; i++) {
+			//循环所有的数据数组,如果它的parentId 和 第一格中的id想等 就放入ops2,再放入第二个select
+					if(msg.datas[i].parentId == positionTypeId1.value){
+						ops2 += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
+						$("#positionTypeId2").html(ops2);
+							
+					//	在ops2中,如果传过来的内容 和 已有的想等,就让已有的为默认.
+						var queryData = {};
+						queryData.clientType = 102500;
+						queryData.positionId = positionId;
+						ajax("/services/position/view", queryData, function(msg){
+							var datas = msg.datas[0].workPositionTypeName;
+							var positionTypeId2 = document.getElementById("positionTypeId2")
+							for (var i = 0; i < positionTypeId2.length; i++) {
+								if(positionTypeId2[i].text == datas){
+									positionTypeId2[i].selected = true;
+								}
+							}
+				  		})
+					}
+		  		}
+			});
+		})
+	}
+	//初始parentId为0 
+	function queryWorkPositionTypeId1(datass){
+		var parentIdData = {};
+		parentIdData.parentId = datass;
+		parentIdData.clientType = 102500;
+		ajax("/services/base/data/work/position/type/list", parentIdData, function(msg) {
+			var msgData = msg.datas;
+			var positionTypeId1 = document.getElementById("positionTypeId1")
+			for(var i = 0; i < msgData.length; i++) {
+				if(msgData[i].parentId == 0) {
+					var option = document.createElement("option");
+					option.value = msgData[i].id;
+					option.innerHTML = msgData[i].name;
+					positionTypeId1.append(option);
+				}
+			}
+			var ops = "<option value='-1 '>====请选择职位类型====</option>";
+			for(var i = 0; i < msgData.length; i++) {
+				//首次为0 
+				if(msgData[i].parentId == datass) {
+					ops += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
+				}
+				$("#positionTypeId2").html(ops);
+			};
+		});
+	}
+	function queryWorkPositionTypeId2() {
+		//option.id
+		var datass = $("#positionTypeId1").val()
+		queryWorkPositionTypeId1(datass)
+	}
+	
+			
+			
+			
+			function queryAddress(type, code) {
+			var data = {};
+			data.type = type;
+			data.code = code;
+			data.clientType = 102500;
+			ajax("/services/dict/type/list", data, function(msg) {
+				var msgData = msg.datas;
+				var province = document.getElementById("province")
+				for(var i = 0; i < msgData.length; i++) {
+					if(msgData[i].parentId == 0) {
+						var option = document.createElement("option");
+						option.value = msgData[i].id;
+						option.innerHTML = msgData[i].name;
+						province.append(option);
+					}
+				}
+				var ops = "<option value='-1 '>==选择城市==</option>";
+				for(var i = 0; i < msgData.length; i++) {
+					if(msgData[i].parentId == code) {
+						ops += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
+					}
+						$("#city").html(ops);
+					};
+				});
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+							//给第二格添加数据
+				
+			
+			
+		</script>
+		
+		
+		
+		
+		for (var i = 0; i < msg.datas.length; i++) {
+						console.log(province.value)
+						if(msg.datas[i].parentId == province.value){
+							ops2 += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
+							$("#city").html(ops2);
+							
+							//	在ops2中,如果传过来的内容 和 已有的想等,就让已有的为默认.
+									var queryData2 = {};
+									queryData2.clientType = 102500;
+									queryData2.positionId = positionId;
+									ajax("/services/position/view", queryData2, function(msg){
+										console.log(msg)
+										var city = document.getElementById("city")
+										var datas = msg.datas[0].workCity.split('_')[1];
+										for (var i = 0; i < city.length; i++) {
+											if(city[i].text == datas){
+												city[i].selected = true;
+											}
+										}
+							  		})
+								}
+							}
+						var ops = "<option value='-1 '>==选择城市==</option>";
+				for(var i = 0; i < msgData.length; i++) {
+					if(msgData[i].parentId == code) {
+						ops += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
+					}
+					$("#city").html(ops);
+				};			
+		
+		
+		
+		
+		//设定第二格的默认值
+					var queryData = {};
+					queryData.clientType = 102500;
+					queryData.positionId = positionId;
+					ajax("/services/position/view", queryData, function(msg){
+						var datas = msg.datas[0].workCity.split('_')[0];
+						var datas2 = msg.datas[0].workCity.split('_')[1];
+						
+						for (var i = 0; i < province.length; i++) {
+							console.log(province.text)
+							if(province[i].text == datas){
+								console.log(province[i].text)
+								province[i].selected = true;
+							}
+			  		}
+			  		})
+		
+		
+	</body>
+</html>
+
+
+
+
+
+	
+				//设定第三格的默认值
+				var queryData3 = {};
+				queryData3.clientType = 102500;
+				queryData3.positionId = positionId;
+				queryData3.type = "district";
+				ajax("/services/dict/type/list", queryData3, function(msg){
+					var ops2 = "<option value='-1 '>====选择区县====</option>"
+			//获取了区县
+					console.log(msg.datas)
+					for (var i = 0; i < msg.datas.length; i++) {
+						if(msg.datas[i].parentId == city.value){
+							ops2 += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
+							$("#city").html(ops2);
+							
+							//	在ops3中,如果传过来的内容 和 已有的想等,就让已有的为默认.
+									var queryData4 = {};
+									queryData4.clientType = 102500;
+									queryData4.positionId = positionId;
+									ajax("/services/position/view", queryData4, function(msg){
+										console.log(msg)
+										var district = document.getElementById("district")
+										var datas = msg.datas[0].workCity.split('_')[1];
+										for (var i = 0; i < district.length; i++) {
+											if(district[i].text == datas){
+												district[i].selected = true;
+											}
+										}
+							  		})
+								}
+							}
+				  		})
+
+
+
+
+
+
+
+	for(var i = 0; i < msgData.length; i++) {
+					if(msgData[i].parentId == code) {
+						ops2 += "<option value=' " + msgData[i].id + " '>" + msgData[i].name + "</option>";
+					}
+					$("#district").html(ops2);
+					//县区的默认值
+						var queryData = {};
+						queryData.clientType = 102500;
+						queryData.positionId = positionId;
+					//职位详情
+						var district = document.getElementById("district")
+						ajax("/services/position/view", queryData, function(msg){
+					//获取了省份
+					console.log(msg)
+							var datas = msg.datas[0].workCity.split('_ ')[2];
+							console.log(datas)
+							for (var i = 0; i < district.length; i++) {
+								if(district[i].text == datas){
+									district[i].selected = true;
+								}
+							}
+				  		})
+					};
+					
+
+	ajax("/services/dict/type/list", queryData, function(msg){
+		var ops = "<option value='-1 '>==选择城市==</option>";
+		for(var i = 0; i < msg.datas.length; i++) {
+			if(msg.datas[i].parentId == province.value) {
+				ops += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
+			}
+		};			
+		$("#city").html(ops);
+		
+	//下面再想操作msg.datas 发现只有一个了  
+	// console.log（msg.datas.length）的结果是1
+			
+
+此处是ajax结尾}
