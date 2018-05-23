@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>报名记录详情</title>
+		<meta name="toTop" content="true">
+		<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!--bootstrap框架↓-->
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+		<!--本页面CSS↓-->
+		<link rel="stylesheet" href="/static/css/swiper.css">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="css/util.css">
+		<!--bootstrap框架↓-->
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+		<script type="text/javascript" src="/static/js/index.js"></script>
+	    <script type="text/javascript" src="js/common.js"></script>
+	</head>
+
+	<body>
+		<!--头部开始-->
+		<div class="w1200">
+			<div class="main_fff">
+				<div class="gongy_jmz" id="registration">
+				</div>
+				<dl class="gongy_xxtop" style="position: relative;">
+					<dd style="max-width:80%;">
+						<h1 id="personTitile"></h1>
+						<span><b id="personNumber"></b>人已报名</span>
+						<span id="personTime">培训时间：</span>
+						<span id="personPlace">培训地点:</span>
+						<span></span>
+					</dd>
+					<dt style="position: absolute;right: 0px;bottom: 27px;"><a id="isRegistration" class="gongy_jies" >已报名</a><span id="browseCount">人浏览</span></dt>
+				</dl>
+				<div class="gongy_xxbox">
+				</div>
+			</div>
+		</div>
+		<!--尾部开始-->
+		<!--尾部end-->
+<script type="text/javascript" src="js/header.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$("#lusername").html($.cookie('userName') + "<b></b>");
+
+				
+				var trainId =+localStorage.getItem('trainId');
+				
+				var trainInfoIdData = {};
+				trainInfoIdData.trainingId = trainId;
+				trainInfoIdData.clientType = 102500;
+				console.log(trainInfoIdData)
+				 $.cookie('isTerminal', 'false');
+				
+				ajax("/services/training/view",trainInfoIdData,function(msg) {
+				 
+			//	ajax("/services/training/apply/list",trainInfoIdData,function(msg) {
+					console.log(msg.datas)
+						var trs = "最近报名者:&nbsp;&nbsp;";
+						$.each(msg.datas, function(i, user) {
+							console.log(user)
+							trs += "<img src='" + user.imageUrl + "'>"
+						});
+						$("#registration").html(trs);
+						//报名titile，人数，
+						$('#personTitile').text(msg.datas[0].title);
+						$('#personNumber').text(msg.datas.length);
+						//报名时间
+						var trainTime = formatDateTime(msg.datas[0].trainTime)
+						$('#personTime').append(trainTime);
+						$('#personPlace').append(msg.datas[0].trainLocation);
+						$('.gongy_xxbox').text(msg.datas[0].text);
+						$('#browseCount').prepend(msg.datas[0].browseCount);
+						
+					}
+				)
+			})
+			
+			function formatDateTime(inputTime) {    
+			    var date = new Date(inputTime);  
+			    var y = date.getFullYear();    
+			    var m = date.getMonth() + 1;    
+			    m = m < 10 ? ('0' + m) : m;    
+			    var d = date.getDate();    
+			    d = d < 10 ? ('0' + d) : d;    
+			    var h = date.getHours();  
+			    h = h < 10 ? ('0' + h) : h;  
+			    var minute = date.getMinutes();  
+			    var second = date.getSeconds();  
+			    minute = minute < 10 ? ('0' + minute) : minute;    
+			    second = second < 10 ? ('0' + second) : second;   
+			    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;    
+			}; 
+		</script>
+	</body>
+
+</html>

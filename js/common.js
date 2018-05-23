@@ -338,7 +338,7 @@ function model(_model) {
         $(this).unbind("click");//为了复用下次要清除上次的事件
     });
 }
-function toast(title) {
+function toast(title){
     var $toastHtml =
         ' <div id="toast">' +
         '     <p>' + title + '</p>' +

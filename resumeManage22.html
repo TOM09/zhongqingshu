@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简历</title>
+</head>
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/verification.js"></script>
+<link rel="stylesheet" type="text/css" href="css/reset-min.css">
+<link rel="stylesheet" type="text/css" href="css/toast.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/util.css">
+<link rel="stylesheet" href="css/commonTop.css">
+<link rel="stylesheet" href="css/accordion.css">
+<link rel="stylesheet" href="css/admin.css">
+<body style="background-color: white;">
+<div class="jd_box_table" style="border: 10px solid #EFEFEF;">
+
+    <ul class="jd_qh">
+        <li id='l1' class='active'><a style='cursor:pointer'>投递简历</a></li>
+        <li id='l2'><a style='cursor:pointer'>下载简历</a></li>
+    </ul>
+    &nbsp;
+    <div id="table_1" >
+        <div class="jianl_shx">选择职位：
+            <select class="person_list_selects" id="choicePosition_1">
+
+            </select>
+        </div>
+        <div class="search">
+            <input id="name1" type="text" placeholder="搜索姓名">
+            <button id='search1' class="searchBtn" type="button"></button>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+            <thead>
+            <tr>
+                <th width="25%">姓名</th>
+                <th width="25%">职位名称</th>
+                <th width="25%">投递日期</th>
+                <th width="25%">操作</th>
+            </tr>
+            </thead>
+            <tbody id="data1"></tbody>
+        </table>
+        <ul class="pagination" id="pagenumber_1">
+        </ul>
+    </div>
+    <div id="table_2" >
+        <div class="jianl_shx">选择职位：
+            <select class="person_list_selects" id="choicePosition_2">
+
+            </select>
+            <a href="javascript:;" class="jianl_paix changeorderimg">时间排序</a>
+        </div>
+        <div class="search">
+            <input id="name2" type="text" placeholder="搜索姓名">
+            <button id='search2' class="searchBtn" type="button"></button>
+        </div>
+        <table border="0" cellpadding="0" cellspacing="0" class="permissionTable">
+            <thead>
+            <tr>
+                <th width="*">姓名</th>
+                <th width="*">职位名称</th>
+                <th width="120px">投递日期</th>
+                <th width="120px">手机号</th>
+                <th width="120px">邮箱</th>
+                <th width="100px" >操作</th>
+            </tr>
+            </thead>
+            <tbody id="data2"></tbody>
+        </table>
+        <ul class="pagination" id="pagenumber_2">
+        </ul>
+    </div>
+</div>
+</body>
+<!--<script src="./js/commomTop.js"></script>
+<script src="./js/accordionNav.js"></script>-->
+<script type="text/javascript" src="js/header.js"></script>
+<script type="text/javascript" src="js/footer.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.submenu').show();
+        $('.link').removeClass('accordionActive').siblings('.submenu').find('li').eq(1).addClass('accordionActive');
+        var companyId = +localStorage.getItem('adminCompanyId');
+        var select = $('.person_list_selects');
+        var tableSend = $('#table_1');
+        var tableDown = $('#table_2');
+        var orderFlag = true;
+        var resumeData = {};
+        resumeData.clientType = 102500;
+        resumeData.companyId = companyId;
+        var downData = {};
+        downData.clientType = 102500;
+        downData.companyId = companyId;
+        downData.order = 'asc';
+        ajax('/services/company/resume/list/position',{clientType:102500,companyId:companyId},function (result) {
+            var msg = result.datas;
+            if(!msg.length){
+                $('.main_fff').hide().eq(1).show();
+                return;
+            }
+            var ops="<option value=''>全部职位</option>";
+            $.each(msg,function(i,position){
+                ops+="<option value='"+position.id+"'>"+position.name+"</option>";
+            });
+            select.html(ops);
+        });
+        sendResume();
+        downResume();
+        function sendResume(){
+            ajax('/services/company/resume/list/sendflow',resumeData,function (result) {
+                console.log(result)
+                var msg = result.datas[0];
+                var trs="";
+                $.each(msg.datas,function(i,resume){
+                    trs+="<tr><td>"+resume.btruName
+                        +"</td><td>"+(resume.pName==null?'':resume.pName)+"</td><td>"+(resume.sendDate==null?'':getTime(resume.sendDate,'YYYY.MM.DD'))+"</td><td><button type='button'"+
+                        "data-id="+resume.bturId+" class='details'>查看详情</button></td></tr>"
+                });
+                if(msg.datas.length == 0) {
+                    trs = "<tr><td colspan='4'>无此搜索内容</td></tr>";
+                }
+                $("#data1").html(trs);
+            })
+        }
+        //下载
+        function downResume(){
+            ajax('/services/company/resume/list/download',downData,function (result) {
+                var msg = result.datas[0];
+                console.log(msg)
+                var trs="";
+                $.each(msg.datas,function(i,resume){
+                    trs+="<tr><td>"+resume.btruName
+                        +"</td><td>"+(resume.pName==null?'':resume.pName)+"</td><td>"+(resume.sendDate==null?'':getTime(resume.sendDate,'YYYY.MM.DD'))+"</td><td>"+resume.phone+"</td><td>"+resume.email+"</td><td><button type='button'"+
+                        "data-id="+resume.bturId+" class='details'>查看详情</button></td></tr>"
+
+                });
+                if(msg.datas.length == 0) {
+                    trs = "<tr><td colspan='6'>无此搜索内容</td></tr>";
+                }
+                $("#data2").html(trs);
+            })
+        }
+        $('.changeorderimg').click(function () {
+            if (orderFlag){
+                $(this).removeClass("changeorderimg");
+                downData.order = 'asc';
+                orderFlag = false
+            }else{
+                $(this).addClass("changeorderimg");
+                downData.order = 'desc';
+                orderFlag = true
+            }
+            downResume();
+        });
+        $('#choicePosition_1').change(function () {
+            var positionId = +$(this).val();
+            if(positionId){
+                resumeData.positionId = $(this).val();
+            }else{
+                resumeData.positionId = null;
+            }
+            sendResume();
+        });
+        $('#choicePosition_2').change(function () {
+            var positionId = +$(this).val();
+            if(positionId){
+                downData.positionId = $(this).val();
+            }else{
+                downData.positionId = null;
+            }
+            downResume();
+        });
+        $('#search1').click(function () {
+            var name = $('#name1').val();
+            resumeData.name = name;
+            sendResume();
+        });
+        $('#search2').click(function () {
+            var name = $('#name2').val();
+            downData.name = name;
+            downResume();
+        });
+        $('.jd_box_table').on('click','.details',function () {
+            var id = $(this).data('id');
+            window.location.href = 'resumeDetail.html?id='+id;
+        })
+        $('#l1').click(function () {
+            tableSend.show();
+            tableDown.hide();
+        });
+        $('#l2').click(function () {
+            tableSend.hide();
+            tableDown.show();
+        });
+        $('.jd_qh li').click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+        })
+
+    })
+
+</script>
+</html>

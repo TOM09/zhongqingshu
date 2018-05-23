@@ -115,7 +115,7 @@
 						</div>
 						<div class="person_list_box">
 							<select class="person_list_select" id="province" onchange='queryCity()'>
-								<option value='-1'>==工作地点==</option>
+								<option value='-1'>==选择城市==</option>
 							</select>
 							<select class="person_list_select" id="city" style="margin-left: 15px;" onchange='queryDistrict()'></select>
 							<select class="person_list_select" id="district" style="margin-left: 15px;">
@@ -363,7 +363,6 @@
 									positionTypeId1.append(option);
 								}
 							}
-
 						});
 					}
 
@@ -480,6 +479,32 @@
 
 					/* 查询工作地点 （参考工作类型） */
 					//初始parentId为0 
+					function queryAddress2(type, code) {
+						var data = {};
+						data.type = type;
+						data.clientType = 102500;
+						ajax("/services/dict/type/list", data, function(msg) {
+							var msgData = msg.datas;
+							var province = document.getElementById("province")
+							for(var i = 0; i < msgData.length; i++) {
+								if(msgData[i].parentId == 0) {
+									var option = document.createElement("option");
+									option.value = msgData[i].id;
+									option.innerHTML = msgData[i].name;
+									province.append(option);
+								}
+							}
+							//刚进入的时候不应该有城市
+							var ops = "<option value='-1'>==选择城市==</option>";
+							for(var i = 0; i < msgData.length; i++) {
+								if(msgData[i].parentId == code) {
+									ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
+								}
+								$("#city").html(ops);
+							};
+						});
+					}
+
 					function queryAddress(type, code) {
 						var data = {};
 						data.type = type;
@@ -495,26 +520,15 @@
 									province.append(option);
 								}
 							}
-							
-							//刚进入的时候不应该有城市
 							var ops = "<option value='-1'>==选择城市==</option>";
-							for(var i = 0; i < msgData.length; i++) {
-								if(msgData[i].parentId == code) {
-									ops += "<option value='" + msgData[i].id + "'>" + msgData[i].name + "</option>";
-								}
-								$("#city").html(ops);
-							};
+							$("#city").html(ops);
 						});
 					}
-
+					
 					function queryDistrict2(type, code) {
 						var data = {};
 						data.type = type;
-						data.code = code;
 						data.clientType = 102500;
-						//      data.type = "province";
-						data.clientType = "102500";
-						console.log(type, code)
 						ajax("/services/dict/type/list", data, function(msg) {
 							console.log(msg)
 							var msgData = msg.datas;
@@ -533,7 +547,7 @@
 						var data = $("#province").val()
 						//让type变成city，data为选中的某省
 						type = "city"
-						queryAddress(type, data)
+						queryAddress2(type, data)
 					}
 
 					function queryDistrict() {

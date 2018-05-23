@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="/static/js/util.js"></script>
 		<script type="text/javascript" src="js/header.js"></script>
 		<script type="text/javascript" src="js/footer.js"></script>
+	    <script type="text/javascript" src="js/common.js"></script>
 		<!-- <script type="text/javascript" src="/static/js/index.js"></script> -->
 	</head>
 <body>
@@ -46,75 +47,57 @@
 //	<%-- href='<%=path%>/services/train/trainDetails' --%>
 	var userId = "${userId}";
     $(function(){
-		queryAllRegistrationRecord(1);
+    	var companyId =+localStorage.getItem('companyId');
+		queryAllRegistrationRecord(1,companyId);
         $("#lusername").html($.cookie('userName')+"<b></b>");
 	})  
 	function queryTrainInfo(trainInfoId) {
-        window.location.href = "/mcbn/services/registrationRecord/registrationRecordDetails?id="+trainInfoId;
+        window.location.href = "registrationRecordDetails.html?id="+trainInfoId;
 	 }
-	 function queryAllRegistrationRecord(data){
+	 function queryAllRegistrationRecord(data,companyId){
 		var pageCount = "";
 		var rdata={};
          rdata.currentPage=data;
          rdata.flag="t";
          rdata.userId=userId;
+         
          rdata.clientType = 102500;
- 		ajax(
-			"/mcbn/services/registrationRecord/queryRegistrationRecordByUserId",rdata,function(msg){
+         rdata.companyId = companyId
+         console.log(companyId)
+         rdata.terminalUserId = null
+         $.cookie('isTerminal', 'false');
+ 		ajax("/services/training/history/list",rdata,function(msg){
+
+ 			var trainId = msg.datas[0].datas[0].trainId;
+ 			console.log(trainId)
+ 			localStorage.setItem("trainId",trainId);
 				pre =   msg.pre;
 				next =	msg.next;
 				pageCount = msg.pageCount;
 				var trs="";
 				$(".gongy_list").remove();
-			  		for(var i = 0; i<msg.rows.length; i++){
+				var msgDatas = msg.datas[0].datas
+			  		for(var i = 0; i<msgDatas.length; i++){
+			  			console.log(1)
 					trs +="<div class='gongy_list'>" +
-						"<span class='gongy_tp'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+msg.rows[i].trainInfo.id+")\">"+
-						"<img src='/images/"+msg.rows[i].trainInfo.imageUrl+"' >"+
+						"<span class='gongy_tp'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+msgDatas[i].id+")\">"+
+						"<img src='/images/"+msgDatas[i].imageUrl+"' >"+
 						"</a></span>"+
 						"<div class='gongy_Rnr'>"+
-							"<h1 class='juz_h2'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+msg.rows[i].trainInfo.id+")\">" +msg.rows[i].trainInfo.title+"</a><b>已报名</b></h1>"+
-							"<span class='juz_shm'>培训时间："+msg.rows[i].trainInfo.trainTime+"</span>"+
-							"<span class='juz_shm'>培训地点："+msg.rows[i].trainInfo.trainLocation+"</span>"+
-							"<span class='juz_shm'>报名时间："+msg.rows[i].createDate+"</span>"+
+							"<h1 class='juz_h2'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+msgDatas[i].id+")\">" +msgDatas[i].title+"</a><b>已报名</b></h1>"+
+							"<span class='juz_shm'>培训时间："+msgDatas[i].trainTime+"</span>"+
+							"<span class='juz_shm'>培训地点："+msgDatas[i].trainLocation+"</span>"+
+							"<span class='juz_shm'>报名时间："+msgDatas[i].createDate+"</span>"+
 						"</div>"+
 					"</div>"
 				};
+
 				$("#main").append(trs);
-                buildPage("pagenumber",msg.currentPage,msg.pageCount,"queryAllRegistrationRecord","");
+				
+				var totalPages = Math.ceil(msg.datas[0].totalCount / msg.datas[0].pageSize);
+                buildPage("pagenumber",msg.datas[0].currentPage,totalPages,"queryAllRegistrationRecord","");
 			}
 		)
-//		$.ajax({
-//			type:"post",
-//			url:"/mcbn/services/registrationRecord/queryRegistrationRecordByUserId",
-//          data:JSON.stringify(rdata),
-//          dataType:"json",
-//          contentType: "application/json",
-//			success:function(msg){
-//				pre =   msg.pre;
-//				next =	msg.next;
-//				pageCount = msg.pageCount;
-//				var trs="";
-//				$(".gongy_list").remove();
-//				$.each(msg.rows,function(i,map){
-//			
-//					trs +="<div class='gongy_list'>" +
-//						"<span class='gongy_tp'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+map.trainInfo.id+")\">"+
-//						"<img src='/images/"+map.trainInfo.imageUrl+"' >"+
-//						"</a></span>"+
-//						"<div class='gongy_Rnr'>"+
-//							"<h1 class='juz_h2'><a href='javascript:void(0);' onclick=\"queryTrainInfo("+map.trainInfo.id+")\">" +map.trainInfo.title+"</a><b>已报名</b></h1>"+
-//							"<span class='juz_shm'>培训时间："+map.trainInfo.trainTime+"</span>"+
-//							"<span class='juz_shm'>培训地点："+map.trainInfo.trainLocation+"</span>"+
-//							"<span class='juz_shm'>报名时间："+map.createDate+"</span>"+
-//						"</div>"+
-//					"</div>"
-//				});
-//				$("#main").append(trs);
-//              buildPage("pagenumber",msg.currentPage,msg.pageCount,"queryAllRegistrationRecord","");
-//			}
-//		})
-		
-		
 	} 
 
 	</script>

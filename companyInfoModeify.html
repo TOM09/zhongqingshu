@@ -348,7 +348,6 @@
             })
 
             $(".person_list_btn").click(function () {
-				console.log(1)
                 var logoImageUrl=$("#logoImageUrl").val();
                 var addressProvince=$("#addressProvince").val();
                 var addressCity=$("#addressCity").val();
@@ -397,7 +396,7 @@
                     data.workIndustryId=data.workIndustryParentId;
                 }
                 data.companyScale=$("#companyScale").val();
-                data.webSite=$("#webSite").val();
+                data.companyWebSite=$("#webSite").val();
                 data.companyProfiles=$("#companyProfiles").val();
                 data.companyProperty=$("#companyProperty").val();
                 data.lon = +$("#lon").val();
@@ -406,7 +405,6 @@
                     data.companyEnvironment=$("#companyEnvironment").val();
                 }
                 console.log(data)
-                
                 ajax("/services/company/info/update", data, function (result) {
                 	console.log(result)
                     var resultCode = result.clientType;
