@@ -1,0 +1,245 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+	<title>视频面试</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+<meta name="toTop" content="true">
+<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+<!--bootstrap框架↓-->
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+<!--本页面CSS↓-->
+<link rel="stylesheet" href="/static/css/swiper.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<!--bootstrap框架↓-->
+<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/iLiveSDK.js"></script>
+<script type="text/javascript" src="/static/js/video.js"></script>
+<script type="text/javascript" src="/static/js/videochrome.js"></script>
+<script type="text/javascript" src="/static/js/util.js"></script>
+<script src="https://sqimg.qq.com/expert_qq/webrtc/1.3/WebRTCAPI.min.js"></script>
+</head>
+<body onunload="exitsp()">
+<!--头部开始-->
+<jsp:include page="toppage.jsp"></jsp:include>
+<div class="Header">
+	<dl class="Login_topdl">
+		<dt style="margin-top:9px;"><a href="/mcbn/services/dispense/companyInfoModeify"><img src="../../../static/images/logo.png" style="width:111px;height:43px;"></a></dt>
+		<dd class="nav" style="padding-left:20px;"><a href="/mcbn/services/dispense/approveSuccess">首页</a><a href="/mcbn/services/resume/pushResume" style="color: #E80D22;border-bottom: 2px solid #E80D22;">招聘</a><a href="/mcbn/services/publicgood/query">公益</a><a href="/mcbn/services/train/train">培训</a><a href="/mcbn/services/policy/policy">政策</a><a href="">APP</a></dd>
+	</dl>
+</div>
+<!--头部end-->
+<div class="w800 shipL">
+<div class="main_fff mar_box" style="margin-top: 0;border-right:1px solid #ddd;">
+	<div class="jianlxx_top">${resumeResult.btruName}的简历</div>
+	<div class="jianlxx_tx">
+		<img src="/images/${resumeResult.headImage}"/>
+		<h1>${resumeResult.btruName}</h1><p>${resumeResult.sex} | ${resumeResult.age} | ${resumeResult.address} | ${resumeResult.degreeLevel} | ${resumeResult.weName}</p>
+	</div>
+	<div class="jianlxx_bt"><span>个人信息</span></div>
+	<ul class="jianlxx_ziliao">
+		<li><span>血型：</span>B型</li>
+	    <li><span>属相：</span>羊</li>
+	    <li><span>星座：</span>金牛座</li>
+		<li><span>出生年月：</span>1991年3月</li>
+		<li><span>工作年限：</span>5年</li>
+		<li><span>所在城市：</span>北京</li>
+		<li><span>婚姻状况：</span>未婚</li>
+		<li><span>联系电话：</span>下载后显示</li>
+		<li><span>联系邮箱：</span>下载后显示</li>
+	</ul>
+	<div class="jianlxx_bt"><span>求职意向</span></div>
+	<ul class="jianlxx_ziliao">
+		<li><span>期望行业类型：</span>互联网</li>
+	    <li><span>期望薪资：</span>5-8K</li>
+	    <li><span>期望工作：</span>UI设计师</li>
+		<li><span>期望职位类型：</span>设计类</li>
+		<li><span>期望城市：</span>天津</li>
+		<li><span>目前状态：</span>在职</li>
+		<li><span>期望工作性质：</span>全职</li>
+	</ul>
+	<div class="jianlxx_bt"><span>工作经历</span></div>
+	<div class="jianlxx_con">
+		<h1>UI设计师 | 赛诺派（天津）网络技术有限公司</h1>
+		<p>2016.07-至今</p>
+		<ul>
+		<li>工作内容：</li>
+	    <li>1.负责软件界面的美术设计、创意工作和制定工作。 </li>
+	    <li>2.根据各种相关软件的用户群，提出构思新颖、有高度吸引力的创意设计；</li>
+		<li>3.对页面进行优化，使用户操作更趋于人性化。</li>
+		</ul>
+	</div>
+	<div class="jianlxx_con">
+		<h1>UI设计师 | 赛诺派（天津）网络技术有限公司</h1>
+		<p>2016.07-至今</p>
+		<ul>
+		<li>工作内容：</li>
+	    <li>1.负责软件界面的美术设计、创意工作和制定工作。 </li>
+	    <li>2.根据各种相关软件的用户群，提出构思新颖、有高度吸引力的创意设计；</li>
+		<li>3.对页面进行优化，使用户操作更趋于人性化。</li>
+		</ul>
+	</div>
+	<div class="jianlxx_bt"><span>教育经历</span></div>
+	<div class="jianlxx_con">
+		<h2>天津科技大学<span>2016.07-至今</span></h2>
+		<ul>
+		<li>工业设计 | 本科</li>
+		</ul>
+	</div>
+	<div class="jianlxx_bt"><span>备注信息</span></div>
+	<div class="jianlxx_con">
+		<ul>
+		<li>1.大学期间曾连续三年荣获校级一等奖学金。</li>
+		<li>2.喜欢画画，摄影。</li>
+		</ul>
+	</div>
+	
+	
+</div>
+</div>
+<div style="width:1px;height:1px">
+	<object id="iLiveSDKCom" classid="CLSID:54E71417-216D-47A2-9224-C991A099C531" codebase="/static/js/iLiveSDK.cab#version=1,5,0,1"></object>
+</div>
+<div class="xiao_ship">
+  <div class="xiao_shiptop">
+
+
+	  <div >
+		  <object id="render0" classid="CLSID:1EA15A99-7F53-4B6F-8947-B57A0729918E"   width="97%" height="100%"></object>
+	  </div>
+	  <div style="float: right; position: absolute; right: 0px; bottom: 110px;">
+		  <object id="localRender" classid="CLSID:1EA15A99-7F53-4B6F-8947-B57A0729918E" width="200px" height="150"></object>
+	  </div>
+	  <div class="xiao_shipbtn">
+		  <a href="javascript:void(0);" onclick="jingyin();" id="ht" class="xship_btn1"></a>
+		  <a href="javascript:void(0);" onclick="exitsp();"><img style="margin-top: 8px;"  src="/static/images/icon_guaduan.png" /></a>
+		  <a href="javascript:void(0);" onclick="waifang();" class="xship_btn2" id="yx"></a>
+	  </div> 
+  </div>
+	<div class="xship_wenzi">
+	<textarea>请输入面试记录...</textarea>
+	<button class="person_fabuzw person_fabuzw2" style="margin-top:10px; float: right;">保存</button>
+	</div>
+</div>
+<div class="clear"></div>
+<!--尾部开始-->
+<div class="footer">
+<jsp:include page="footerpage.jsp"></jsp:include>
+</div>
+<!--尾部end-->
+</body>
+</html>
+<script>
+    var browesType = "";
+	$(function(){
+        var userAgent = navigator.userAgent;
+        if (userAgent.indexOf("Chrome") > -1){
+            browesType="2";
+            $("#localRender")[0].outerHTML='<video width="200px" height="150"  id="localVideo" autoplay playsinline muted></video>';
+            $("#render0")[0].outerHTML='<video width=" 670px" height="500px" id="remoteVideo" autoplay playsinline ></video>';
+        } else if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
+            browesType="1";
+        } else {
+            alert("请使用IE或谷歌浏览器");
+        }
+        if(browesType != "") {
+            var data = {};
+            data.clientType = 102500;
+            ajax(("${servicefix}/services/connect/room/create"), data, function (result) {
+                if(result.resultCode == 1){
+                    g_roomId = result.datas[0];
+                    g_id = "COMPANY_USER_${userId}";
+                    var sigdata = {};
+                    sigdata.clientType = 102500;
+                    ajax(("${servicefix}/services/video/tencent/sig/get"), sigdata, function (result) {
+                        if(result.resultCode == 1){
+                            g_userSig = result.datas[0];
+                            if(browesType == "1") {
+                                OnInit(sendComplete);
+							} else {
+                                postfun=sendComplete;
+                                login();
+							}
+                        }
+                    });
+                }
+            });
+		}
+	});
+
+	function sendComplete(stat) {
+        var tzdata = {};
+        tzdata.clientType = 102500;
+        tzdata.b2cTerminalUserId=5;
+        tzdata.roomId=g_roomId;
+        tzdata.status=true;
+        tzdata.positionId=77;
+        ajax(("${servicefix}/services/connect/room/create/complete"), tzdata, function (result) {
+            if(result.resultCode == 0){
+               alert("未连通求职者");
+            }
+        });
+	}
+
+	function jingyin(){
+		if($("#ht").hasClass("xiao_shipjy")){
+            $("#ht").removeClass("xiao_shipjy");
+            if(browesType=="1") {
+                OnBtnOpenMic();
+			} else if(browesType=="2") {
+                WebRTCAPI.openAudio();
+            }
+		} else {
+            $("#ht").addClass("xiao_shipjy");
+            if(browesType=="1") {
+                OnBtnCloseMic();
+            } else if(browesType=="2") {
+                WebRTCAPI.closeAudio();
+            }
+		}
+	}
+    function waifang(){
+        if($("#yx").hasClass("xiao_shipjf")){
+            $("#yx").removeClass("xiao_shipjf");
+            if(browesType=="1") {
+                OnBtnOpenPlayer();
+            } else {
+                WebRTCAPI.openAudio();
+			}
+        } else {
+            $("#yx").addClass("xiao_shipjf");
+            if(browesType=="1") {
+                OnBtnClosePlayer();
+            } else {
+                WebRTCAPI.closeAudio();
+			}
+        }
+    }
+	function exitsp(){
+        if(browesType=="1") {
+            OnUninit();
+        } else {
+            onWebSocketClose();
+        }
+        var lrdata = {};
+        lrdata.clientType = 102500;
+        lrdata.roomId=roomId;
+        ajax(("${servicefix}/services/connect/room/left"), lrdata, function (result) {
+            if(result.resultCode == 1){
+                g_userSig = result.datas[0];
+                OnInit();
+            }
+        });
+	}
+
+
+</script>

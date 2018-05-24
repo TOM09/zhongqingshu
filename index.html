@@ -85,7 +85,7 @@
                         var resultCode = result.resultCode;
                         var companyId = result.datas[0].companyId;
                         localStorage.setItem("companyId",companyId);
-                        localStorage.setItem("username",data.username)
+                        localStorage.setItem("username",result.datas[0].username)
                         data = {};
                         data.id=companyId;
                         ajax("/services/company/view/own", data, function (resulta) {

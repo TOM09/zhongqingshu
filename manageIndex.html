@@ -111,60 +111,65 @@
 			$(document).ready(function() {
 				var data = {};
                 data.companyId = +localStorage.getItem('companyId');
-//              data.companyType = 100700;
                 data.clientType = "102500";
                 //查看公司信息
 				ajax("/services/company/info/view", data, function(result) {
-//				ajax("/services/company/info/view", data, function(result) {
-		//			services/user/detail		
 					var userinfo = result.datas[0];
 					var resultCode = result.resultCode;
 					if(resultCode == "1" && userinfo != null) {
-						//创建一个cookie并设置cookie的有效路径，有效期为100天
-						//cook名为userName，value为userinfo.name
 						$.cookie('userName', userinfo.name, {
 							path: '/',
 							expires: 100
 						});
-						//lusername的内容等于 cook的内容
 						$("#lusername").html(userinfo.name + "<b></b>");
 					}
 				})
 				
+				//中青分
+				var datas = {};
+                datas.clientType = 102500;
+				ajax("/services/company/score/get", datas, function(result) {
+					console.log(result.datas[0].score)
+						//得分
+						var score = result.datas[0].score
+						$("#score").html(score);
+				})
 				//查询企业详情
 				var companydata = {};
 				companydata.id = +localStorage.getItem('companyId');
-        		companydata.userId =+localStorage.getItem("username");
+        		companydata.userId = localStorage.getItem("username");
                 companydata.clientType = "102500";
-				ajax("/services/company/view/own", companydata, function(result) {
-					console.log(result.datas[0])
+        		
+        		//用户名
+				$("#nickName").text(companydata.userId);
+                
+				ajax("/services/company/info/view", companydata, function(result) {
+
 					var indexdata = result.datas[0];
 					var resultCode = result.resultCode;
 					if(resultCode == "1" && indexdata != null) {
+						console.log(1)
 						if(indexdata.logoImageUrl) {
 							$("#logoImg").attr("src", "/images/" + indexdata.logoImageUrl);
 						}
-						$("#nickName").html(indexdata.name);
-						//得分
-						$("#score").html(indexdata.score);
+					
 						
-						var infoComplete = indexdata.flag;
-						if(infoComplete == "1") {
-							$("#companyInfo")[0].outerHTML = "<p class=\"inP_p2\">" + indexdata.companyProperty + " | " + indexdata.updatedCompanyInfo.workIndustryName + " | " + indexdata.updatedCompanyInfo.companyScaleName + "</p>\n" +
-								"\t\t<p class=\"inP_add\" onclick='showMap()'>" + indexdata.updatedCompanyInfo.addressDetail + "</p>";
+//						if(infoComplete == "1") {
+							$("#companyInfo")[0].outerHTML = "<p class=\"inP_p2\">" + indexdata.companyProperty + " | " + indexdata.workIndustryName + " | " + indexdata.companyScale + "</p>\n" +
+								"\t\t<p class=\"inP_add\" onclick='showMap()'>" + indexdata.addressDetail + "</p>";
 							map = new AMap.Map('container', {
 								resizeEnable: true,
 								zoom: 15,
 								center: [116.480983, 40.0958]
 							});
 							var marker = new AMap.Marker({
-								position: [indexdata.updatedCompanyInfo.lon, indexdata.updatedCompanyInfo.lat],
-								title: indexdata.updatedCompanyInfo.addressDetail,
+								position: [indexdata.lon, indexdata.lat],
+								title: indexdata.addressDetail,
 								map: map
 							});
 							marker.setMap(map);
-							map.setCenter([indexdata.updatedCompanyInfo.lon, indexdata.updatedCompanyInfo.lat]);
-						}
+							map.setCenter([indexdata.lon, indexdata.lat]);
+//						}
 					}
 				})
 			})

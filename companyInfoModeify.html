@@ -408,7 +408,7 @@
                 ajax("/services/company/info/update", data, function (result) {
                 	console.log(result)
                     var resultCode = result.clientType;
-                    if (resultCode=="102500") {
+                    if (resultCode == 102500) {
                     	console.log(1)
                         toast('修改成功')
                     }
