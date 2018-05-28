@@ -128,4 +128,14 @@ function fn1(data){
 //              city.appendChild(option);
 //          }
 //        }
+function formatDateTime(inputTime) {    
+			    var date = new Date(inputTime);  
+			    console.log(date)
+			    var y = date.getFullYear();    
+			    var date2 = new Date().getFullYear()
+			    var nowYear = date2-y;
+			    console.log(nowYear)
+			    return nowYear;    
+			};  
+			console.log(formatDateTime(1527317760000));
 	</script>

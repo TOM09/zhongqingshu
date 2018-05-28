@@ -66,7 +66,7 @@
          console.log(companyId)
          rdata.terminalUserId = null
          $.cookie('isTerminal', 'false');
- 		ajax("/services/training/history/list",rdata,function(msg){
+ 		ajax("/services/resume/video/list",rdata,function(msg){
 
  			var trainId = msg.datas[0].datas[0].trainId;
  			console.log(trainId)

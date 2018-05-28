@@ -721,7 +721,6 @@
 					var ops = "<option value='-1 '>==选择城市==</option>";
 					var city = document.getElementById("city")
 					for(var i = 0; i < msg.datas.length; i++) {
-						console.log(msg.datas[i])
 						if(msg.datas[i].parentId == province.value) {
 							console.log(msg.datas[i])
 							ops += "<option value=' " + msg.datas[i].id + " '>" + msg.datas[i].name + "</option>";
@@ -763,7 +762,6 @@
 							queryData4.clientType = 102500;
 							queryData4.positionId = positionId;
 							ajax("/services/position/view", queryData4, function(msg){
-								console.log(msg)
 								var datas = msg.datas[0].workCity.split('_')[2];
 								for (var i = 0; i < district.length; i++) {
 									if(district[i].text == datas){
@@ -1069,20 +1067,15 @@ function submit(){
 		data.lon = $("#lon").val()
 		data.lat = $("#lat").val()
 		data.responsibility = $("#responsibility").val()
+		data.clientType = 102500;
 		loginPostData = JSON.stringify(data)
-		$.ajax({
-			type:"post",
-			url:"${pageContext.request.contextPath }/mcbn/services/admint/position/update",
-			data:loginPostData,
-			dataType:"json",
-			contentType: 'application/json;charset=UTF-8 ',
-			success:function(msg){
+		ajax("/services/position/update",data,function(msg){
+			console.log(msg)
 				if (msg == 1){
-					location.href="${pageContext.request.contextPath}/mcbn/services/admint/position/jumpAdminPositionManage?flag=rePublish&companyId="+companyId;
+					location.href="positionManage.html?flag=rePublish&companyId="+companyId;
 				} 
-			}
-		});
-	}
+		})
+		}
 
     function showMap(){
         $('#map ').modal('show ');

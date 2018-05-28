@@ -70,31 +70,58 @@
         mdata.companyId=companyId;
         mdata.clientType = 102500;
         mdata.currentPage=data;
-		ajax("/services/position/video/list",mdata,function(msg){
+		ajax("/services/company/resume/video/position/list",mdata,function(msg){
 			console.log(msg)
 				pre =   msg.pre;
 				next =	msg.next;
 				pageCount = msg.pageCount;
-				rows = msg.rows;
+				msgDatas = msg.datas[0].datas;
 				var trs="";
-				$.each(msg.rows,function(i,position){
+				$.each(msgDatas,function(i,position){
+					console.log(msg)
+					var startV = formatDateTime(position.videoInterviewStartDate) 
+					var endV = formatDateTime(position.videoInterviewEndDate) 
 						trs += "<dl class='fabuzw_dl' style='border: 1px solid #EEEEEE;margin-bottom: 25px;'><dd>"+
-								"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo("+position.id+")\">" +position.positionName+"</a>"+
-								(position.isVideo==true?"<b>"+"视频"+"</b>":"&nbsp;&nbsp;")+
-								"<span>"+position.ssName+"</span></h1>"+
-								"<p>"+position.weName+"&nbsp;"+position.degreeLevelName+"&nbsp;"+position.jobCategoryName+"&nbsp;"+position.workCityName+"</p></dd>"+
-								"<dt><span>"+position.interviewStartDateString+"-"+position.interviewEndDateString+""
-						if (position.operation == "进行中"){
-							trs += "</span><button class='person_fabuzw' onclick=\"queryJobSeekerList("+position.id+")\">"+position.operation+"</button></dt></dl>"
-						}else{
-							trs += "</span><button class='person_fabuzw person_fabuzw2' onclick=\"queryJobSeekerList("+position.id+")\">"+position.operation+"</button></dt></dl>"
+								"<h1><a style='cursor:pointer' onclick=\"queryTrainInfo("+position.id+")\">" +position.name+"</a>"+
+								(position.isVideoInterview==true?"<b>"+"视频"+"</b>":"&nbsp;&nbsp;")+
+								"<span>"+position.salaryScopeName+"</span></h1>"+
+								"<p>"+position.workExperienceName+"&nbsp;"+position.degreeLevel+"&nbsp;"+position.jobCategory+"&nbsp;"+position.workCity+"</p></dd>"+
+								"<dt><span>"+startV+" - "+endV+""
+						var comp = function(date) {
+						var timestamp=new Date().getTime();
+						    if (timestamp >= date) {
+								trs += "</span><button class='person_fabuzw' onclick=\"queryJobSeekerList("+position.id+")\">已结束/看录像</button></dt></dl>"
+						    }  else {
+								trs += "</span><button class='person_fabuzw person_fabuzw2' onclick=\"queryJobSeekerList("+position.id+")\">进行中</button></dt></dl>"
+						    }
+//						    return trs;
 						}
+						comp(position.videoInterviewEndDate);
 				});
 				$("#div_1").html(trs);
 				/* createPage("#pagenumber_1") */
-				buildPage("pagenumber_1",msg.currentPage,msg.pageCount,"queryAllInterViewPosition","")
+				var totalPages = Math.ceil(msg.datas[0].totalCount / msg.datas[0].pageSize);
+				buildPage("pagenumber_1",msg.datas[0].currentPage,totalPages,"queryAllInterViewPosition","")
 			})
 		}
+	
+			
+	//时间戳
+	function formatDateTime(inputTime) {    
+			    var date = new Date(inputTime);  
+			    var y = date.getFullYear();    
+			    var m = date.getMonth() + 1;    
+			    m = m < 10 ? ('0' + m) : m;    
+			    var d = date.getDate();    
+			    d = d < 10 ? ('0' + d) : d;    
+			    var h = date.getHours();  
+			    h = h < 10 ? ('0' + h) : h;  
+			    var minute = date.getMinutes();  
+			    var second = date.getSeconds();  
+			    minute = minute < 10 ? ('0' + minute) : minute;    
+			    second = second < 10 ? ('0' + second) : second;   
+			    return y + '.' + m + '.' + d+' '+h+':'+minute+':'+second;    
+			};  
 	/* function createPage(data){
   		$(data).empty()
 		if (rows.length!=0){
@@ -138,7 +165,7 @@
 		}
 	} */
 	function queryJobSeekerList(positionId){
-		location.href="/mcbn/services/resume/jumpJobSeekerList?positionId="+positionId
+		window.open("interViewList.html?positionId="+positionId)
 	}
 </script>
 </body>
