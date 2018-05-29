@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>面试窗口</title>
+		<link href="/static/css/base.css" rel="stylesheet" type="text/css" />
+		<!--bootstrap框架↓-->
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="/static/bootstrap-3.3.7-dist/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />
+		<!--本页面CSS↓-->
+		<link rel="stylesheet" href="/static/css/swiper.css">
+		<link rel="stylesheet" href="/static/css/style.css">
+		<link rel="stylesheet" href="css/util.css">
+		<!--bootstrap框架↓-->
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.tabslet.min.js"></script>
+		<script type="text/javascript" src="/static/js/index.js"></script>
+		<script type="text/javascript" src="/static/js/iLiveSDK.js"></script>
+		<script type="text/javascript" src="/static/js/video.js"></script>
+		<script type="text/javascript" src="/static/js/videochrome.js"></script>
+		<script type="text/javascript" src="/static/js/util.js"></script>
+		<script type="text/javascript" src="/static/js/WebRTCAPI.min.js"></script>
+
+		<style>
+			.resumeDetailsBaseLeft {
+				text-align: right;
+				width: auto;
+				height: 40px;
+				min-width: 100px;
+				line-height: 40px;
+				font-size: 16px;
+				white-space: nowrap;
+			}
+			
+			.resumeDetailsBaseRight {
+				text-align: left;
+				width: auto;
+				height: 40px;
+				font-size: 16px;
+				padding-right: 17px;
+				line-height: 40px;
+				white-space: nowrap;
+			}
+			
+			.longToo {
+				min-width: 100%;
+				width: auto;
+				overflow-x: auto;
+				padding-left: 20px;
+			}
+			
+			.longToo::-webkit-scrollbar {
+				width: 0px;
+				height: 5px;
+			}
+			
+			.longToo::-webkit-scrollbar-button {
+				background-color: #fff;
+			}
+			
+			.longToo::-webkit-scrollbar-track {
+				background: #fff;
+			}
+			
+			.longToo::-webkit-scrollbar-thumb {
+				background: #9B9B9B;
+				border-radius: 4px;
+			}
+			
+			.longToo::-webkit-scrollbar-corner {
+				background: #82AFFF;
+			}
+			
+			.longToo::-webkit-scrollbar-resizer {
+				background: #FF0BEE;
+			}
+		</style>
+	</head>
+
+	<body style="height:100%!important;width:100%; overflow:auto; margin:0;padding:0">
+		<!--头部开始-->
+		<script>
+			var pageHeight = document.body.clientHeight - $("#nav1").height() - $('#nav2').height();
+			$("#videoPage").css('height', pageHeight);
+		</script>
+		<div style="position:relative;height:700px;float:inherit" id="videoPage">
+			<div class="shipL" style="height:100%;width:50%;overflow-y:auto;overflow-x:hidden;float:left;">
+				<div class="jianlxx_top"><span class="userName"></span>的简历<a style='cursor:pointer' id='down' >下载简历</a></div>
+				        <div class="jianlxx_tx">
+				            <img src="" class="userImg"/>
+				            <h1><span class="userName"></span></h1><p id="p1"></p>
+				        </div>
+				        <div id="isVideo" style='display:none'>
+				            <div class="jianlxx_bt"><span>视频简历</span></div>
+				            <div class="swiper_video" style='width:auto;tex-align:center;'><video src="" controls="controls" id="media" poster="" style="height:500px;display:block;width:auto;margin: 0 auto;" ></video></div>
+				        </div>
+				
+				        <div class="jianlxx_bt"><span>个人信息</span></div>
+				        <div class="longToo">
+				            <table class="jianlxx_ziliao" style="width:100%;">
+				                <tr>
+				                    <td class="resumeDetailsBaseLeft">血型：</td>
+				                    <td class="resumeDetailsBaseRight bloodTypeName"></td>
+				                    <td class="resumeDetailsBaseLeft">属相：</td>
+				                    <td class="resumeDetailsBaseRight chineseZodiacName"></td>
+				                    <td class="resumeDetailsBaseLeft">星座：</td>
+				                    <td class="resumeDetailsBaseRight zodiacName"></td>
+				                </tr>
+				                <tr>
+				                    <td class="resumeDetailsBaseLeft">出生日期：</td>
+				                    <td class="resumeDetailsBaseRight birthdayString"></td>
+				                    <td class="resumeDetailsBaseLeft">工作年限：</td>
+				                    <td class="resumeDetailsBaseRight workTime"></td>
+				                    <td class="resumeDetailsBaseLeft">所在城市：</td>
+				                    <td class="resumeDetailsBaseRight address"></td>
+				                </tr>
+				                <tr>
+				                    <td class="resumeDetailsBaseLeft">婚姻状况：</td>
+				                    <td class="resumeDetailsBaseRight maritalStatusName"></td>
+				                    <td class="resumeDetailsBaseLeft">联系电话：</td>
+				                    <td class="resumeDetailsBaseRight phone">下载后显示</td>
+				                    <td class="resumeDetailsBaseLeft">联系邮箱：</td>
+				                    <td class="resumeDetailsBaseRight email">下载后显示</td>
+				                </tr>
+				            </table>
+				        </div>
+				        <div class="jianlxx_bt"><span>求职意向</span></div>
+				        <div class="longToo">
+				            <table class="jianlxx_ziliao" style="width:100%;">
+				                <tr>
+				                    <td class="resumeDetailsBaseLeft">期望行业：</td>
+				                    <td class="resumeDetailsBaseRight wiName"></td>
+				                    <td class="resumeDetailsBaseLeft">期望薪资：</td>
+				                    <td class="resumeDetailsBaseRight salary"></td>
+				                    <td class="resumeDetailsBaseLeft">期望工作：</td>
+				                    <td class="resumeDetailsBaseRight ppName"></td>
+				                </tr>
+				                <tr>
+				                    <td class="resumeDetailsBaseLeft">期望职能：</td>
+				                    <td class="resumeDetailsBaseRight btujiwptName"></td>
+				                    <td class="resumeDetailsBaseLeft">期望城市：</td>
+				                    <td class="resumeDetailsBaseRight workCityName"></td>
+				                    <td class="resumeDetailsBaseLeft">目前状态：</td>
+				                    <td class="resumeDetailsBaseRight workStatusName"></td>
+				                </tr>
+				                <tr>
+				                    <td class="resumeDetailsBaseLeft">期望工作性质：</td>
+				                    <td  colspan='5' class="resumeDetailsBaseRight jobCategoryName"></td>
+				                </tr>
+				            </table>
+				        </div>
+				        <div class="jianlxx_bt workExperiences"><span>工作经历</span></div>
+				
+				        <!--<c:forEach items="${resumeResult.workExperienceList}" var="workExperience" varStatus="vs">-->
+				            <!--<div class="jianlxx_con">-->
+				                <!--<h1 style='font-size:16px;'></h1>-->
+				                <!--<p></p>-->
+				                <!--<ul>-->
+				                    <!--<li>工作内容：</li>-->
+				                    <!--<li class="hzh"></li>-->
+				                <!--</ul>-->
+				            <!--</div>-->
+				        <!--</c:forEach>-->
+				        <div class="jianlxx_bt eduExperience"><span>教育经历</span></div>
+				        <!--<c:forEach items="${resumeResult.educationExperienceList}" var="educationExperience" varStatus="vs">-->
+				            <!--<div class="jianlxx_con">-->
+				                <!--<h2 style='font-size:16px;'><span></span></h2>-->
+				                <!--<ul>-->
+				                    <!--<li></li>-->
+				                <!--</ul>-->
+				            <!--</div>-->
+				        <!--</c:forEach>-->
+				        <div class="jianlxx_bt"><span>备注信息</span></div>
+				        <div class="jianlxx_con">
+				            <ul>
+				                <li class="hzh selfComment"></li>
+				            </ul>
+				        </div>
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<div style="height:100%;position:absolute;right:0px;top:0px;width: 50%">
+				<div style="width:1px;height:1px">
+					<object id="iLiveSDKCom" classid="CLSID:54E71417-216D-47A2-9224-C991A099C531" codebase="/static/js/iLiveSDK.cab#version=1,5,0,1"></object>
+				</div>
+				<div class="xiao_ship" style="height:100%;width:auto;">
+					<div class="xiao_shiptop" style="height:55%;">
+
+						<div style="width:100%;height:100%;">
+							<object id="render0" classid="CLSID:1EA15A99-7F53-4B6F-8947-B57A0729918E" width="97%" height="100%"></object>
+						</div>
+						<div style="float: right; position: absolute; right: 0px; bottom: 110px;">
+							<object id="localRender" classid="CLSID:1EA15A99-7F53-4B6F-8947-B57A0729918E" width="200px" height="150"></object>
+						</div>
+						<div class="xiao_shipbtn">
+							<a href="javascript:void(0);" onclick="jingyin();" id="ht" class="xship_btn1"></a>
+							<a href="javascript:void(0);" onclick="exitsp();"><img style="margin-top: 8px;" src="/static/images/icon_guaduan.png" /></a>
+							<a href="javascript:void(0);" onclick="waifang();" class="xship_btn2" id="yx"></a>
+						</div>
+					</div>
+					<div class="xship_wenzi" style="height:40%;">
+						<textarea placeholder="请输入面试记录..." id="interviewComment" style="height: 200px;"></textarea>
+						<button id="end" class="person_fabuzw person_fabuzw2" style="background-color:#E80D22;color:white;margin-top:10px; float: right;">结束面试</button>
+						<button id="save" class="person_fabuzw person_fabuzw2" style="margin-top:10px; float: right;">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="margin-top: 300px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					</div>
+					<div class="modal-body" id="prompt">
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">确定
+					</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" style="margin-top: 300px;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					</div>
+					<div class="modal-body" id="prompt1">
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeandback()">确定
+					</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/header.js"></script>
+	
+		<script type="text/javascript">
+			$(function(){
+						var userAgent = navigator.userAgent;
+						console.log(userAgent.indexOf("Chrome"))
+						if (userAgent.indexOf("Chrome") > -1){
+								browesType="2";
+								$("#localRender")[0].outerHTML='<video width="200px" height="150"  id="localVideo" autoplay playsinline muted></video>';
+								$("#render0")[0].outerHTML='<video width=" 670px" height="500px" id="remoteVideo" autoplay playsinline ></video>';
+						} else if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
+								browesType="1";
+						} else {
+								alert("请使用IE或谷歌浏览器");
+						}
+						if(browesType != "") {
+								var data = {};
+								data.clientType = 102500;
+								ajax(("/services/connect/room/create"), data, function (result) {
+									console.log(result)
+										if(result.resultCode == 1){
+												g_roomId = result.datas[0];
+												// g_id = "COMPANY_USER_${userId}";
+												var sigdata = {};
+												sigdata.clientType = 102500;
+												ajax(("/services/video/tencent/sig/get"), sigdata, function (result) {
+													console.log(result)
+														if(result.resultCode == 1){
+																g_userSig = result.datas[0];
+																if(browesType == "1") {
+																		OnInit(sendComplete);
+									} else {
+																		postfun=sendComplete;
+																		login();
+									}
+														}
+												});
+										}
+								});
+				}
+			});
+				var resumeId = getSearch('resumeId');
+				var positionId = getSearch('positionId');
+				var resumeData = {};
+				var status = null;
+				var down = $('#down');
+				resumeData.clientType = 102500;
+				resumeData.positionId = positionId;
+				resumeData.companyId = +localStorage.getItem('companyId');
+				resumeData.b2cTerminalUserResumeId = +resumeId;
+				console.log(resumeData)
+				$('.nav').find('a').eq(1).addClass('active').siblings().removeClass('active');
+				ajax('/services/company/resume/view/details',resumeData,function (result) {
+					console.log(result)
+						var msg= result.datas[0];
+						console.log(msg)
+						$('.bloodTypeName').text(msg.bloodTypeName);
+						$('.chineseZodiacName').text(msg.chineseZodiacName);
+						$('.zodiacName').text(msg.zodiacName);
+						$('.birthdayString').text(msg.birthdayString);
+						$('.workTime').text(msg.workTime);
+						$('.address').text(msg.address);
+						$('.maritalStatusName').text(msg.maritalStatusName);
+						$('.wiName').text(msg.wiName);
+						$('.salary').text(msg.salary);
+						$('.ppName').text(msg.ppName);
+						$('.btujiwptName').text(msg.btujiwptName);
+						$('.workCityName').text(msg.workCityName);
+						$('.workStatusName').text(msg.workStatusName);
+						$('.jobCategoryName').text(msg.jobCategoryName);
+						$('.userImg').attr('src','/images/'+ msg.headImage);
+						$('.userName').text(msg.btruName);
+						$('#p1').text(msg.sex+'|'+msg.age+'|'+msg.address+'|'+msg.degreeLevel+'|'+msg.weName);
+						if(msg.selfComment){
+								$('.selfComment').html(msg.selfComment.replace(/\n/g,"<br/>"));
+						}
+						if(msg.video){
+								$('#isVideo').show();
+								$('#media').attr('src',msg.video);
+								$('#media').attr('poster',msg.videoImage);
+						}
+						status = msg.downLoadStatus;
+						if(msg.downLoadStatus){
+								$('.phone').text(msg.phone);
+								$('.email').text(msg.email);
+								down.text('导出简历');
+						}
+				})
+				//工作内容
+				ajax('/services/company/resume/view/workexperience',resumeData,function (result) {
+						console.log(result)
+						var msg = result.datas;
+						var _html = '';
+						for(var i = 0; i<msg.length;i++){
+								_html += '<div class="jianlxx_con">\n' +
+										'                <h1 style="font-size:16px;">'+msg[i].workPosition+'| '+msg[i].companyName+'</h1>\n' +
+										'                <p>'+getTime(msg[i].startWorkDate,"YYYY.MM.DD")+'-'+ (msg.endWorkDate?getTime(msg.endWorkDate,"YYYY.MM.DD"):"至今")+'</p>\n' +
+										'                <ul>\n' +
+										'                    <li>工作内容：</li>\n' +
+										'                    <li class="hzh">'+msg[i].jobDescription+'</li>\n' +
+										'                </ul>\n' +
+										'            </div>'
+						}
+						$('.workExperiences').after(_html);
+				})
+				//教育经历
+				ajax('/services/company/resume/view/educationexperience',resumeData,function (result) {
+						var msg = result.datas;
+						var _html = '';
+						for(var i = 0; i<msg.length;i++){
+								_html += '<div class="jianlxx_con">\n' +
+										'<h2 style="font-size:16px;">'+msg[i].jobsUniversity+'<span>'+getTime(msg[i].startDate,'YYYY.MM.DD')+'- '+getTime(msg[i].endDate,'YYYY.MM.DD')+'</span></h2>\n' +
+										'<ul>\n' +
+										'<li>'+msg[i].major+' | '+msg[i].degreeLevel+'</li>\n' +
+										'</ul>\n' +
+										'</div>'
+						}
+						$('.eduExperience').after(_html);
+				})
+				//下载简历
+				down.click(function () {
+						if(status == 0){
+								ajax('/services/company/resume/download/serch',resumeData,function (result) {
+										if(result.datas[0]){
+												$('.phone').text(msg.phone);
+												$('.email').text(msg.email);
+												status = 1;
+												down.text('导出简历');
+										}
+								})
+						}
+						if(status == 1){
+								ajax('/services/position/resume/download',resumeData, function (result) {
+										if (result.status == "success"){
+												window.open("/images/"+result.datas[0]);
+										}
+								});
+						}
+				})
+
+
+			function closeandback() {
+				window.history.go(-1);
+			}
+
+			function sendComplete(stat) {
+				var tzdata = {};
+				tzdata.clientType = "102500";
+				tzdata.b2cTerminalUserId =+resumeId;
+				tzdata.roomId = g_roomId;
+				tzdata.status = true;
+				tzdata.positionId = positionId;
+				console.log(tzdata)
+				ajax(("/services/connect/room/create/complete"), tzdata, function(result) {
+					console.log(result)
+					if(result.resultCode == 0){
+						alert("未连通求职者");
+					}
+				});
+				setTimeout(function() {
+					if(!hasseeker) {
+						$('#prompt1').html('对方无应答，请稍后重试');
+						$('#myModal1').modal('show');
+					}
+				}, 60000);
+			}
+
+			function jingyin() {
+				if($("#ht").hasClass("xiao_shipjy")) {
+					$("#ht").removeClass("xiao_shipjy");
+					if(browesType == "1") {
+						OnBtnOpenMic();
+					} else if(browesType == "2") {
+						WebRTCAPI.openAudio();
+					}
+				} else {
+					$("#ht").addClass("xiao_shipjy");
+					if(browesType == "1") {
+						OnBtnCloseMic();
+					} else if(browesType == "2") {
+						WebRTCAPI.closeAudio();
+					}
+				}
+			}
+
+			function waifang() {
+				if($("#yx").hasClass("xiao_shipjf")) {
+					$("#yx").removeClass("xiao_shipjf");
+					if(browesType == "1") {
+						OnBtnOpenPlayer();
+					} else {
+						WebRTCAPI.openAudio();
+					}
+				} else {
+					$("#yx").addClass("xiao_shipjf");
+					if(browesType == "1") {
+						OnBtnClosePlayer();
+					} else {
+						WebRTCAPI.closeAudio();
+					}
+				}
+			}
+
+			function exitsp() {
+				if(browesType == "1") {
+					OnUninit();
+				} else {
+					onWebSocketClose();
+				}
+			}
+		</script>
+
+		<script>
+			var pageHeight = $(window).height() - $("#nav1").height() - $('#nav2').height() - 10;
+			$("#videoPage").css('height', pageHeight);
+		</script>
+	</body>
+
+</html>
