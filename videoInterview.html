@@ -273,6 +273,7 @@
 									console.log(result)
 										if(result.resultCode == 1){
 												g_roomId = result.datas[0];
+												console.log(g_roomId)
 												// g_id = "COMPANY_USER_${userId}";
 												var sigdata = {};
 												sigdata.clientType = 102500;
@@ -333,6 +334,7 @@
 								$('#media').attr('poster',msg.videoImage);
 						}
 						status = msg.downLoadStatus;
+						
 						if(msg.downLoadStatus){
 								$('.phone').text(msg.phone);
 								$('.email').text(msg.email);
@@ -372,22 +374,40 @@
 				})
 				//下载简历s
 				down.click(function () {
-						if(status == 0){
-								ajax('/services/company/resume/download/serch',resumeData,function (result) {
-										if(result.datas[0]){
-												$('.phone').text(msg.phone);
-												$('.email').text(msg.email);
-												status = 1;
-												down.text('导出简历');
-										}
-								})
+					console.log(status)
+						if(!status){
+							var resumeData = {};
+							console.log(1)
+							resumeData.clientType = 102500;
+							resumeData.positionId = positionId;
+							resumeData.companyId = +localStorage.getItem('companyId');
+							resumeData.b2cTerminalUserResumeId = +resumeId;
+							console.log(resumeData)
+							
+							ajax('/services/company/resume/view/details',resumeData,function (result) { 
+								console.log(result)
+								var resDatas = result.datas[0]
+									if(resDatas){
+										$('.phone').text(resDatas.phone);
+										$('.email').text(resDatas.email);
+										status = false;
+										down.text('导出简历');
+									}
+							})
 						}
-						if(status == 1){
-								ajax('/services/position/resume/download',resumeData, function (result) {
-										if (result.status == "success"){
-												window.open("/images/"+result.datas[0]);
-										}
-								});
+						if(status){
+							var resumeData = {};
+							resumeData.clientType = 102500;
+							resumeData.positionId = positionId;
+							resumeData.companyId = +localStorage.getItem('companyId');
+							resumeData.b2cTerminalUserResumeId = +resumeId;
+							ajax('/services/position/resume/download',resumeData, function (result) {
+								console.log(result)
+									if (result.status == "success"){
+										console.log(1)
+											window.open("/images/"+result.datas[0]);
+									}
+							});
 						}
 				})
 

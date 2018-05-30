@@ -7,23 +7,50 @@
  */
 (function  () {
     var $body = $("body");
+    var $head = $('head');
     // var $wrap = $('.wrap');
     var _header;
     var username = localStorage.getItem("username")? localStorage.getItem("username") : "待完善";
-    _header = '<div class="util-wrap"><div class="header"><div class="headerDiv"><ul><li><a id="rideoResume"><span>【</span><span id="radioMsg">视频面试</span><span>】</span></a><a style="margin: 0 5px" href="./news.html">消息</a><div id="newsIcon"></div></li><li> <a href="editResume.html">我的简历</a> </li><li><a href="delivery.html">投递记录</a></li><li title= '+username+'><span class="account-setting-name menu-bd">'+username+'</span><span class="caret"></span><div class="account-setting"> <p><a id="buttonGotoAccountSetting" href="accountSetting.html">账号设置</a></p><p id="buttonLogout" class="signOut">退出登录</p></div></li></ul></div></div><div class="nav-list"><div class="navDiv"><img src="../img/logo.png" alt=""><ul><li><a href="./index.html" class="navDivActive">首页</a></li><li><a id="buttonGotoJob" href="./jobs.html">求职</a></li><li><a id="buttonGotoPublicWelfare" href="./publicWelfare.html">公益</a></li><li><a id="buttonGotoTraining" href="./train.html">培训</a></li><li><a id="buttonGotoGovPolicy" href="./policy.html">政策</a></li><li>APP</li></ul></div></div></div>';
+    var script = '<script type="text/javascript" src="js/common.js"></script><link rel="stylesheet" type="text/css" href="css/toast.css">'
+    console.log(localStorage.getItem("username"))
+    _header = '<div class="top_bg">\n' +
+        '    <div id="site-nav">\n' +
+        '        <ul class="quick-menu">\n' +
+        '            <li><a href="/news.html">消息</a><i id="messageCount">0</i>|</li>\n' +
+        '            <li><a href="/createPosition.html">发布职位</a>|</li>\n' +
+        '            <li><a href="/resumeManage.html">简历管理</a>|</li>\n' +
+        '            <li><a href="/positionManage.html">职位管理</a>|</li>\n' +
+        '            <li class="menu-item">\n' +
+        '                <div class="menu">\n' +
+        '                    <a class="menu-hd" href="javascript:void(0);" id="lusername" >'+username+'<b></b></a>\n' +
+        '                    <div class="menu-bd">\n' +
+        '                        <a href="../certificateInfo.html">认证信息</a>\n' +
+        '                        <a href="../userModify.html">个人信息</a>\n' +
+        '                        <a href="../companyInfoModeify.html">企业信息</a>\n' +
+        '                        <a href="../accountModify.html">账号设置</a>\n' +
+        '                        <a href="javascript:void(0);" class="logout">退出登录</a>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '            </li>\n' +
+        '        </ul>\n' +
+        '    </div>\n' +
+        '</div>'+
+        '<div class="Header">'+
+        '<dl class="Login_topdl">'+
+        '<dt><img src="../img/logo.png" style="width:111px;height:43px;"></dt>'+
+        '<dd class="nav" style="padding-left:20px;"><a href="../manageIndex.html" class="active">首页</a><a href="../resumeSearch.html">招聘</a><a href="../publicWelfare.html">公益</a><a href="../train.html">培训</a><a href="../policy.html">政策</a><a href="">APP</a></dd>'+
+    '</dl>'+
+    '</div>';
     $body.prepend(_header);
-
-//点击帐号
-	$('.account-setting-name').on("click",function () {
-		console.log(1)
-       	 $('.account-setting').toggle()
+    $head.append(script);
+    $('.account-setting-name').on("click",function () {
+        $('.account-setting').toggle()
     });
-    
     var rideoResume = $('#rideoResume');
     rideoResume.hide();
-    $("#newsIcon").text(localStorage.getItem("countNotRead"));
+    $("#messageCount").text(localStorage.getItem("countNotRead"));
     var count = '';
-    // getNotReadCount();
+    getNotReadCount();
     //查询有几条消息
     function getNotReadCount() {
         ajax("/services/message/count/not/read",{clientType :102500},function (result) {
@@ -33,63 +60,16 @@
             count = result.datas[0].count;
             localStorage.setItem("countNotRead",count);
             if(count){
-                $("#newsIcon").show().text(localStorage.getItem("countNotRead"));
+                $("#messageCount").show().text(localStorage.getItem("countNotRead"));
             }else {
-                $("#newsIcon").hide();
+                $("#messageCount").hide();
             }
         })
     }
-   // 获取视频房间号
-   // getRoomId();
-   var timer,
-       roomId,
-       preRoom = 0,
-       currRoom = 0;
-    // localStorage.setItem("roomId",null);
-    function getRoomId() {
-        ajax('/services/connect/room/try/connect',{clientType:102500},function (result) {
-            if(result.datas.length){
-                // currRoom = result.datas[0].roomId;
-                // rideoResume.show();
-                // timer = setInterval(getRadio,1000);
-                clearInterval(timer);
-                rideoResume.show();
-                timer = setInterval(getRadio,1000);
-                localStorage.setItem("roomId",result.datas[0].roomId);
-                localStorage.setItem("roomPositionId",result.datas[0].positionId);
-                localStorage.setItem("roomUserId",result.datas[0].userId);
-                localStorage.setItem("roomCompanyId",result.datas[0].companyId);
-                setTimeout(function() {
-                    rideoResume.hide();
-                    clearInterval(timer);
-                },60000)
-            }
-            // else{
-            //     rideoResume.hide();
-            //     clearTimeout(timer);
-            // }
-            /*roomId = localStorage.getItem('roomId');
-            if(roomId != 'null'){
-                rideoResume.show();
-                timer = setInterval(getRadio,1000);
-            }*/
-        })
-    }
-    rideoResume.click(function () {
-        rideoResume.hide();
-        clearInterval(timer);
-    });
-    // setInterval(getNotReadCount,5000);
-    // setInterval(getRoomId,5000);
-    // var timer = setInterval(getRadio,1000);
-    var $radioMsg = $("#radioMsg");
-    function getRadio() {
-        $radioMsg.animate({opacity:"0"},250);
-        $radioMsg.animate({opacity:"1"},499)
-    }
-    $('.signOut').on("click",function () {
+    setInterval(getNotReadCount,5000);
+    $('.logout').on("click",function () {
         model({
-            size:['445px',"281px"],
+            size:['445px',"260px"],
             title:"退出登录",
             btn:1,
             btnId:"logout",
@@ -102,36 +82,4 @@
             }
         });
     });
-    var userAgent = navigator.userAgent;
-    var isChrome = userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Safari") > -1;
-    var isIE = userAgent.indexOf('NET') != -1 && userAgent.indexOf("rv") != -1;
-    rideoResume.click(function () {
-        var positionId = +localStorage.getItem('roomPositionId');
-        if(isIE){
-            window.open('./video.html?positionId='+localStorage.getItem('roomPositionId'));
-        }else if(isChrome){
-            window.open('./chromeVideo.html?positionId='+localStorage.getItem('roomPositionId'));
-        }else{
-            alert('请使用IE9+或谷歌浏览器');
-        }
-
-    });
-    /*$('.myResume').on("click",function () {
-        if (localStorage.getItem("intention")==="null"){
-            model({
-                size:['500px',"200px"],
-                title:"请完善简历",
-                btnName:"完成",
-                btnClass:"addResume",
-                btn:1,
-                btnFun3:function (ev) {
-                    var ev = ev || event;
-                    ev.preventDefault();
-                    window.location.href = "/fillResume.html"
-                }
-            });
-        }else {
-            window.location.href = "/editResume.html"
-        }
-    })*/
 })();
